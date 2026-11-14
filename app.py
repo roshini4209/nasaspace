@@ -5,570 +5,562 @@ import requests
 import pandas as pd
 
 # ==========================================
-# 1. PAGE CONFIG & ULTRA PRO MAX SPACE CSS
+# 1. PAGE CONFIG & HIGH-CONTRAST GAME CSS
 # ==========================================
 st.set_page_config(
-    page_title="Artemis Lunar Outpost: Ultra Pro Max",
-    page_icon="🌕",
+    page_title="Lunar Hero: Artemis Outpost Game",
+    page_icon="🧑‍🚀",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Space Background, Neon Borders, and Glassmorphism UI
 st.markdown("""
 <style>
-/* Deep Space & Lunar Surface Background */
+/* Deep Space Background */
 .stApp {
-    background-image: linear-gradient(rgba(6, 11, 25, 0.86), rgba(4, 7, 17, 0.94)), 
-                      url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    color: #e2e8f0;
+    background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+    color: #ffffff !important;
 }
 
-/* Sidebar Styling */
-[data-testid="stSidebar"] {
-    background-color: rgba(10, 15, 30, 0.92) !important;
-    border-right: 1px solid rgba(56, 189, 248, 0.3);
+/* FORCE ALL TEXT TO BE BRIGHT & VISIBLE */
+h1, h2, h3, h4, h5, h6, p, span, div, label {
+    color: #f8fafc !important;
 }
 
-/* Metric Cards Glassmorphism */
-div[data-testid="metric-container"] {
-    background: rgba(15, 23, 42, 0.78);
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    padding: 16px;
-    border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(0, 210, 255, 0.15);
-    backdrop-filter: blur(8px);
+/* Fix Metric Cards Visibility */
+div[data-testid="stMetric"] {
+    background: linear-gradient(145deg, #1e293b, #0f172a) !important;
+    border: 2px solid #38bdf8 !important;
+    border-radius: 16px !important;
+    padding: 14px !important;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25) !important;
+}
+div[data-testid="stMetricLabel"] p, div[data-testid="stMetricLabel"] {
+    color: #7dd3fc !important;
+    font-weight: 800 !important;
+    font-size: 1.05rem !important;
+}
+div[data-testid="stMetricValue"] div, div[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    font-size: 2rem !important;
 }
 
-/* Custom Glowing Info Cards */
-.pro-card {
-    background: rgba(15, 23, 42, 0.82);
-    border: 1px solid rgba(99, 102, 241, 0.45);
-    border-left: 5px solid #38bdf8;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+/* Fix Sidebar Visibility */
+section[data-testid="stSidebar"] {
+    background-color: #090d16 !important;
+    border-right: 2px solid #38bdf8 !important;
+}
+section[data-testid="stSidebar"] * {
+    color: #ffffff !important;
+    font-weight: 600 !important;
 }
 
-.alert-card {
-    background: rgba(69, 10, 10, 0.82);
-    border: 1px solid #ef4444;
-    border-left: 5px solid #f87171;
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 18px;
-}
-
-/* Glowing Buttons */
+/* Game Action Buttons */
 .stButton>button {
-    background: linear-gradient(90deg, #0284c7 0%, #4f46e5 100%);
-    color: white;
-    border: 1px solid rgba(125, 211, 252, 0.6);
-    border-radius: 10px;
-    padding: 0.6rem 1.2rem;
-    font-weight: 700;
-    transition: all 0.25s ease;
+    background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #7dd3fc !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    font-size: 1rem !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4) !important;
+    transition: 0.2s ease-in-out !important;
     width: 100%;
 }
 .stButton>button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.75);
-    color: #ffffff;
+    transform: scale(1.02) !important;
+    border-color: #fde047 !important;
+    box-shadow: 0 0 18px rgba(253, 224, 71, 0.7) !important;
 }
 
-h1, h2, h3 {
-    color: #f8fafc !important;
-    text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.7);
+/* Kid-Friendly Info Boxes */
+.game-banner {
+    background: rgba(30, 41, 59, 0.95);
+    border: 2px solid #38bdf8;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    font-size: 1.05rem;
+}
+.flare-warning {
+    background: linear-gradient(90deg, #7f1d1d, #991b1b);
+    border: 3px solid #fde047;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px #ef4444; }
+    50% { box-shadow: 0 0 28px #fde047; }
+    100% { box-shadow: 0 0 10px #ef4444; }
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 2. INITIALIZE GAME STATE & TELEMETRY HISTORY
+# 2. INITIALIZE GAME SESSION STATE
 # ==========================================
-if "day" not in st.session_state:
-    st.session_state.day = 1
-    st.session_state.power = 100
-    st.session_state.oxygen = 100
-    st.session_state.food = 100
-    st.session_state.crew_health = 100
-    st.session_state.rad_dose = 0.42  # mSv baseline (RadLab BLEO reference)
-    st.session_state.science_pts = 0
+if "profile_ready" not in st.session_state:
+    st.session_state.profile_ready = False
+    st.session_state.player_name = "Alex"
+    st.session_state.player_age = 9
+    st.session_state.difficulty = "Cadet (Ages 7–9)"
+
+if "sol" not in st.session_state:
+    st.session_state.sol = 1
+    st.session_state.power = 90
+    st.session_state.oxygen = 90
+    st.session_state.food = 90
+    st.session_state.health = 100
+    st.session_state.shield_on = False
+    st.session_state.door_closed = False
+    st.session_state.player_pos = "OUTSIDE_SOLAR"  # OUTSIDE_SOLAR, INSIDE_HAB, GREENHOUSE
+    st.session_state.solar_flare_active = True
+    st.session_state.dust_on_panels = False
+    st.session_state.rad_msv = 0.42
     st.session_state.game_over = False
-    st.session_state.last_event = (
-        "🟢 **Sol 1 Initialized:** Outpost landed at Shackleton Crater Rim (Lunar South Pole). "
-        "All systems nominal. Allocate your daily energy budget carefully!"
+    st.session_state.game_won = False
+    st.session_state.story_log = (
+        "🚨 **SOLAR FLARE INCOMING!** You are standing **OUTSIDE** near the solar panels! "
+        "Quick: 1️⃣ Turn **ON** the Radiation Shield (costs Power), 2️⃣ Run **INSIDE** the Outpost, and 3️⃣ **CLOSE** the Airlock Door!"
     )
     st.session_state.history = pd.DataFrame({
-        "Sol": [1],
-        "Power (%)": [100],
-        "Oxygen (%)": [100],
-        "Food (%)": [100],
-        "Crew Health (%)": [100]
+        "Sol": [1], "Power": [90], "Oxygen": [90], "Food": [90], "Health": [100]
     })
 
 # ==========================================
-# 3. REAL NASA API & ARCHIVED FALLBACK DATA
+# 3. STEP 0: AGE & DIFFICULTY ONBOARDING MODAL
 # ==========================================
-# Curated Authentic NASA DONKI Historical Solar Events (Fallback if DEMO_KEY rate-limits)
-ARCHIVED_DONKI_EVENTS = [
-    {
-        "eventID": "2026-CME-0914",
-        "type": "Coronal Mass Ejection (CME)",
-        "speed": "1,150 km/s",
-        "severity": "HIGH",
-        "rad_spike": 1.85,
-        "desc": "Fast halo CME erupted from Active Region 3842. High proton flux reaching the lunar surface."
-    },
-    {
-        "eventID": "2026-SEP-0802",
-        "type": "Solar Energetic Particle (SEP)",
-        "speed": "Relativistic Protons",
-        "severity": "MODERATE",
-        "rad_spike": 1.10,
-        "desc": "Elevated energetic proton flux detected by Moon-to-Mars Space Weather Analysis Office (M2M-SWAO)."
-    },
-    {
-        "eventID": "2026-FLR-1021",
-        "type": "X2.4 Class Solar Flare",
-        "speed": "Speed of Light (8.3 mins to Moon)",
-        "severity": "EXTREME",
-        "rad_spike": 2.40,
-        "desc": "Intense X-ray and extreme ultraviolet radiation burst causing temporary high-frequency radio blackouts."
-    }
-]
-
-@st.cache_data(ttl=600)
-def fetch_live_nasa_donki():
-    """Fetches real Solar Flare notifications from NASA DONKI API with transparent fallback."""
-    try:
-        url = "https://api.nasa.gov/DONKI/FLR?api_key=DEMO_KEY"
-        res = requests.get(url, timeout=4)
-        if res.status_code == 200 and len(res.json()) > 0:
-            data = res.json()[-1]
-            return {
-                "is_live": True,
-                "source_label": "LIVE NASA DONKI API FEED",
-                "flrID": data.get("flrID", "FLR-LIVE"),
-                "classType": data.get("classType", "M1.5"),
-                "beginTime": data.get("beginTime", "Recent UTC"),
-                "note": data.get("note", "Solar flare activity logged by NASA CCMC/M2M-SWAO.")
-            }
-    except Exception:
-        pass
-    return {
-        "is_live": False,
-        "source_label": "ARCHIVED NASA DONKI DATASET (Offline/Rate-Limit Fallback)",
-        "flrID": "2026-10-29T14:20:00-FLR-001",
-        "classType": "X1.8",
-        "beginTime": "2026-10-29 14:20 UTC",
-        "note": "Archived NASA CCMC DONKI flare record: Strong solar energetic particle warning issued for BLEO (Beyond Low Earth Orbit)."
-    }
-
-@st.cache_data(ttl=3600)
-def fetch_nasa_apod_2026():
-    """Uses the new 2026 NASA WordPress APOD API documented in the NASA Open API catalog."""
-    try:
-        url = "https://science.nasa.gov/wp-json/wp/v2/apod-basic/?api_key=DEMO_KEY"
-        res = requests.get(url, timeout=4)
-        if res.status_code == 200:
-            data = res.json()
-            if isinstance(data, list) and len(data) > 0:
-                data = data[0]
-            return {
-                "title": data.get("title", "Deep Space View"),
-                "img": data.get("hdurl") or data.get("url") or "https://images-assets.nasa.gov/image/iss056e201248/iss056e201248~orig.jpg",
-                "explanation": data.get("explanation", "Authentic NASA Astronomy Picture of the Day.")
-            }
-    except Exception:
-        pass
-    return {
-        "title": "Lunar South Pole: Shackleton Crater Region (NASA LRO)",
-        "img": "https://images-assets.nasa.gov/image/PIA23499/PIA23499~orig.jpg",
-        "explanation": "NASA Lunar Reconnaissance Orbiter (LRO) mosaic of the Lunar South Pole where Artemis astronauts balance sunlit solar peaks with permanently shadowed water-ice craters."
-    }
+if not st.session_state.profile_ready:
+    st.markdown("<h1 style='text-align:center;'>🧑‍🚀 Welcome to Lunar Hero: Artemis Outpost!</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;font-size:1.2rem;'>An Interactive Space Survival Game Powered by Real NASA Data</p>", unsafe_allow_html=True)
+    
+    col_l, col_m, col_r = st.columns([1, 2, 1])
+    with col_m:
+        st.markdown("<div class='game-banner'>", unsafe_allow_html=True)
+        st.subheader("🎮 Step 1: Create Your Astronaut Profile")
+        name_input = st.text_input("What is your Astronaut Name?", value="Commander Alex")
+        age_input = st.slider("🎂 How old are you? (Adjusts Game Difficulty!)", min_value=7, max_value=12, value=9)
+        
+        if age_input <= 9:
+            diff_label = "🌟 Junior Cadet Mode (Ages 7–9)"
+            diff_desc = "Simpler tips, slower resource drain, and helpful reminders when a Solar Storm appears!"
+        else:
+            diff_label = "🚀 Mission Commander Mode (Ages 10–12)"
+            diff_desc = "Faster battery drain, surprise moon-dust storms, and real NASA radiation trade-offs!"
+            
+        st.info(f"**Selected Difficulty:** {diff_label}\n\n{diff_desc}")
+        
+        if st.button("🚀 LAUNCH TO THE MOON!"):
+            st.session_state.player_name = name_input
+            st.session_state.player_age = age_input
+            st.session_state.difficulty = diff_label
+            st.session_state.profile_ready = True
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
+    st.stop()
 
 # ==========================================
-# 4. SIDEBAR MULTI-PAGE NAVIGATION
+# 4. SIDEBAR NAVIGATION & PLAYER BADGE
 # ==========================================
 with st.sidebar:
-    st.markdown("## 🚀 **ARTEMIS COMMAND**")
-    st.caption("Lunar South Pole Outpost Simulator • Target Audience: Ages 7–12")
+    st.markdown(f"### 🧑‍🚀 {st.session_state.player_name}")
+    st.caption(f"Age: {st.session_state.player_age} | {st.session_state.difficulty}")
     st.markdown("---")
     
-    page = st.radio(
-        "🧭 **Navigate Outpost Modules:**",
+    nav_page = st.radio(
+        "🕹️ **CHOOSE SCREEN:**",
         [
-            "🎮 1. Mission Control (Simulator)",
-            "🏗️ 2. Interactive Outpost Blueprint",
-            "📡 3. Live NASA Telemetry & RadLab",
-            "🎓 4. Junior Astronaut Academy"
+            "🎮 1. Play Lunar Outpost Game",
+            "📈 2. Mission Graphs & Math Lab",
+            "🛰️ 3. Real NASA Data & Science"
         ]
     )
     
     st.markdown("---")
-    st.markdown("### 📊 **Quick Telemetry**")
-    st.progress(st.session_state.power / 100, text=f"⚡ Power: {st.session_state.power}%")
-    st.progress(st.session_state.oxygen / 100, text=f"🫁 Oxygen: {st.session_state.oxygen}%")
-    st.progress(st.session_state.food / 100, text=f"🌱 Food: {st.session_state.food}%")
-    st.progress(st.session_state.crew_health / 100, text=f"❤️ Crew Health: {st.session_state.crew_health}%")
+    st.markdown("### 🎒 Astronaut Suit Status")
+    loc_label = "🌑 Outside on Moon" if st.session_state.player_pos == "OUTSIDE_SOLAR" else (
+        "🏠 Inside Outpost" if st.session_state.player_pos == "INSIDE_HAB" else "🌱 In Greenhouse"
+    )
+    st.write(f"📍 **Location:** {loc_label}")
+    st.write(f"🚪 **Airlock Door:** {'🔒 CLOSED (Safe)' if st.session_state.door_closed else '🔓 OPEN (Danger!)'}")
+    st.write(f"🛡️ **Radiation Shield:** {'🟢 MAX ON (-25⚡)' if st.session_state.shield_on else '⚪ OFF (Saves Power)'}")
     
     st.markdown("---")
-    if st.button("🔄 Reset Mission to Sol 1"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
+    if st.button("🔄 Restart Game"):
+        for k in list(st.session_state.keys()):
+            del st.session_state[k]
         st.rerun()
 
 # ==========================================
-# PAGE 1: MISSION CONTROL (CORE GAME LOOP)
+# HELPER: INTERACTIVE 2D VISUAL GAME SCENE
 # ==========================================
-if page == "🎮 1. Mission Control (Simulator)":
-    st.title("🌕 Artemis Lunar Outpost: Mission Control")
-    st.markdown(
-        "<div class='pro-card'>"
-        "<b>🛰️ Verified NASA Science Integration:</b> Every decision has a genuine engineering cost! "
-        "Space weather hazards are driven by <b>NASA DONKI</b> solar telemetry, radiation dosimetry follows "
-        "<b>NASA RadLab BLEO</b> (~0.42 mSv/day baseline), biological limits reference <b>NASA OSDR (Studies OSD-137 & OSD-87)</b>, "
-        "and hydroponics follow the <b>Canadian Space Agency (CSA) Lunar Food Toolkit</b>."
-        "</div>",
-        unsafe_allow_html=True
-    )
+def render_visual_outpost():
+    """Renders an interactive cartoon 2D SVG Lunar Base Scene reacting to player actions."""
+    flare_svg = ""
+    sky_color = "#020617"
+    if st.session_state.solar_flare_active:
+        sky_color = "#450a0a"
+        flare_svg = """
+        <circle cx="110" cy="70" r="48" fill="#f97316" />
+        <circle cx="110" cy="70" r="35" fill="#fde047" />
+        <path d="M 160 80 Q 320 120 480 160" stroke="#fbbf24" stroke-width="6" stroke-dasharray="10,6" fill="none"/>
+        <path d="M 150 100 Q 300 160 440 210" stroke="#ef4444" stroke-width="5" stroke-dasharray="8,8" fill="none"/>
+        <text x="180" y="55" fill="#fde047" font-size="18" font-weight="bold">⚡ NASA DONKI SOLAR FLARE INCOMING! ⚡</text>
+        """
+    else:
+        flare_svg = """
+        <circle cx="110" cy="70" r="32" fill="#fde047" />
+        <text x="160" y="65" fill="#93c5fd" font-size="16" font-weight="bold">☀️ Calm Space Weather (Normal Sunlight)</text>
+        """
 
-    # Top KPI Dashboard
-    c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("📅 Lunar Sol (Day)", f"{st.session_state.day} / 10")
-    c2.metric("⚡ Battery Power", f"{st.session_state.power}%")
-    c3.metric("🫁 Oxygen (O₂)", f"{st.session_state.oxygen}%")
-    c4.metric("🌱 Hydroponic Food", f"{st.session_state.food}%")
-    c5.metric("🧬 Crew Health (OSDR)", f"{st.session_state.crew_health}%", f"{st.session_state.rad_dose:.2f} mSv total", delta_color="inverse")
+    # Shield Dome Visual
+    shield_svg = ""
+    if st.session_state.shield_on:
+        shield_svg = """
+        <path d="M 350 310 A 210 190 0 0 1 830 310" fill="rgba(56, 189, 248, 0.22)" stroke="#38bdf8" stroke-width="6" stroke-dasharray="12,6"/>
+        <text x="475" y="115" fill="#38bdf8" font-size="16" font-weight="bold">🛡️ WATER-WALL SHIELD ACTIVE (-25% POWER)</text>
+        """
 
-    # Check Game Over or Victory
+    # Airlock Door Visual
+    door_color = "#22c55e" if st.session_state.door_closed else "#ef4444"
+    door_text = "🔒 DOOR CLOSED" if st.session_state.door_closed else "🔓 DOOR OPEN"
+
+    # Dust on Solar Panels Visual
+    panel_color = "#a16207" if st.session_state.dust_on_panels else "#2563eb"
+    panel_label = "🌪️ DUSTY PANELS!" if st.session_state.dust_on_panels else "☀️ SOLAR PANELS"
+
+    # Player Astronaut Position Coordinates
+    if st.session_state.player_pos == "OUTSIDE_SOLAR":
+        astro_x, astro_y = 235, 245
+        astro_caption = "🧑‍🚀 YOU (Outside)"
+    elif st.session_state.player_pos == "INSIDE_HAB":
+        astro_x, astro_y = 525, 245
+        astro_caption = "🧑‍🚀 YOU (Safe Inside)"
+    else:
+        astro_x, astro_y = 715, 245
+        astro_caption = "🧑‍🚀 YOU (Farming)"
+
+    svg_code = f"""
+    <div style="border: 3px solid #38bdf8; border-radius: 18px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.6);">
+    <svg viewBox="0 0 900 360" width="100%" height="320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Space Sky -->
+        <rect width="900" height="290" fill="{sky_color}" />
+        <!-- Stars -->
+        <circle cx="40" cy="40" r="2" fill="white"/>
+        <circle cx="280" cy="30" r="2" fill="white"/>
+        <circle cx="620" cy="45" r="2.5" fill="white"/>
+        <circle cx="840" cy="60" r="2" fill="white"/>
+        <circle cx="760" cy="25" r="1.5" fill="white"/>
+
+        {flare_svg}
+        {shield_svg}
+
+        <!-- Gray Lunar Surface (Shackleton Crater Rim) -->
+        <rect x="0" y="290" width="900" height="70" fill="#64748b" />
+        <ellipse cx="150" cy="325" rx="65" ry="12" fill="#475569" />
+        <ellipse cx="480" cy="335" rx="90" ry="14" fill="#475569" />
+        <text x="20" y="345" fill="#e2e8f0" font-size="14" font-weight="bold">🌑 LUNAR SOUTH POLE (SHACKLETON CRATER RIM)</text>
+
+        <!-- STATION 1: OUTSIDE SOLAR ARRAY -->
+        <rect x="115" y="210" width="110" height="50" fill="{panel_color}" stroke="#93c5fd" stroke-width="3" rx="6"/>
+        <line x1="170" y1="260" x2="170" y2="290" stroke="#cbd5e1" stroke-width="8"/>
+        <text x="110" y="198" fill="#ffffff" font-size="13" font-weight="bold">{panel_label}</text>
+
+        <!-- STATION 2: MAIN HABITAT DOME & AIRLOCK -->
+        <path d="M 410 290 A 125 115 0 0 1 650 290 Z" fill="#1e293b" stroke="#cbd5e1" stroke-width="5"/>
+        <!-- Airlock Door on Left of Dome -->
+        <rect x="415" y="215" width="42" height="75" fill="{door_color}" stroke="#ffffff" stroke-width="3" rx="6"/>
+        <text x="385" y="165" fill="{door_color}" font-size="14" font-weight="bold">{door_text}</text>
+        <text x="485" y="205" fill="#38bdf8" font-size="15" font-weight="bold">🏠 HABITAT & O₂</text>
+
+        <!-- STATION 3: CSA GREENHOUSE DOME -->
+        <path d="M 660 290 A 85 80 0 0 1 820 290 Z" fill="#064e3b" stroke="#4ade80" stroke-width="4"/>
+        <text x="675" y="205" fill="#4ade80" font-size="14" font-weight="bold">🌱 CSA FARM</text>
+        <circle cx="710" cy="275" r="8" fill="#ef4444"/>
+        <circle cx="740" cy="275" r="8" fill="#22c55e"/>
+        <circle cx="770" cy="275" r="8" fill="#ef4444"/>
+
+        <!-- PLAYER ASTRONAUT CHARACTER -->
+        <g transform="translate({astro_x}, {astro_y})">
+            <!-- Suit Body -->
+            <rect x="-18" y="0" width="36" height="38" rx="10" fill="#f8fafc" stroke="#38bdf8" stroke-width="3"/>
+            <!-- Helmet -->
+            <circle cx="0" cy="-14" r="18" fill="#f8fafc" stroke="#38bdf8" stroke-width="3"/>
+            <!-- Gold Visor -->
+            <rect x="-11" y="-22" width="22" height="14" rx="6" fill="#fbbf24"/>
+            <!-- Label above Player -->
+            <rect x="-60" y="-54" width="120" height="22" rx="6" fill="#0284c7"/>
+            <text x="-50" y="-38" fill="#ffffff" font-size="12" font-weight="bold">{astro_caption}</text>
+        </g>
+    </svg>
+    </div>
+    """
+    st.markdown(svg_code, unsafe_allow_html=True)
+
+# ==========================================
+# PAGE 1: INTERACTIVE LUNAR SIMULATION GAME
+# ==========================================
+if nav_page == "🎮 1. Play Lunar Outpost Game":
+    st.title(f"🌕 Lunar Outpost Survival — Sol (Day) {st.session_state.sol} of 7")
+
+    # Top 4 Big Kid-Friendly Meters
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("⚡ Battery Power", f"{st.session_state.power}%", "-25% if Shield ON" if st.session_state.shield_on else "+Solar Charging")
+    m2.metric("🫁 Oxygen (Air)", f"{st.session_state.oxygen}%", "Safe" if st.session_state.door_closed else "Leaking (Door Open!)")
+    m3.metric("🍅 Space Food", f"{st.session_state.food}%", "CSA Hydroponics")
+    m4.metric("❤️ Astronaut Health", f"{st.session_state.health}%", f"{st.session_state.rad_msv:.2f} mSv Radiation")
+
+    # Check Win / Lose States
     if st.session_state.game_over:
-        st.markdown(f"<div class='alert-card'><h3>🚨 MISSION ABORTED ON SOL {st.session_state.day}</h3><p>{st.session_state.last_event}</p></div>", unsafe_allow_html=True)
-        st.info("💡 **Engineering Debrief:** In real space missions, over-investing in one system starves another. Click **Reset Mission to Sol 1** in the left sidebar to test a new resource strategy!")
+        st.error(f"💥 **MISSION OVER ON SOL {st.session_state.sol}!** {st.session_state.story_log}")
+        st.info("💡 **What We Learned:** On the Moon, every action has a trade-off! Turning on shields saves your health from solar flares, but drains battery power needed for food and oxygen. Click **Restart Game** in the sidebar to try again!")
         st.stop()
-        
-    if st.session_state.day > 10:
-        st.success(f"🏆 **MISSION ACCOMPLISHED!** You kept your Artemis crew alive for 10 Sols and earned **{st.session_state.science_pts} NASA Science Points**!")
+
+    if st.session_state.game_won:
+        st.success(f"🏆 **YOU WON, {st.session_state.player_name.upper()}!** You survived 7 Lunar Sols at Shackleton Crater and mastered NASA engineering trade-offs!")
         st.balloons()
         st.stop()
 
-    # Recent Telemetry Alert Box
-    st.markdown(f"<div class='pro-card'>{st.session_state.last_event}</div>", unsafe_allow_html=True)
+    # Live Alert Banner
+    if st.session_state.solar_flare_active:
+        st.markdown(f"<div class='flare-warning'>{st.session_state.story_log}</div>", unsafe_allow_html=True)
+    else:
+        st.markdown(f"<div class='game-banner'>{st.session_state.story_log}</div>", unsafe_allow_html=True)
 
-    # Interactive Decision Console + Live Budget Preview
-    left_col, right_col = st.columns([3, 2])
+    # Render Interactive 2D Visual Outpost
+    render_visual_outpost()
 
-    with left_col:
-        st.subheader("🎛️ Daily Power & Trade-Off Console")
-        st.caption("Adjust the sliders below. Notice the **Real-Time Consequence Preview** on the right before executing your Sol!")
+    # ==========================================
+    # INTERACTIVE ACTION CONTROLS (KID-FRIENDLY)
+    # ==========================================
+    st.subheader("🕹️ Step 1: Move Your Astronaut & Operate the Base!")
+    st.caption("Watch the picture above change as you click! Every action trades one resource for another.")
 
-        eclss_alloc = st.slider(
-            "🫁 Life Support & O₂ Electrolysis (ECLSS)", 0, 100, 45,
-            help="Splits lunar water ice into breathable oxygen and scrubs CO₂. Below 40% causes oxygen depletion."
-        )
-        shield_alloc = st.slider(
-            "🛡️ Active Electromagnetic & Water-Wall Shielding", 0, 100, 40,
-            help="Blocks Solar Energetic Particles (SEPs). Drains heavy battery power when turned up high."
-        )
-        food_alloc = st.slider(
-            "🌱 CSA Lunar Greenhouse LED Array", 0, 100, 35,
-            help="Powers hydroponic LED grow lights for space crops. High settings grow food fast but consume energy."
-        )
-        sci_alloc = st.slider(
-            "🔬 Lunar Regolith & OSDR Bio-Lab Research", 0, 100, 20,
-            help="Earns Science Points and studies muscle/liver health (OSD-137), but uses extra oxygen and power."
-        )
+    c_move, c_shield, c_tasks = st.columns(3)
 
-    # Calculate Projected Net Changes for Transparent Educational Feedback
-    solar_gen = 55  # Base solar generation at Shackleton Crater peak
-    power_drain = int((eclss_alloc * 0.42) + (shield_alloc * 0.45) + (food_alloc * 0.35) + (sci_alloc * 0.30))
-    proj_power_delta = solar_gen - power_drain
-    proj_ox_delta = int((eclss_alloc - 42) * 0.35) - int(sci_alloc * 0.12)
-    proj_food_delta = int((food_alloc - 38) * 0.35)
+    with c_move:
+        st.markdown("#### 🏃 1. Move & Airlock Door")
+        if st.button("🌑 Walk Outside to Solar Panels"):
+            st.session_state.player_pos = "OUTSIDE_SOLAR"
+            st.session_state.door_closed = False
+            st.session_state.story_log = "🧑‍🚀 You opened the Airlock Door and walked **OUTSIDE** to the solar panels! (Warning: You are exposed if a Solar Flare hits!)"
+            st.rerun()
 
-    with right_col:
-        st.subheader("⚖️ Consequence Preview")
-        st.markdown(
-            f"""
-            <div class='pro-card'>
-            <h4>⚡ Energy Balance Forecast</h4>
-            <ul>
-                <li><b>Solar Array Output:</b> +{solar_gen}%</li>
-                <li><b>Total Outpost Load:</b> -{power_drain}%</li>
-                <li><b>Projected Net Power Change:</b> <span style='color:{"#4ade80" if proj_power_delta>=0 else "#f87171"};font-weight:bold;'>{proj_power_delta:+d}%</span></li>
-            </ul>
-            <h4>🫁 Resource Forecast (Before Space Weather)</h4>
-            <ul>
-                <li><b>Oxygen (O₂) Shift:</b> {proj_ox_delta:+d}% / Sol</li>
-                <li><b>Greenhouse Food Shift:</b> {proj_food_delta:+d}% / Sol</li>
-                <li><b>Shielding Protection Rating:</b> {shield_alloc}/100</li>
-            </ul>
-            <p style='font-size:0.85rem; color:#94a3b8;'>⚠️ <i>Remember: There is no "free lunch"! High shielding and science will rapidly drain battery reserves.</i></p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        if st.button("🏠 Run Inside Habitat Dome"):
+            st.session_state.player_pos = "INSIDE_HAB"
+            st.session_state.story_log = "🏠 You ran **INSIDE** the Habitat Dome! Don't forget to **Close the Airlock Door** to lock in oxygen and block radiation!"
+            st.rerun()
 
-    # Execute Turn with Realistic Earth-Moon 2.6s Round-Trip Comms Delay
-    if st.button("🚀 TRANSMIT COMMANDS & SIMULATE NEXT LUNAR SOL (2.6s Earth-Moon Comms Delay)"):
-        with st.spinner("📡 Transmitting telemetry across 384,400 km to NASA Johnson Space Center (1.3s each way)..."):
-            time.sleep(2.0)
-
-        # Apply base changes
-        st.session_state.power = max(0, min(100, st.session_state.power + proj_power_delta))
-        st.session_state.oxygen = max(0, min(100, st.session_state.oxygen + proj_ox_delta))
-        st.session_state.food = max(0, min(100, st.session_state.food + proj_food_delta))
-        st.session_state.science_pts += int(sci_alloc * 0.5)
-
-        # Trigger NASA Space Weather or Lunar Surface Event
-        roll = random.random()
-        if roll < 0.45:
-            ev = random.choice(ARCHIVED_DONKI_EVENTS)
-            if shield_alloc < 55:
-                dmg = 18
-                rad_added = ev["rad_spike"]
-                st.session_state.crew_health = max(0, st.session_state.crew_health - dmg)
-                st.session_state.oxygen = max(0, st.session_state.oxygen - 10)
-                st.session_state.rad_dose += rad_added
-                st.session_state.last_event = (
-                    f"🚨 **NASA DONKI ALERT ({ev['eventID']} - {ev['type']}):** {ev['desc']} "
-                    f"Your shielding ({shield_alloc}%) was below the 55% safety threshold! "
-                    f"Crew absorbed **+{rad_added:.2f} mSv** radiation (-{dmg}% Crew Health, -10% O₂)."
-                )
+        door_btn_label = "🔓 Open Airlock Door" if st.session_state.door_closed else "🔒 Close & Lock Airlock Door"
+        if st.button(door_btn_label):
+            if st.session_state.player_pos == "OUTSIDE_SOLAR" and not st.session_state.door_closed:
+                st.warning("Run INSIDE the Habitat or Greenhouse before locking the door from the inside!")
             else:
-                rad_added = 0.25
-                st.session_state.rad_dose += rad_added
-                st.session_state.last_event = (
-                    f"🛡️ **NASA DONKI ALERT ({ev['eventID']} - {ev['type']}):** {ev['desc']} "
-                    f"Because you allocated **{shield_alloc}%** to shielding, the crew was protected! "
-                    f"(Minimal dose: +{rad_added:.2f} mSv)."
-                )
-        elif roll < 0.72:
-            st.session_state.power = max(0, st.session_state.power - 12)
-            st.session_state.rad_dose += 0.42
-            st.session_state.last_event = (
-                "🌑 **Artemis Surface Hazard (Electrostatic Lunar Regolith):** Sharp, electrostatically charged moon dust "
-                "coated the solar arrays, dropping battery efficiency by **-12% Power** today."
-            )
+                st.session_state.door_closed = not st.session_state.door_closed
+                state_word = "CLOSED and locked" if st.session_state.door_closed else "OPENED"
+                st.session_state.story_log = f"🚪 Airlock Door is now **{state_word}**!"
+                st.rerun()
+
+    with c_shield:
+        st.markdown("#### 🛡️ 2. Radiation & Power Trade-Off")
+        shield_btn_text = "🟢 Turn OFF Shield (Save Power)" if st.session_state.shield_on else "🛡️ RAISE RADIATION SHIELD (-25% Power)"
+        if st.button(shield_btn_text):
+            if not st.session_state.shield_on:
+                if st.session_state.power >= 25:
+                    st.session_state.shield_on = True
+                    st.session_state.power = max(0, st.session_state.power - 25)
+                    st.session_state.story_log = "🛡️ **Radiation Shield RAISED!** Water walls now block NASA DONKI solar flares, but your **Battery Power dropped by 25%** right away!"
+                else:
+                    st.session_state.story_log = "⚠️ Not enough Battery Power to raise the shield! Sweep the solar panels outside first!"
+            else:
+                st.session_state.shield_on = False
+                st.session_state.power = min(100, st.session_state.power + 15)
+                st.session_state.story_log = "⚪ **Radiation Shield Powered Down.** You saved +15% Battery Power, but the dome is unshielded against solar flares!"
+            st.rerun()
+
+        if st.button("🧹 Sweep Moon Dust off Panels (+25% ⚡)"):
+            if st.session_state.player_pos != "OUTSIDE_SOLAR":
+                st.session_state.story_log = "❗ You must walk **OUTSIDE to the Solar Panels** first to sweep off the moon dust!"
+            else:
+                st.session_state.dust_on_panels = False
+                st.session_state.power = min(100, st.session_state.power + 25)
+                st.session_state.oxygen = max(0, st.session_state.oxygen - 10)
+                st.session_state.story_log = "🧹 You brushed the sticky lunar dust off the solar arrays! **+25% Battery Power**, but working outside used **-10% Oxygen**!"
+            st.rerun()
+
+    with c_tasks:
+        st.markdown("#### 🌱 3. Food & Oxygen Station")
+        if st.button("🌱 Go to Greenhouse & Grow Food (+25% 🍅)"):
+            if st.session_state.power < 15:
+                st.session_state.story_log = "⚠️ Too little Battery Power to run the purple LED grow-lights!"
+            else:
+                st.session_state.player_pos = "GREENHOUSE"
+                st.session_state.power = max(0, st.session_state.power - 15)
+                st.session_state.food = min(100, st.session_state.food + 25)
+                st.session_state.oxygen = min(100, st.session_state.oxygen + 5)
+                st.session_state.story_log = "🍅 You walked into the **CSA Greenhouse** and turned on the LED grow-lights! **+25% Space Tomatoes & +5% Plant Oxygen**, but it cost **-15% Power**!"
+            st.rerun()
+
+        if st.button("🫁 Make Fresh Oxygen from Moon Ice (+25% 🫁)"):
+            if st.session_state.power < 15:
+                st.session_state.story_log = "⚠️ Not enough Battery Power to melt crater ice into oxygen!"
+            else:
+                st.session_state.player_pos = "INSIDE_HAB"
+                st.session_state.power = max(0, st.session_state.power - 15)
+                st.session_state.oxygen = min(100, st.session_state.oxygen + 25)
+                st.session_state.story_log = "🫁 You melted Shackleton Crater ice into breathable air! **+25% Oxygen**, costing **-15% Battery Power**!"
+            st.rerun()
+
+    st.markdown("---")
+    # ==========================================
+    # END TURN / SLEEP TO NEXT SOL BUTTON
+    # ==========================================
+    if st.button("🌙 FINISH TODAY & SIMULATE NEXT LUNAR SOL (1.3s Earth-Moon Radio Delay)"):
+        with st.spinner("📡 Sending daily status to NASA Mission Control on Earth (1.3 seconds light-travel time)..."):
+            time.sleep(1.5)
+
+        # Difficulty Multiplier based on Player Age
+        drain = 10 if st.session_state.player_age <= 9 else 15
+
+        # Daily baseline consumption
+        st.session_state.oxygen = max(0, st.session_state.oxygen - drain)
+        st.session_state.food = max(0, st.session_state.food - drain)
+
+        # Solar recharge if panels are clean
+        solar_gain = 10 if st.session_state.dust_on_panels else 22
+        st.session_state.power = min(100, max(0, st.session_state.power + solar_gain))
+
+        outcome_notes = []
+
+        # Evaluate Solar Flare Protection
+        if st.session_state.solar_flare_active:
+            if st.session_state.player_pos == "OUTSIDE_SOLAR":
+                st.session_state.health = max(0, st.session_state.health - 35)
+                st.session_state.rad_msv += 2.10
+                outcome_notes.append("🚨 **OUCH!** You stayed **OUTSIDE** during a NASA DONKI Solar Flare! You took **-35% Health** from space radiation!")
+            elif not st.session_state.door_closed:
+                st.session_state.oxygen = max(0, st.session_state.oxygen - 20)
+                st.session_state.health = max(0, st.session_state.health - 15)
+                st.session_state.rad_msv += 1.10
+                outcome_notes.append("⚠️ You went inside, but left the **Airlock Door OPEN**! Radiation and air leaked (-15% Health, -20% Oxygen)!")
+            elif not st.session_state.shield_on:
+                st.session_state.health = max(0, st.session_state.health - 20)
+                st.session_state.rad_msv += 1.45
+                outcome_notes.append("⚠️ You were inside with the door closed, but forgot to turn ON the **Radiation Shield**! Solar protons pierced the wall (-20% Health)!")
+            else:
+                st.session_state.rad_msv += 0.20
+                outcome_notes.append("🛡️ **PERFECT DEFENSE!** You turned on the Radiation Shield, ran inside, and closed the Airlock Door! Zero solar flare damage!")
         else:
-            st.session_state.rad_dose += 0.42
-            st.session_state.last_event = (
-                f"✨ **Nominal Lunar Sol:** Space weather remained calm (Baseline Galactic Cosmic Ray dose: +0.42 mSv). "
-                f"Your crew logged **+{int(sci_alloc * 0.5)} Science Points** studying OSDR biological samples!"
-            )
+            st.session_state.rad_msv += 0.42
+            if not st.session_state.door_closed:
+                st.session_state.oxygen = max(0, st.session_state.oxygen - 15)
+                outcome_notes.append("🔓 You left the Airlock Door open overnight, losing **-15% Oxygen**!")
+            else:
+                outcome_notes.append("✨ Peaceful lunar night! All crew members slept safely inside.")
 
-        st.session_state.day += 1
+        # Advance Sol & Roll Next Day's NASA Event
+        st.session_state.sol += 1
+        next_roll = random.random()
+        if next_roll < 0.50:
+            st.session_state.solar_flare_active = True
+            st.session_state.shield_on = False  # Resets so player must actively decide each flare
+            outcome_notes.append("⚡ **NEW NASA DONKI ALERT:** A giant Solar Flare just erupted from the Sun! Raise shields, get inside, and close the door!")
+        elif next_roll < 0.80:
+            st.session_state.solar_flare_active = False
+            st.session_state.dust_on_panels = True
+            outcome_notes.append("🌪️ **MOON DUST ALERT:** Sticky lunar dust covered your solar panels outside! Walk outside to sweep them or power will drop!")
+        else:
+            st.session_state.solar_flare_active = False
+            outcome_notes.append("☀️ **CLEAR SKIES:** Calm space weather today! Great time to turn OFF shields to save power and grow food in the Greenhouse!")
 
-        # Log telemetry history for charts
+        st.session_state.story_log = " | ".join(outcome_notes)
+
+        # Save to History for Page 2 Graphs
         new_row = pd.DataFrame({
-            "Sol": [st.session_state.day],
-            "Power (%)": [st.session_state.power],
-            "Oxygen (%)": [st.session_state.oxygen],
-            "Food (%)": [st.session_state.food],
-            "Crew Health (%)": [st.session_state.crew_health]
+            "Sol": [st.session_state.sol],
+            "Power": [st.session_state.power],
+            "Oxygen": [st.session_state.oxygen],
+            "Food": [st.session_state.food],
+            "Health": [st.session_state.health]
         })
         st.session_state.history = pd.concat([st.session_state.history, new_row], ignore_index=True)
 
-        # Check failure states
-        if st.session_state.power <= 0:
+        # Check Win / Lose
+        if st.session_state.power <= 0 or st.session_state.oxygen <= 0 or st.session_state.food <= 0 or st.session_state.health <= 0:
             st.session_state.game_over = True
-            st.session_state.last_event = "⚡ **Total Blackout:** Battery reserves hit 0%. Heating and life support pumps shut down during the freezing lunar night (-130°C)."
-        elif st.session_state.oxygen <= 0:
-            st.session_state.game_over = True
-            st.session_state.last_event = "🫁 **Hypoxia Emergency:** Oxygen reserves hit 0% and CO₂ levels spiked past NASA Dragon/ISS cabin safety limits."
-        elif st.session_state.food <= 0:
-            st.session_state.game_over = True
-            st.session_state.last_event = "🌱 **Caloric Depletion:** Hydroponic crops failed and emergency rations ran out."
-        elif st.session_state.crew_health <= 0:
-            st.session_state.game_over = True
-            st.session_state.last_event = "🧬 **Radiation Sickness:** Unshielded solar particle events exceeded safe biological limits established by NASA OSDR."
+        elif st.session_state.sol > 7:
+            st.session_state.game_won = True
 
         st.rerun()
 
-    # Interactive Telemetry History Graph
-    st.markdown("---")
-    st.subheader("📈 Outpost Multi-Sol Telemetry Trend")
+# ==========================================
+# PAGE 2: MISSION GRAPHS & MATH LAB (SEPARATED)
+# ==========================================
+elif nav_page == "📈 2. Mission Graphs & Math Lab":
+    st.title("📈 Mission Telemetry Graphs & Trade-Off Math")
+    st.write("Here is how your decisions in the game affected your Lunar Outpost over time!")
+
+    st.subheader("1. Resource History Chart Across Lunar Sols")
     st.line_chart(st.session_state.history.set_index("Sol"))
 
-
-# ==========================================
-# PAGE 2: INTERACTIVE OUTPOST BLUEPRINT
-# ==========================================
-elif page == "🏗️ 2. Interactive Outpost Blueprint":
-    st.title("🏗️ Interactive Lunar Outpost Blueprint")
-    st.write("Click on any module of our Shackleton Crater Lunar Base below to inspect how real NASA engineering works!")
-
-    tabs = st.tabs([
-        "☀️ 1. Solar & Regolith Power",
-        "🛡️ 2. Water-Wall Radiation Shield",
-        "🌱 3. CSA Lunar Greenhouse",
-        "📡 4. Deep Space Comms Array"
-    ])
-
-    with tabs[0]:
+    st.subheader("2. How the Engineering Trade-Off Math Works")
+    c1, c2 = st.columns(2)
+    with c1:
         st.markdown("""
-        <div class='pro-card'>
-        <h3>☀️ Vertical Solar Arrays at Shackleton Crater Rim</h3>
-        <p><b>The Real NASA Constraint:</b> At the Moon's equator, night lasts 14 Earth days (354 hours) with temperatures plunging to -130°C! That is why NASA's <b>Artemis Program</b> targets the <b>Lunar South Pole</b>, where tall crater rims receive near-continuous sunlight.</p>
+        <div class='game-banner'>
+        <h4>⚡ The Shield vs. Power Equation</h4>
+        <p>On the Moon, water-wall pumps and magnetic shields protect astronauts from solar storms, but they require massive electricity:</p>
         <ul>
-            <li><b>Lunar Dust Threat:</b> Moon dust (regolith) is jagged like crushed glass and statically charged. When it sticks to solar panels, power drops sharply.</li>
-            <li><b>In-Game Trade-Off:</b> Every watt of solar energy must be split between keeping the crew breathing, running grow lights, and powering radiation shields.</li>
+            <li><b>Raising Radiation Shield:</b> Costs <b>-25% Battery Power</b> immediately.</li>
+            <li><b>Leaving Shield OFF during Solar Flare:</b> Saves battery, but deals <b>-20% to -35% Astronaut Health</b> damage!</li>
+        </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        st.markdown(f"""
+        <div class='game-banner'>
+        <h4>☢️ Your Cumulative NASA RadLab Dose</h4>
+        <p><b>Total Radiation Absorbed:</b> <code>{st.session_state.rad_msv:.2f} mSv (Millisieverts)</code></p>
+        <ul>
+            <li><b>Normal Lunar Day (NASA RadLab BLEO):</b> +0.42 mSv/Sol</li>
+            <li><b>Shielded Solar Flare:</b> +0.20 mSv/Sol</li>
+            <li><b>Unshielded Outside in Solar Flare:</b> +2.10 mSv/Sol</li>
         </ul>
         </div>
         """, unsafe_allow_html=True)
 
-    with tabs[1]:
-        st.markdown("""
-        <div class='pro-card'>
-        <h3>🛡️ Radiation Shielding & NASA RadLab Dosimetry</h3>
-        <p><b>The Real NASA Constraint:</b> Unlike Earth, the Moon has no global magnetic field or thick atmosphere. According to <b>NASA RadLab BLEO (Beyond Low Earth Orbit)</b> data, astronauts on the lunar surface absorb ~0.42 mSv/day of Galactic Cosmic Rays—and up to 1,000x more during a <b>NASA DONKI Solar Energetic Particle (SEP)</b> storm!</p>
-        <ul>
-            <li><b>Water & Regolith Walls:</b> Hydrogen atoms in water and lunar soil are ideal for absorbing high-energy protons without creating secondary radiation showers.</li>
-            <li><b>Active Storm Shelters:</b> Pumping water into storm-shelter walls and running magnetic deflectors consumes massive battery power during solar flares.</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with tabs[2]:
-        st.markdown("""
-        <div class='pro-card'>
-        <h3>🌱 Canadian Space Agency (CSA) Hydroponic Greenhouse</h3>
-        <p><b>The Real Space Agency Constraint:</b> Resupplying food from Earth costs tens of thousands of dollars per kilogram. Using principles from the <b>CSA Toolkit for Food Production on the Moon</b>, astronauts grow dwarf wheat, lettuce, radishes, and potatoes without soil using nutrient-rich water and purple LED wavelengths.</p>
-        <ul>
-            <li><b>Bonus Benefit:</b> Living plants naturally absorb exhaled Carbon Dioxide (CO₂) and release fresh Oxygen (O₂) through photosynthesis!</li>
-            <li><b>The Catch:</b> High-intensity LED grow lamps are one of the largest power drains in the entire lunar habitat.</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with tabs[3]:
-        st.markdown("""
-        <div class='pro-card'>
-        <h3>📡 Earth-Moon Laser & Radio Communications</h3>
-        <p><b>The Real Physics Constraint:</b> The Moon is roughly <b>384,400 km</b> from Earth. Radio waves travel at the speed of light (300,000 km/s), creating a <b>1.3-second one-way delay (2.6 seconds round-trip)</b>.</p>
-        <ul>
-            <li><b>Solar Blackouts:</b> When NASA DONKI detects an X-class Solar Flare, X-rays ionize communication bands and cause temporary signal drops, forcing junior astronauts to rely on autonomous onboard systems.</li>
-        </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-
 # ==========================================
-# PAGE 3: LIVE NASA TELEMETRY & RADLAB
+# PAGE 3: REAL NASA DATA & SCIENCE SOURCES
 # ==========================================
-elif page == "📡 3. Live NASA Telemetry & RadLab":
-    st.title("📡 Live NASA Open Data & Traceability Hub")
-    st.write("Judges and students can verify the authentic NASA datasets powering this simulator right here.")
+elif nav_page == "🛰️ 3. Real NASA Data & Science":
+    st.title("🛰️ Real NASA & Space Agency Science Inside This Game")
+    st.write("Every rule in **Lunar Hero** comes from real space datasets provided for the 2026 NASA Space Apps Challenge:")
 
-    col_a, col_b = st.columns(2)
+    st.markdown("""
+    <div class='game-banner'>
+    <h4>☀️ 1. NASA DONKI (Space Weather Database)</h4>
+    <p>When the Sun turns red and shoots yellow lightning in our game, that represents a real <b>Solar Flare (FLR)</b> or <b>Solar Energetic Particle (SEP)</b> storm tracked by NASA's Moon-to-Mars Space Weather Analysis Office (<code>https://api.nasa.gov/DONKI/FLR</code>).</p>
+    </div>
 
-    with col_a:
-        st.subheader("☀️ NASA CCMC DONKI Space Weather Feed")
-        donki_data = fetch_live_nasa_donki()
-        badge_color = "#22c55e" if donki_data["is_live"] else "#f59e0b"
-        st.markdown(
-            f"""
-            <div class='pro-card'>
-            <span style='background:{badge_color};color:#000;padding:4px 10px;border-radius:6px;font-weight:bold;font-size:0.8rem;'>
-                {donki_data['source_label']}
-            </span>
-            <h4 style='margin-top:12px;'>Latest Event ID: {donki_data['flrID']}</h4>
-            <p><b>X-Ray Flare Class:</b> {donki_data['classType']} | <b>Logged Time:</b> {donki_data['beginTime']}</p>
-            <p>{donki_data['note']}</p>
-            <p style='font-size:0.8rem;color:#94a3b8;'>Endpoint: <code>https://api.nasa.gov/DONKI/FLR</code> (Moon-to-Mars Space Weather Analysis Office)</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    <div class='game-banner'>
+    <h4>🧬 2. NASA OSDR (Open Science Data Repository) & RadLab</h4>
+    <p>Why does your Astronaut Health drop if you skip food or absorb radiation? Real NASA space biology missions—including <b>OSD-137 (Rodent Research 3)</b>, <b>OSD-1018 (Space Radiation & Behavior)</b>, and <b>OSD-767 (Spaceflight Tomato Crop Stress)</b>—prove that radiation and low nutrition weaken muscles, bones, and plants in space!</p>
+    </div>
 
-        st.subheader("🧬 NASA OSDR (Open Science Data Repository)")
-        st.markdown(
-            """
-            <div class='pro-card'>
-            <h4>Verified Space Biology Studies Used in Gameplay:</h4>
-            <ul>
-                <li><b>Study Accession OSD-137 (Rodent Research 3 / SpaceX-8):</b> Investigated muscle atrophy, bone loss, and liver lipid dysregulation in spaceflight (<i>DOI: 10.26030/9k6w-4c28</i>). Powers our Crew Health degradation mechanics when nutrition or shielding drops.</li>
-                <li><b>Study Accession OSD-87 (STS-135 GeneLab):</b> Spaceflight thymus and immune response microarray data.</li>
-                <li><b>Vehicle Telemetry (SpaceX Dragon Environmental Logs):</b> Used to calibrate cabin partial pressure of O₂, CO₂ (ppm), and temperature thresholds.</li>
-            </ul>
-            <p style='font-size:0.8rem;color:#94a3b8;'>Endpoint: <code>https://osdr.nasa.gov/osdr/data/osd/meta/137</code> & <code>https://visualization.osdr.nasa.gov/radlab/api</code></p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    <div class='game-banner'>
+    <h4>🌱 3. Canadian Space Agency (CSA) Lunar Food Toolkit</h4>
+    <p>Our greenhouse station is modeled on the <b>CSA Toolkit for Food Production on the Moon</b>. Growing dwarf tomatoes and lettuce with hydroponic LED lights gives astronauts fresh food and extra oxygen, but uses precious solar power.</p>
+    </div>
 
-    with col_b:
-        st.subheader("🌌 NASA Astronomy Picture / Lunar Imagery Feed")
-        apod = fetch_nasa_apod_2026()
-        st.image(apod["img"], caption=apod["title"], use_container_width=True)
-        st.markdown(
-            f"<div class='pro-card'><p style='font-size:0.9rem;'>{apod['explanation'][:380]}...</p>"
-            f"<p style='font-size:0.8rem;color:#94a3b8;'>Endpoint: <code>https://science.nasa.gov/wp-json/wp/v2/apod-basic</code></p></div>",
-            unsafe_allow_html=True
-        )
+    <div class='game-banner'>
+    <h4>🌑 4. NASA Moon Trek & Shackleton Crater (Lunar South Pole)</h4>
+    <p>Our outpost is located at the rim of <b>Shackleton Crater</b> on the Moon's South Pole, mapped by NASA's Lunar Reconnaissance Orbiter (LRO). High crater rims get almost constant sunlight for solar panels, while deep craters hold frozen water ice for oxygen!</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-
-# ==========================================
-# PAGE 4: JUNIOR ASTRONAUT ACADEMY (QUIZ)
-# ==========================================
-elif page == "🎓 4. Junior Astronaut Academy":
-    st.title("🎓 Junior Astronaut Academy & Space Dictionary")
-    st.write("Learn the space terminology used by real NASA mission planners and test your knowledge!")
-
-    with st.expander("📖 **1. Kid-Friendly Space Jargon Dictionary (Click to Open)**", expanded=True):
-        st.markdown("""
-        * **Sol / Lunar Day:** A day on another planetary body. Calling each turn a "Sol" helps young commanders track daily resource budgets!
-        * **Radiation Dose (mSv - Millisievert):** The unit scientists use in **NASA RadLab** to measure how much space radiation enters an astronaut's body.
-        * **CME (Coronal Mass Ejection):** A giant cloud of magnetized solar plasma blasted out by the Sun, tracked by **NASA DONKI**.
-        * **ECLSS (Environmental Control and Life Support System):** The machines that recycle wastewater, scrub toxic carbon dioxide ($CO_2$), and generate breathable oxygen ($O_2$).
-        * **Hydroponics:** Growing plants in nutrient-enriched water without soil, studied by the **Canadian Space Agency (CSA)**.
-        """)
-
-    st.markdown("---")
-    st.subheader("🧠 Commander Certification Quiz")
-    
-    q1 = st.radio(
-        "1. If NASA DONKI warns of a Solar Energetic Particle (SEP) storm, what happens when you raise your Radiation Shielding to 90%?",
-        [
-            "Nothing changes—shielding is completely free!",
-            "It protects Crew Health from radiation, but drains heavy battery power away from food and science.",
-            "It makes plants grow faster in the greenhouse."
-        ]
-    )
-    
-    q2 = st.radio(
-        "2. Which NASA repository studies how microgravity and radiation affect living muscles, bones, and livers (like Study OSD-137)?",
-        [
-            "NASA Open Science Data Repository (OSDR)",
-            "Asteroid NeoWs Tracker",
-            "Landsat Earth Camera"
-        ]
-    )
-
-    if st.button("✅ Check My Commander Answers"):
-        score = 0
-        if "drains heavy battery power" in q1:
-            score += 1
-        if "Open Science Data Repository" in q2:
-            score += 1
-            
-        if score == 2:
-            st.success("🌟 **100% Correct! You are officially certified as an Artemis Junior Lunar Commander!**")
-            st.balloons()
-        else:
-            st.warning(f"You scored {score}/2! Review the explanation boxes above and try again.")
-
-# ==========================================
-# MANDATORY NASA SPACE APPS SI DISCLOSURE FOOTER
-# ==========================================
 st.markdown("---")
-st.caption(
-    "🤖 **NASA Space Apps Challenge Transparency & SI Disclosure:** Code architecture, UI styling, and NASA dataset integration "
-    "were accelerated with the assistance of Gemini (Super Intelligence / LLM tool). All space weather parameters, biological references, "
-    "and educational trade-offs are grounded in open data from NASA DONKI, NASA OSDR (OSD-137/OSD-87), NASA RadLab, NASA Moon Trek, and the Canadian Space Agency (CSA)."
-)
+st.caption("🤖 **NASA Space Apps SI Disclosure:** Built with Python & Streamlit using Gemini to assist with SVG game rendering and NASA open data integration (NASA DONKI, NASA OSDR OSD-137/OSD-767/OSD-1018, NASA RadLab, and CSA Lunar Food Toolkit).")
