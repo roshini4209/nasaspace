@@ -1,462 +1,445 @@
 # ==============================================================================
-# AVENGERS LUNAR MART: ULTRA PRO-MAX ELITE EDITION (PART 1 OF 6: LINES 1-500)
+# AVENGERS LUNAR OUTPOST: COMPLETE UNIFIED SINGLE-FILE EDITION (app.py)
 # ==============================================================================
-# Architect: Junior Astronaut Mission Control Team
-# Datasets: NASA CCMC DONKI API, NASA OSDR (OSD-895, OSD-767, OSD-137),
-#           NASA RadLab BLEO, Canadian Space Agency (CSA) Lunar Food Toolkit
-# ==============================================================================
-
-import re
-import math
-import time
-import json
-import random
-import datetime
-import requests
-import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
+import pandas as pd
+import requests
 
-# ------------------------------------------------------------------------------
-# 1. APPLICATION PAGE CONFIGURATION
-# ------------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Avengers Lunar Mart: NASA Space Arcade",
+    page_title="Avengers Lunar Outpost: Space Arcade",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-def render_arcade_viewport(html_code: str, height: int = 840):
-    """Renders the custom HTML5 Canvas, SVG World, and WebAudio Engine."""
-    components.html(html_code, height=height, scrolling=False)
+def render_game_frame(html_str: str, height: int = 840):
+    """Renders the HTML5/JS/SVG Arcade Engine safely across Streamlit versions."""
+    components.html(html_str, height=height, scrolling=False)
 
-# ------------------------------------------------------------------------------
-# 2. ULTRA PRO-MAX ELITE CSS THEME (100% HIGH CONTRAST & ARCADE STYLING)
-# ------------------------------------------------------------------------------
+# ==========================================
+# 1. GLOBAL STYLING
+# ==========================================
 st.markdown("""
 <style>
-/* Global App Background & High-Contrast Typography */
 .stApp {
-    background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0f172a 55%, #020617 100%) !important;
+    background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 60%, #020617 100%) !important;
     color: #ffffff !important;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
 }
-
 .block-container {
-    padding-top: 1.0rem !important;
-    padding-bottom: 1.0rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 0.5rem !important;
     max-width: 98% !important;
 }
-
-/* Force High-Contrast White/Cyan Text Everywhere */
-h1, h2, h3, h4, h5, h6, p, span, div, label, li {
+h1, h2, h3, h4, h5, h6, p, span, div, label {
     color: #f8fafc !important;
 }
-
-/* Sidebar Styling */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #090d16 0%, #1e1b4b 100%) !important;
-    border-right: 3px solid #eab308 !important;
+    background-color: #090d16 !important;
+    border-right: 2px solid #eab308 !important;
 }
-
-/* Arcade Buttons */
-.stButton > button {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 40%, #2563eb 100%) !important;
+.stButton>button {
+    background: linear-gradient(90deg, #ef4444 0%, #2563eb 100%) !important;
     color: #ffffff !important;
     border: 2px solid #fde047 !important;
     border-radius: 14px !important;
-    padding: 10px 18px !important;
-    font-size: 1.02rem !important;
+    padding: 10px 16px !important;
+    font-size: 1rem !important;
     font-weight: 900 !important;
-    letter-spacing: 0.5px !important;
-    width: 100% !important;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.65) !important;
-    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    width: 100%;
+    transition: 0.2s !important;
 }
-
-.stButton > button:hover {
+.stButton>button:hover {
     border-color: #38bdf8 !important;
-    box-shadow: 0 0 22px rgba(253, 224, 71, 0.9) !important;
-    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow: 0 0 18px rgba(253, 224, 71, 0.85) !important;
+    transform: translateY(-2px);
 }
-
-.stButton > button:disabled {
-    background: #334155 !important;
-    border-color: #64748b !important;
-    color: #94a3b8 !important;
-    opacity: 0.65 !important;
-}
-
-/* Elite Avengers Glassmorphism Cards */
 .avengers-card {
-    background: rgba(15, 23, 42, 0.94);
+    background: rgba(15, 23, 42, 0.95);
     border: 3px solid #eab308;
-    border-radius: 22px;
-    padding: 22px;
-    margin-bottom: 16px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8);
-}
-
-.neon-card {
-    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-    border: 2px solid #38bdf8;
-    border-radius: 18px;
-    padding: 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2);
-}
-
-.inst-card {
-    background: linear-gradient(145deg, #1e1b4b 0%, #0f172a 100%);
-    border: 3px solid #38bdf8;
     border-radius: 20px;
     padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.75);
+}
+.inst-card {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    border: 3px solid #38bdf8;
+    border-radius: 18px;
+    padding: 18px;
     height: 100%;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
-}
-
-.badge-gold {
-    display: inline-block;
-    background: linear-gradient(90deg, #eab308, #f59e0b);
-    color: #020617 !important;
-    font-weight: 900;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    margin-right: 6px;
-}
-
-.badge-cyan {
-    display: inline-block;
-    background: rgba(56, 189, 248, 0.2);
-    border: 1px solid #38bdf8;
-    color: #38bdf8 !important;
-    font-weight: 800;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-}
-
-/* Input Fields High Contrast */
-div[data-baseweb="input"] > div {
-    background-color: #0f172a !important;
-    border: 2px solid #38bdf8 !important;
-    border-radius: 12px !important;
-    color: #ffffff !important;
-}
-input {
-    color: #fde047 !important;
-    font-weight: 800 !important;
-    font-size: 1.1rem !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------------------------------------------------------------------
-# 3. LIVE NASA CCMC DONKI API & CURATED REAL SCIENTIFIC ARCHIVES
-# ------------------------------------------------------------------------------
-NASA_CURATED_FLARE_ARCHIVE = [
-    {
-        "flrID": "2026-10-29T14:20:00-FLR-001",
-        "classType": "X1.8",
-        "beginTime": "2026-10-29T14:02Z",
-        "peakTime": "2026-10-29T14:20Z",
-        "endTime": "2026-10-29T14:47Z",
-        "sourceLocation": "S16W42",
-        "activeRegionNum": 13874,
-        "protonFlux_pfu": 420.5,
-        "unshieldedDose_mSv": 4.85,
-        "shieldedDose_mSv": 0.38,
-        "note": "Major X-class solar particle eruption detected toward Earth-Moon Lagrange corridor."
-    },
-    {
-        "flrID": "2026-09-14T08:15:00-FLR-002",
-        "classType": "M5.6",
-        "beginTime": "2026-09-14T07:55Z",
-        "peakTime": "2026-09-14T08:15Z",
-        "endTime": "2026-09-14T08:40Z",
-        "sourceLocation": "N12E28",
-        "activeRegionNum": 13822,
-        "protonFlux_pfu": 165.0,
-        "unshieldedDose_mSv": 2.15,
-        "shieldedDose_mSv": 0.22,
-        "note": "Medium-intensity solar flare triggering elevated energetic proton flux at Lunar South Pole."
-    },
-    {
-        "flrID": "2026-07-21T19:45:00-FLR-003",
-        "classType": "X2.4",
-        "beginTime": "2026-07-21T19:12Z",
-        "peakTime": "2026-07-21T19:45Z",
-        "endTime": "2026-07-21T20:18Z",
-        "sourceLocation": "S21W10",
-        "activeRegionNum": 13759,
-        "protonFlux_pfu": 610.0,
-        "unshieldedDose_mSv": 6.40,
-        "shieldedDose_mSv": 0.45,
-        "note": "Severe X2.4 flare requiring immediate habitat water-wall radiation shielding."
-    }
-]
-
-NASA_OSDR_BIOLOGY_DATASETS = {
-    "OSD-895": {
-        "title": "EDEN ISS Antarctic Greenhouse & Lunar Hydroponic Analog",
-        "agency": "NASA OSDR / DLR",
-        "finding": "Closed-loop hydroponic chambers produce fresh crop yields while recycling transpired water and generating supplemental crew oxygen via photosynthesis.",
-        "power_draw_kw": 2.4,
-        "o2_generation_g_per_sol": 185.0
-    },
-    "OSD-767": {
-        "title": "Spaceflight Microgravity & Lunar Regolith Simulant Crop Growth (Red Robin Tomatoes)",
-        "agency": "NASA Open Science Data Repository",
-        "finding": "Dwarf tomato cultivars and leafy greens under LED photosynthetically active radiation (PAR) spectrum boost crew caloric intake and psychological morale.",
-        "caloric_yield_kcal": 620,
-        "water_efficiency_pct": 94.2
-    },
-    "OSD-137": {
-        "title": "Ionizing Space Radiation & Cellular DNA Repair Response",
-        "agency": "NASA GeneLab / OSDR",
-        "finding": "Cumulative Galactic Cosmic Rays (GCR) and Solar Particle Events (SPE) above 0.42 mSv/Sol increase oxidative stress unless mitigated by polyethylene/water shielding.",
-        "baseline_gcr_msv_sol": 0.42,
-        "storm_spike_msv_sol": 4.85
-    },
-    "CSA-FOOD-2026": {
-        "title": "Canadian Space Agency Lunar Deep Space Food Production Toolkit",
-        "agency": "Canadian Space Agency (CSA)",
-        "finding": "Combining fast-cycle radishes (21 days), lettuce (28 days), dwarf tomatoes (55 days), and sweet potatoes sustains a 4-person Artemis crew.",
-        "crops": ["Red Robin Tomato 🍅", "Outredgeous Lettuce 🥬", "Cherry Belle Radish 🥕", "Lunar Sweet Potato 🥔"]
-    }
-}
-
+# ==========================================
+# 2. REAL NASA DONKI API
+# ==========================================
 @st.cache_data(ttl=600)
-def fetch_live_nasa_donki_telemetry():
-    """Queries live NASA DONKI Solar Flare API with graceful fallback to verified NASA archive."""
+def get_nasa_donki_flare():
+    """Fetches real Solar Flare notifications from NASA DONKI API or uses verified NASA archive."""
     try:
-        api_url = "https://api.nasa.gov/DONKI/FLR?api_key=DEMO_KEY"
-        response = requests.get(api_url, timeout=3.5)
-        if response.status_code == 200:
-            data = response.json()
-            if isinstance(data, list) and len(data) > 0:
-                latest = data[-1]
-                return {
-                    "id": latest.get("flrID", "2026-FLR-LIVE"),
-                    "class": latest.get("classType", "M3.2"),
-                    "peak": latest.get("peakTime", "2026-LIVE-TELEMETRY"),
-                    "region": str(latest.get("activeRegionNum", "AR13890")),
-                    "source": "LIVE NASA CCMC DONKI API",
-                    "is_live": True
-                }
+        url = "https://api.nasa.gov/DONKI/FLR?api_key=DEMO_KEY"
+        r = requests.get(url, timeout=3)
+        if r.status_code == 200 and len(r.json()) > 0:
+            latest = r.json()[-1]
+            return {
+                "id": latest.get("flrID", "2026-FLR-LIVE"),
+                "class": latest.get("classType", "M2.4"),
+                "source": "LIVE NASA DONKI API"
+            }
     except Exception:
         pass
-    fallback = NASA_CURATED_FLARE_ARCHIVE[0]
     return {
-        "id": fallback["flrID"],
-        "class": fallback["classType"],
-        "peak": fallback["peakTime"],
-        "region": str(fallback["activeRegionNum"]),
-        "source": "VERIFIED NASA DONKI CURATED ARCHIVE",
-        "is_live": False
+        "id": "2026-10-29T14:20-FLR",
+        "class": "X1.8",
+        "source": "ARCHIVED NASA DONKI DATASET"
     }
 
-nasa_flare = fetch_live_nasa_donki_telemetry()
+nasa_flare = get_nasa_donki_flare()
 
-# ------------------------------------------------------------------------------
-# 4. PINTEREST DIRECT IMAGE RESOLVER (DISPLAYS ACTUAL MEME PICTURE IN GAME)
-# ------------------------------------------------------------------------------
-@st.cache_data(ttl=3600)
-def resolve_pinterest_image(pin_url: str, fallback_gif_url: str) -> str:
-    """
-    Follows your exact pin.it shortlinks on the backend and extracts the direct
-    i.pinimg.com image URL (og:image) so the real meme picture pops up inside the game!
-    """
-    try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-        }
-        resp = requests.get(pin_url, headers=headers, timeout=4.0, allow_redirects=True)
-        if resp.status_code == 200:
-            og_match = re.search(r'property="og:image"\s+content="([^"]+)"', resp.text)
-            if not og_match:
-                og_match = re.search(r'content="([^"]+)"\s+property="og:image"', resp.text)
-            if not og_match:
-                og_match = re.search(r'(https://i\.pinimg\.com/originals/[^"\'\s>]+)', resp.text)
-            if not og_match:
-                og_match = re.search(r'(https://i\.pinimg\.com/736x/[^"\'\s>]+)', resp.text)
-            if og_match:
-                return og_match.group(1)
-    except Exception:
-        pass
-    return fallback_gif_url
-
-# Your Exact 5 Meme Triggers Mapped to Direct Image URLs:
-MEME_URLS = {
-    # 1. When Sunflare Alert occurs and until Shield is ON:
-    "FLARE": resolve_pinterest_image(
-        "https://pin.it/320BCxcPn",
-        "https://media.giphy.com/media/HUkOv6BNWc1HO/giphy.gif"
-    ),
-    # 2. When Shield is turned ON (shows for 2 seconds):
-    "SHIELD": resolve_pinterest_image(
-        "https://pin.it/24dl7qhQI",
-        "https://media.giphy.com/media/qadvd1vBaZBBu/giphy.gif"
-    ),
-    # 3. When the Game is Won:
-    "WIN": resolve_pinterest_image(
-        "https://pin.it/1MEqcIZWV",
-        "https://media.giphy.com/media/ckeHl52mNtoq87veET/giphy.gif"
-    ),
-    # 4. When Plants are ready to be cultivated from the field until cultivated:
-    "PLANTS": resolve_pinterest_image(
-        "https://pin.it/4fXQCGxrB",
-        "https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"
-    ),
-    # 5. When Solar Panel is dusty:
-    "DUST": resolve_pinterest_image(
-        "https://pin.it/1MJRej5pj",
-        "https://media.giphy.com/media/NV4cSrRYXXwfUcYnua/giphy.gif"
-    )
-}
-
-# ------------------------------------------------------------------------------
-# 5. AVENGERS HERO ROSTER (CLEAN CARDS, FUNKO/ANIME SVG, UNIQUE PERKS)
-# ------------------------------------------------------------------------------
+# ==========================================
+# 3. AVENGERS ROSTER & PERKS
+# ==========================================
 HEROES = {
     "CAPTAIN_AMERICA": {
         "name": "Captain America",
-        "title": "First Avenger • Tactical Outpost Leader",
+        "title": "First Avenger & Outpost Leader",
         "unlock_wins": 0,
         "unlock_coins": 0,
         "perk_code": "CAP",
-        "perk_desc": "🛡️ Vibranium Shield: Radiation Shield drains 50% less Battery Power!",
-        "bio": "Unlocked from the start! Steve Rogers halves radiation dome power drain during NASA DONKI solar storms.",
+        "perk_desc": "🛡️ Vibranium Shield: Shield uses 50% less Power!",
+        "bio": "Unlocked First! Keeps the lunar base safe and halves shield power drain.",
         "suit_color": "#2563eb",
         "accent": "#ef4444",
         "eyes": "#38bdf8",
-        "speed_mult": 1.0,
-        "head_svg": """
-            <path d='M 24 50 A 36 36 0 0 1 96 50 Z' fill='#1d4ed8' stroke='#ffffff' stroke-width='2.5'/>
-            <text x='60' y='39' text-anchor='middle' fill='#ffffff' font-size='19' font-weight='900'>A</text>
-            <path d='M 22 44 L 14 36 L 24 38 Z' fill='#ffffff'/>
-            <path d='M 98 44 L 106 36 L 96 38 Z' fill='#ffffff'/>
-        """
+        "head_svg": "<path d='M 24 50 A 36 36 0 0 1 96 50 Z' fill='#1d4ed8' stroke='#ffffff' stroke-width='2'/><text x='60' y='38' text-anchor='middle' fill='#ffffff' font-size='18' font-weight='900'>A</text>"
     },
     "NATASHA": {
         "name": "Natasha Romanoff",
-        "title": "Black Widow • Stealth & O₂ Conservationist",
+        "title": "Black Widow • Stealth Specialist",
         "unlock_wins": 0,
         "unlock_coins": 0,
         "perk_code": "WIDOW",
-        "perk_desc": "🕷️ Widow Agility: Uses 50% less Oxygen & starts with +20 bonus SuperCoins!",
-        "bio": "Unlocked from the start! Master spy who breathes efficiently during EVA moonwalks and starts with extra coins.",
+        "perk_desc": "🕷️ Widow Agility: Uses 50% less O₂ & starts with +20 Coins!",
+        "bio": "Unlocked First! High-speed spy who uses 50% less Oxygen.",
         "suit_color": "#1e293b",
         "accent": "#ef4444",
         "eyes": "#22c55e",
-        "speed_mult": 1.25,
-        "head_svg": """
-            <path d='M 24 58 Q 26 14 60 16 Q 94 14 96 58 L 88 34 Q 60 22 32 34 Z' fill='#b91c1c'/>
-            <circle cx='24' cy='52' r='9' fill='#b91c1c'/>
-            <circle cx='96' cy='52' r='9' fill='#b91c1c'/>
-        """
+        "head_svg": "<path d='M 24 58 Q 26 14 60 16 Q 94 14 96 58 L 88 34 Q 60 22 32 34 Z' fill='#b91c1c'/><circle cx='24' cy='52' r='9' fill='#b91c1c'/><circle cx='96' cy='52' r='9' fill='#b91c1c'/>"
     },
     "IRON_MAN": {
         "name": "Iron Man",
-        "title": "Tony Stark • Arc Reactor Chief Engineer",
+        "title": "Tony Stark • Arc Reactor Genius",
         "unlock_wins": 1,
         "unlock_coins": 60,
         "perk_code": "IRON",
-        "perk_desc": "⚡ Mk-85 Arc Reactor: Doubles Solar Array charging speed (+2x ⚡ per tick)!",
-        "bio": "Requires 1 Trophy Win & 60 🪙! Supercharges the Shackleton Crater battery grid with Arc Reactor tech.",
+        "perk_desc": "⚡ Arc Reactor: Doubles Solar Charging speed (+2x ⚡)!",
+        "bio": "Requires 1 Win & 60 🪙! Powers the Moon base with his Arc Reactor.",
         "suit_color": "#dc2626",
         "accent": "#facc15",
         "eyes": "#38bdf8",
-        "speed_mult": 1.15,
-        "head_svg": """
-            <rect x='30' y='18' width='60' height='54' rx='18' fill='#b91c1c' stroke='#facc15' stroke-width='3'/>
-            <polygon points='38,22 82,22 76,58 44,58' fill='#facc15'/>
-            <rect x='40' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/>
-            <rect x='66' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/>
-        """
+        "head_svg": "<rect x='30' y='18' width='60' height='54' rx='18' fill='#b91c1c' stroke='#facc15' stroke-width='3'/><polygon points='38,22 82,22 76,58 44,58' fill='#facc15'/><rect x='40' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/><rect x='66' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/>"
     },
     "THOR": {
         "name": "Thor Odinson",
-        "title": "God of Thunder • Cosmic Stormbreaker",
+        "title": "God of Thunder",
         "unlock_wins": 1,
         "unlock_coins": 60,
         "perk_code": "THOR",
-        "perk_desc": "🔨 Asgardian Armor: Takes 60% less Crew Health damage during Solar Flares!",
-        "bio": "Requires 1 Trophy Win & 60 🪙! Built to withstand stellar plasma and extreme space weather.",
+        "perk_desc": "🔨 Stormbreaker: Takes 60% less Solar Flare damage!",
+        "bio": "Requires 1 Win & 60 🪙! Shrugs off cosmic radiation storms.",
         "suit_color": "#475569",
         "accent": "#ef4444",
         "eyes": "#38bdf8",
-        "speed_mult": 1.1,
-        "head_svg": """
-            <path d='M 24 58 Q 28 14 60 16 Q 92 14 96 58 L 86 34 Q 60 24 34 34 Z' fill='#facc15'/>
-            <path d='M 20 42 L 10 22 L 26 32 Z' fill='#cbd5e1'/>
-            <path d='M 100 42 L 110 22 L 94 32 Z' fill='#cbd5e1'/>
-        """
+        "head_svg": "<path d='M 24 58 Q 28 14 60 16 Q 92 14 96 58 L 86 34 Q 60 24 34 34 Z' fill='#facc15'/><path d='M 20 42 L 10 22 L 26 32 Z' fill='#cbd5e1'/><path d='M 100 42 L 110 22 L 94 32 Z' fill='#cbd5e1'/>"
     },
     "DR_STRANGE": {
         "name": "Dr. Strange",
-        "title": "Master of the Mystic Time Stone",
+        "title": "Master of the Mystic Arts",
         "unlock_wins": 2,
         "unlock_coins": 80,
         "perk_code": "STRANGE",
-        "perk_desc": "⏳ Eye of Agamotto: 1.0s Earth Comms delay & discounted radio calls (10 🪙)!",
-        "bio": "Requires 2 Trophy Wins & 80 🪙! Bends space-time so NASA Mission Control replies almost instantly.",
+        "perk_desc": "⏳ Time Stone: 1-second Earth Comms & cheaper calls (10 🪙)!",
+        "bio": "Requires 2 Wins & 80 🪙! Bends time for fast NASA Earth support.",
         "suit_color": "#1e3a8a",
         "accent": "#dc2626",
         "eyes": "#4ade80",
-        "speed_mult": 1.1,
-        "head_svg": """
-            <path d='M 28 46 Q 30 16 60 16 Q 90 16 92 46 L 84 32 Q 60 22 36 32 Z' fill='#1e293b'/>
-            <path d='M 26 42 L 34 42' stroke='#e2e8f0' stroke-width='4'/>
-            <path d='M 86 42 L 94 42' stroke='#e2e8f0' stroke-width='4'/>
-        """
+        "head_svg": "<path d='M 28 46 Q 30 16 60 16 Q 90 16 92 46 L 84 32 Q 60 22 36 32 Z' fill='#1e293b'/><path d='M 26 42 L 34 42' stroke='#e2e8f0' stroke-width='4'/><path d='M 86 42 L 94 42' stroke='#e2e8f0' stroke-width='4'/>"
     },
     "WANDA": {
         "name": "Wanda Maximoff",
-        "title": "Scarlet Witch • Chaos Hydroponic Botanist",
+        "title": "Scarlet Witch • Chaos Botanist",
         "unlock_wins": 2,
         "unlock_coins": 80,
         "perk_code": "WANDA",
-        "perk_desc": "🔮 Chaos Magic: CSA Greenhouse crops grow 2x faster & yield +5% bonus O₂!",
-        "bio": "Requires 2 Trophy Wins & 80 🪙! Accelerates NASA OSDR space tomatoes, lettuce, radishes, and potatoes.",
+        "perk_desc": "🔮 Chaos Magic: Picking crops adds +5% bonus Oxygen!",
+        "bio": "Requires 2 Wins & 80 🪙! Boosts greenhouse oxygen production.",
         "suit_color": "#991b1b",
         "accent": "#f43f5e",
         "eyes": "#ef4444",
-        "speed_mult": 1.15,
-        "head_svg": """
-            <path d='M 22 60 Q 26 16 60 16 Q 94 16 98 60 L 86 34 Q 60 24 34 34 Z' fill='#7c2d12'/>
-            <polygon points='42,38 50,18 60,30 70,18 78,38' fill='#ef4444' stroke='#fca5a5' stroke-width='1.5'/>
-        """
+        "head_svg": "<path d='M 22 60 Q 26 16 60 16 Q 94 16 98 60 L 86 34 Q 60 24 34 34 Z' fill='#7c2d12'/><polygon points='42,38 50,18 60,30 70,18 78,38' fill='#ef4444' stroke='#fca5a5' stroke-width='1.5'/>"
     },
     "LOKI": {
         "name": "Loki",
-        "title": "God of Mischief • Funko Pop Crown Edition",
+        "title": "God of Mischief (Funko Style)",
         "unlock_wins": 2,
         "unlock_coins": 90,
         "perk_code": "LOKI",
-        "perk_desc": "🐍 Glorious Purpose: Doubles all SuperCoin (🪙) pickups & panel-cleaning rewards!",
-        "bio": "Requires 2 Trophy Wins & 90 🪙! Iconic green-and-gold horned crown; earns 2x SuperCoins everywhere!",
+        "perk_desc": "🐍 Glorious Purpose: Doubles all SuperCoin (🪙) pickups!",
+        "bio": "Requires 2 Wins & 90 🪙! Gold horned crown; earns 2x SuperCoins!",
         "suit_color": "#15803d",
         "accent": "#eab308",
         "eyes": "#22c55e",
-        "speed_mult": 1.2,
-        "head_svg": """
-            <path d='M 22 58 Q 24 18 60 18 Q 96 18 98 58 Z' fill='#0f172a'/>
-            <path d='M 34 40 Q 60 50 86 40 L 82 28 Q 60 38 38 28 Z' fill='#eab308' stroke='#fef08a' stroke-width='1.5'/>
-            <path d='M 40 32 Q 22 6 44 4 Q 34 18 46 30 Z' fill='#eab308'/>
-            <path d='M 80 32 Q 98 6 76 4 Q 86 18 74 30 Z' fill='#eab308'/>
-        """
+        "head_svg": "<path d='M 22 58 Q 24 18 60 18 Q 96 18 98 58 Z' fill='#0f172a'/><path d='M 34 40 Q 60 50 86 40 L 82 28 Q 60 38 38 28 Z' fill='#eab308' stroke='#fef08a' stroke-width='1.5'/><path d='M 40 32 Q 22 6 44 4 Q 34 18 46 30 Z' fill='#eab308'/><path d='M 80 32 Q 98 6 76 4 Q 86 18 74 30 Z' fill='#eab308'/>"
     }
 }
-# ================= END OF PART 1 (PASTE PART 2 DIRECTLY BELOW) ================
-# ==============================================================================
-# AVENGERS LUNAR OUTPOST: GEN-Z EDITION — PART 2 OF 2
-# (Paste directly below the last line of Part 1 in app.py!)
-# ==============================================================================
 
+# ==========================================
+# 4. SAFE SESSION STATE INITIALIZATION
+# ==========================================
+DEFAULT_STATE = {
+    "av_stage": "STEP_1_HERO_SELECT",
+    "age_str": "10",
+    "valid_age": 10,
+    "age_tier": "9-12",
+    "hero_key": "CAPTAIN_AMERICA",
+    "games_won": 0,
+    "bank_coins": 60,
+    "unlocked_heroes": ["CAPTAIN_AMERICA", "NATASHA"],
+    "unlock_msg": "",
+    "unlock_ok": False,
+}
+for k, v in DEFAULT_STATE.items():
+    if k not in st.session_state:
+        st.session_state[k] = v
+
+if st.session_state.hero_key not in HEROES:
+    st.session_state.hero_key = "CAPTAIN_AMERICA"
+
+hero_cfg = HEROES[st.session_state.hero_key]
+
+# ==========================================
+# 5. SIDEBAR NAVIGATION
+# ==========================================
+with st.sidebar:
+    st.markdown("## 🛡️ **AVENGERS TELEMETRY HUB**")
+    st.markdown(f"**Hero:** `{hero_cfg['name']}`")
+    st.markdown(f"**Trophies:** `🏆 {st.session_state.games_won}` | **Vault Coins:** `🪙 {st.session_state.bank_coins}`")
+    st.markdown("---")
+    side_page = st.radio(
+        "📂 **Open Module:**",
+        [
+            "🎮 1. Active Full-Screen Game",
+            "📈 2. Engineering Graphs & Math Lab",
+            "🛰️ 3. Real NASA Data Verification"
+        ]
+    )
+    st.markdown("---")
+    if st.button("🏆 Bank Mission Victory (+1 Win & +60 🪙)"):
+        st.session_state.games_won += 1
+        st.session_state.bank_coins += 60
+        st.success("Added +1 Win & +60 🪙 to your Vault!")
+    if st.button("🛡️ Step 1: Switch Avenger / Age"):
+        st.session_state.av_stage = "STEP_1_HERO_SELECT"
+        st.rerun()
+    if st.button("📖 Step 2: How to Play"):
+        st.session_state.av_stage = "STEP_2_BRIEFING"
+        st.rerun()
+
+if side_page == "📈 2. Engineering Graphs & Math Lab":
+    st.title("📈 Lunar Outpost Engineering Graphs & Math")
+    st.info("👈 Select **'🎮 1. Active Full-Screen Game'** in the sidebar to return to the game!")
+    df_chart = pd.DataFrame({
+        "Sol": [1, 2, 3, 4, 5, 6, 7],
+        "Power (Smart Shield Timing)": [90, 86, 82, 79, 75, 72, 70],
+        "Power (Shield Left ON All Day)": [90, 55, 20, 0, 0, 0, 0],
+        "Crew Health Protected (%)": [100, 100, 100, 99, 98, 98, 97]
+    }).set_index("Sol")
+    st.line_chart(df_chart)
+    st.stop()
+
+elif side_page == "🛰️ 3. Real NASA Data Verification":
+    st.title("🛰️ Authentic NASA & Space Agency Datasets Used")
+    st.info("👈 Select **'🎮 1. Active Full-Screen Game'** in the sidebar to return to the game!")
+    st.markdown(f"""
+    <div class='avengers-card'>
+    <h4>☀️ 1. NASA DONKI Space Weather API</h4>
+    <p>Active Solar Flare ID: <code>{nasa_flare['id']}</code> (Class <code>{nasa_flare['class']}</code>) via <b>{nasa_flare['source']}</b>.</p>
+    <h4>🌱 2. NASA OSDR (OSD-895 & OSD-767) + CSA Lunar Food Toolkit</h4>
+    <p>4-Crop hydroponic farming (Tomatoes, Lettuce, Radishes, Potatoes) and oxygen loops follow real space greenhouse studies.</p>
+    <h4>☢️ 3. NASA RadLab BLEO & OSDR OSD-137</h4>
+    <p>Baseline lunar surface radiation (<code>0.42 mSv/Sol</code>) is calibrated from NASA RadLab.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    st.stop()
+
+# ==========================================
+# STEP 1: AGE INPUT & HERO SELECTOR
+# ==========================================
+if st.session_state.av_stage == "STEP_1_HERO_SELECT":
+    st.markdown("<h1 style='text-align:center;'>🛡️ AVENGERS LUNAR OUTPOST: PICK YOUR HERO</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;font-size:1.1rem;'>Type your age and pick your Avenger! (Captain America & Natasha start unlocked!)</p>", unsafe_allow_html=True)
+
+    col_age, col_vault = st.columns([1.8, 1.4])
+    age_is_valid = False
+
+    with col_age:
+        raw_age = st.text_input("🎂 How old are you?", value=st.session_state.age_str, placeholder="Enter your age (e.g. 10)")
+        st.session_state.age_str = raw_age
+        if raw_age.strip() == "":
+            st.warning("👉 Please type **your age** above to start!")
+        else:
+            try:
+                parsed_age = int(raw_age.strip())
+                if parsed_age <= 0 or parsed_age > 100:
+                    st.error("⚠️ Please enter a valid age between 1 and 100!")
+                else:
+                    age_is_valid = True
+                    st.session_state.valid_age = parsed_age
+                    st.session_state.age_tier = "7-9" if parsed_age <= 9 else "9-12"
+                    st.success("✅ Age verified! Click any unlocked Avenger below to play.")
+            except ValueError:
+                st.error("⚠️ Please type a number for your age!")
+
+    with col_vault:
+        st.markdown(f"""
+        <div style='background:#0f172a;border:2px solid #fde047;border-radius:14px;padding:10px;text-align:center;'>
+            <div style='font-size:13px;color:#fde047;font-weight:bold;'>🏆 TROPHIES: {st.session_state.games_won} | 🪙 VAULT COINS: {st.session_state.bank_coins}</div>
+            <div style='font-size:11px;color:#93c5fd;margin-top:3px;'>Earn Trophies & SuperCoins in the game to unlock locked Avengers!</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button("🔓 Check Vault & Unlock Next Avenger"):
+            locked_list = [k for k in HEROES if k not in st.session_state.unlocked_heroes]
+            if not locked_list:
+                st.session_state.unlock_ok = True
+                st.session_state.unlock_msg = "🎉 All Avengers are already unlocked!"
+            else:
+                next_k = locked_list[0]
+                nh = HEROES[next_k]
+                if st.session_state.games_won >= nh["unlock_wins"] and st.session_state.bank_coins >= nh["unlock_coins"]:
+                    st.session_state.bank_coins -= nh["unlock_coins"]
+                    st.session_state.unlocked_heroes.append(next_k)
+                    st.session_state.unlock_ok = True
+                    st.session_state.unlock_msg = f"🎉 Unlocked {nh['name']}!"
+                else:
+                    st.session_state.unlock_ok = False
+                    st.session_state.unlock_msg = (
+                        f"❌ To unlock {nh['name']}, you need {nh['unlock_wins']} Win(s) and {nh['unlock_coins']} 🪙 "
+                        f"(You have {st.session_state.games_won} Wins & {st.session_state.bank_coins} 🪙)."
+                    )
+
+    if st.session_state.unlock_msg:
+        if st.session_state.unlock_ok:
+            st.success(st.session_state.unlock_msg)
+        else:
+            st.error(st.session_state.unlock_msg)
+
+    st.subheader("🦸‍♂️ Avengers Roster (Character Abilities):")
+    hero_keys = list(HEROES.keys())
+    grid_cols = st.columns(4) + st.columns(3)
+
+    for idx, hk in enumerate(hero_keys):
+        h = HEROES[hk]
+        is_unlocked = hk in st.session_state.unlocked_heroes
+        border_c = h["accent"] if is_unlocked else "#475569"
+        lock_overlay = "" if is_unlocked else f"""
+            <rect x="0" y="0" width="120" height="145" rx="14" fill="rgba(2,6,23,0.82)"/>
+            <text x="60" y="65" text-anchor="middle" fill="#fde047" font-size="26">🔒</text>
+            <text x="60" y="90" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="bold">NEED {h['unlock_wins']} WIN &amp; {h['unlock_coins']} 🪙</text>
+        """
+        with grid_cols[idx]:
+            render_game_frame(f"""
+            <div style="background:linear-gradient(145deg,#0f172a,#1e1b4b);border:3px solid {border_c};border-radius:16px;padding:8px;text-align:center;font-family:sans-serif;color:white;">
+                <svg width="100" height="115" viewBox="0 0 120 145">
+                    <circle cx="60" cy="52" r="36" fill="#f8fafc" stroke="{h['suit_color']}" stroke-width="4"/>
+                    <circle cx="60" cy="53" r="22" fill="#ffedd5"/>
+                    <ellipse cx="51" cy="52" rx="4.5" ry="5.5" fill="{h['eyes']}"/><circle cx="49.5" cy="50" r="1.8" fill="#fff"/>
+                    <ellipse cx="69" cy="52" rx="4.5" ry="5.5" fill="{h['eyes']}"/><circle cx="67.5" cy="50" r="1.8" fill="#fff"/>
+                    <path d="M 54 62 Q 60 67 66 62" stroke="#0f172a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    {h['head_svg']}
+                    <rect x="32" y="88" width="56" height="46" rx="14" fill="{h['suit_color']}" stroke="{h['accent']}" stroke-width="3.5"/>
+                    <circle cx="60" cy="108" r="7" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5"/>
+                    {lock_overlay}
+                </svg>
+                <div style="font-weight:900;font-size:13.5px;color:#fde047;">{h['name']}</div>
+                <div style="font-size:10px;color:#93c5fd;margin:2px 0;">{h['title']}</div>
+                <div style="font-size:10px;color:#86efac;font-weight:bold;">{h['perk_desc']}</div>
+                <div style="font-size:9.5px;color:#cbd5e1;margin-top:2px;">{h['bio']}</div>
+            </div>
+            """, height=225)
+
+            if is_unlocked:
+                if st.button(f"🛡️ Play as {h['name']}", key=f"play_{hk}", disabled=not age_is_valid):
+                    st.session_state.hero_key = hk
+                    st.session_state.unlock_msg = ""
+                    st.session_state.av_stage = "STEP_2_BRIEFING"
+                    st.rerun()
+            else:
+                if st.button(f"🔒 Unlock {h['name']}", key=f"try_{hk}"):
+                    if st.session_state.games_won >= h["unlock_wins"] and st.session_state.bank_coins >= h["unlock_coins"]:
+                        st.session_state.bank_coins -= h["unlock_coins"]
+                        st.session_state.unlocked_heroes.append(hk)
+                        st.session_state.unlock_ok = True
+                        st.session_state.unlock_msg = f"🎉 Successfully unlocked {h['name']}!"
+                    else:
+                        st.session_state.unlock_ok = False
+                        st.session_state.unlock_msg = (
+                            f"❌ {h['name']} requires {h['unlock_wins']} Win(s) and {h['unlock_coins']} 🪙 SuperCoins!"
+                        )
+                    st.rerun()
+    st.stop()
+
+# ==========================================
+# STEP 2: BRIEFING & CONTROLS GUIDE
+# ==========================================
+if st.session_state.av_stage == "STEP_2_BRIEFING":
+    st.markdown(f"<h1 style='text-align:center;'>🎮 HOW TO PLAY: {hero_cfg['name'].upper()}</h1>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align:center;font-size:1.15rem;'>Special Hero Power: <b style='color:#fde047;'>{hero_cfg['perk_desc']}</b></p>", unsafe_allow_html=True)
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown("""
+        <div class='inst-card'>
+            <h2>🏃‍♂️ 1. Walk Between Stations!</h2>
+            <p style='font-size:1.05rem;'>Click the movement buttons to walk your Avenger between the <b>Solar Pad</b>, <b>Pantry Table</b>, and <b>CSA Greenhouse</b>!</p>
+            <p style='color:#fde047;font-weight:bold;'>Remember to close the Airlock Door when inside to keep your Oxygen sealed!</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        st.markdown("""
+        <div class='inst-card'>
+            <h2>🛡️ 2. Beat NASA DONKI Solar Storms!</h2>
+            <p style='font-size:1.05rem;'>Keep your <b>Shield OFF</b> during calm skies so your solar panels recharge battery power.</p>
+            <p style='color:#4ade80;font-weight:bold;'>When a NASA DONKI Solar Flare hits: Run Inside, Seal the Door, and Turn Shield ON!</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c3:
+        st.markdown("""
+        <div class='inst-card'>
+            <h2>📡 3. Farm Crops & Call Earth HQ</h2>
+            <p style='font-size:1.05rem;'>Pick 4 space veggies into your <b>Hand Basket (🧺)</b> and stock the <b>Pantry Table (🍽️)</b>!</p>
+            <p style='color:#38bdf8;font-weight:bold;'>Use the 5 Earth HQ Radio presets (with a real 2.6s light-travel delay) for emergency drops!</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    b1, b2, b3 = st.columns([1, 2, 1])
+    with b1:
+        if st.button("⬅️ Back to Hero Locker"):
+            st.session_state.av_stage = "STEP_1_HERO_SELECT"
+            st.rerun()
+    with b2:
+        if st.button(f"🚀 LAUNCH MISSION AS {hero_cfg['name'].upper()}! (🔊 SOUND ON)"):
+            st.session_state.av_stage = "STEP_3_PLAY"
+            st.rerun()
+    st.stop()
+
+# ==========================================
+# STEP 3: 2D AVENGERS LUNAR OUTPOST ARCADE
+# ==========================================
 if st.session_state.av_stage == "STEP_3_PLAY":
     perk = hero_cfg["perk_code"]
     hero_name = hero_cfg["name"]
@@ -529,11 +512,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
             display: none;
             z-index: 50;
             box-shadow: 0 8px 24px rgba(0,0,0,0.9);
-            animation: popIn 0.25s ease-out;
-        }}
-        @keyframes popIn {{
-            0% {{ transform: scale(0.6); opacity: 0; }}
-            100% {{ transform: scale(1); opacity: 1; }}
         }}
 
         #hero-sprite {{
@@ -584,7 +562,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
     </head>
     <body>
 
-    <!-- TOP HUD METERS -->
     <div class="hud">
         <div class="hud-box">
             <div class="hud-lbl">📅 Lunar Sol</div>
@@ -627,12 +604,11 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         <span style="color:#fde047;font-size:11.5px;">NASA DONKI ID: {nasa_flare['id']} ({nasa_flare['class']})</span>
     </div>
 
-    <!-- 2D ARCADE VIEWPORT -->
     <div class="stage-wrap">
         <div id="meme-toast">
             <div id="meme-art" style="font-size:42px;line-height:1.1;">🚨🔥</div>
             <div id="meme-title" style="font-weight:900;font-size:13px;color:#fde047;margin-top:4px;">SOLAR FLARE INCOMING!</div>
-            <div id="meme-cap" style="font-size:11px;color:#e2e8f0;margin-top:2px;">Bro forgot to raise the Vibranium Shield 💀</div>
+            <div id="meme-cap" style="font-size:11px;color:#e2e8f0;margin-top:2px;">Raise the Vibranium Shield!</div>
         </div>
 
         <svg id="arcade-svg" viewBox="0 0 980 320" width="100%" height="310">
@@ -651,19 +627,16 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 </linearGradient>
             </defs>
 
-            <!-- Sky & Stars -->
             <rect id="bg-sky" width="980" height="245" fill="url(#skyCalm)"/>
             <circle cx="80" cy="30" r="2" fill="#fff"/><circle cx="290" cy="25" r="2.2" fill="#fde047"/>
             <circle cx="520" cy="35" r="2" fill="#fff"/><circle cx="740" cy="22" r="2.5" fill="#38bdf8"/>
 
-            <!-- Earth & Comms Wave -->
             <g transform="translate(900, 48)">
                 <circle cx="0" cy="0" r="24" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2"/>
                 <path d="M -10 -8 Q 4 -14 10 -2 Q 5 12 -8 8 Z" fill="#22c55e"/>
                 <text x="-42" y="36" fill="#93c5fd" font-size="10" font-weight="bold">🌍 EARTH HQ</text>
             </g>
 
-            <!-- Sun & DONKI Solar Flare Rays -->
             <g>
                 <circle cx="75" cy="58" r="36" fill="#facc15" stroke="#f97316" stroke-width="4"/>
                 <g id="flare-visual" style="display:none;">
@@ -674,19 +647,16 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 </g>
             </g>
 
-            <!-- Lunar Horizon & Ground -->
             <polygon points="0,245 140,175 290,245" fill="#0f172a"/>
             <polygon points="240,245 430,165 620,245" fill="#1e293b"/>
             <polygon points="570,245 760,175 980,245" fill="#0f172a"/>
             <rect x="0" y="245" width="980" height="75" fill="url(#lunarSoil)"/>
 
-            <!-- Vibranium Radiation Shield Dome -->
             <g id="dome-shield" style="display:none;">
                 <path d="M 330 245 A 315 195 0 0 1 960 245" fill="rgba(56,189,248,0.2)" stroke="#38bdf8" stroke-width="5" stroke-dasharray="12,6"/>
                 <text x="530" y="65" fill="#38bdf8" font-size="13" font-weight="bold">🛡️ VIBRANIUM RADIATION SHIELD ACTIVE</text>
             </g>
 
-            <!-- STATION 1: SOLAR ARRAY & ROVER PAD (X=120) -->
             <g transform="translate(55, 145)">
                 <ellipse cx="65" cy="112" rx="58" ry="12" fill="rgba(250,204,21,0.25)" stroke="#fde047" stroke-width="2"/>
                 <rect x="58" y="52" width="14" height="48" fill="#cbd5e1"/>
@@ -695,16 +665,13 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 <text x="8" y="4" fill="#fde047" font-size="11" font-weight="bold">☀️ 1. SOLAR PAD</text>
             </g>
 
-            <!-- STATION 2: AIRLOCK DOOR & HABITAT (X=380) -->
             <g>
                 <path d="M 355 245 A 160 120 0 0 1 675 245 Z" fill="#e2e8f0" stroke="#475569" stroke-width="4"/>
                 <path d="M 410 242 A 105 80 0 0 1 620 242 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5"/>
-                <!-- Airlock Frame -->
                 <rect x="355" y="172" width="48" height="73" rx="6" fill="#334155" stroke="#94a3b8" stroke-width="2.5"/>
                 <rect id="svg-door" x="363" y="180" width="32" height="62" rx="4" fill="#22c55e"/>
                 <text id="svg-door-txt" x="342" y="165" fill="#4ade80" font-size="11" font-weight="bold">🔒 SEALED</text>
 
-                <!-- Home Pantry Table (Shows plated meals!) -->
                 <ellipse cx="525" cy="257" rx="65" ry="12" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="2"/>
                 <rect x="470" y="212" width="110" height="10" rx="3" fill="#b45309" stroke="#fde047" stroke-width="1.5"/>
                 <rect x="482" y="222" width="8" height="22" fill="#78350f"/>
@@ -713,7 +680,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 <text id="table-plates" x="525" y="206" text-anchor="middle" font-size="15">🍅🥬🥕</text>
             </g>
 
-            <!-- STATION 3: 4-CROP CSA GREENHOUSE (X=800) -->
             <g>
                 <path d="M 700 245 A 125 105 0 0 1 950 245 Z" fill="rgba(6,78,59,0.9)" stroke="#4ade80" stroke-width="3.5"/>
                 <ellipse cx="825" cy="257" rx="75" ry="12" fill="rgba(74,222,128,0.25)" stroke="#4ade80" stroke-width="2"/>
@@ -721,7 +687,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 <text id="crop-icons" x="825" y="225" text-anchor="middle" font-size="20">🍅 🥬 🥕 🥔</text>
             </g>
 
-            <!-- AVENGER CHARACTER SPRITE -->
             <g id="hero-sprite" transform="translate(525, 162)">
                 <rect x="-62" y="-30" width="124" height="20" rx="7" fill="#0f172a" stroke="#fde047" stroke-width="1.5"/>
                 <text id="hero-tag" x="0" y="-16" text-anchor="middle" fill="#fde047" font-size="10.5" font-weight="bold">{hero_name}</text>
@@ -741,7 +706,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         </svg>
     </div>
 
-    <!-- BOTTOM 4-COLUMN ARCADE CONTROLS -->
     <div class="ctrl-grid">
         <div class="ctrl-panel">
             <h4>🏃 1. Floor Pad Movement</h4>
@@ -752,7 +716,7 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         </div>
 
         <div class="ctrl-panel">
-            <h4>🛡️ 2. Shield, Dust & O₂ Ice</h4>
+            <h4>🛡️ 2. Shield, Dust &amp; O₂ Ice</h4>
             <button class="btn btn-red" id="btn-shield" onclick="toggleShield()">🛡️ Turn Shield ON / OFF</button>
             <button class="btn" onclick="sweepDust()">🧹 Sweep Solar Dust (+25% ⚡, +15 🪙)</button>
             <button class="btn" onclick="meltIce()">🫁 Melt Crater Ice (+25% O₂, -12% ⚡)</button>
@@ -760,7 +724,7 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         </div>
 
         <div class="ctrl-panel">
-            <h4>🧺 3. CSA 4-Crop Basket & Table</h4>
+            <h4>🧺 3. CSA 4-Crop Basket &amp; Table</h4>
             <button class="btn btn-green" onclick="pickCrop('🍅')">🍅 Pick Tomato &amp; 🥬 Lettuce</button>
             <button class="btn btn-green" onclick="pickCrop('🥕')">🥕 Pick Radish &amp; 🥔 Potato</button>
             <button class="btn btn-gold" onclick="stockTable()">🍽️ Stock Pantry Table (+Food &amp; +20 🪙)</button>
@@ -782,7 +746,7 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         const IS_JUNIOR = {is_junior};
         let sol = 1, power = 90, oxygen = 90, food = 85, hp = 100, rad = 0.42;
         let coins = (PERK === "WIDOW") ? 70 : 50;
-        let zone = "HOME"; // SOLAR, HOME, FARM
+        let zone = "HOME";
         let doorSealed = true;
         let shieldOn = false;
         let flareOn = false;
@@ -790,10 +754,9 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         let basket = [];
         let tableMeals = ["🍅", "🥬", "🥕"];
         let tickCount = 0;
-        let lastFlareTick = -12; // Guarantees 36s+ calm cooldown between flares
+        let lastFlareTick = -12;
         let gameOver = false;
 
-        // Synthesized Web Audio Arcade Sound Engine
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         let actx = null;
         function playTone(freq, dur, type="sine") {{
@@ -845,13 +808,11 @@ if st.session_state.av_stage == "STEP_3_PLAY":
             document.getElementById("table-plates").textContent = tableMeals.length > 0 ? tableMeals.join("") : "🍽️(Empty)";
             document.getElementById("sub-rad").innerText = "☢️ " + rad.toFixed(2) + " mSv";
 
-            // Position Hero Sprite
             const sp = document.getElementById("hero-sprite");
             if (zone === "SOLAR") sp.setAttribute("transform", "translate(120, 162)");
             else if (zone === "HOME") sp.setAttribute("transform", "translate(525, 162)");
             else sp.setAttribute("transform", "translate(825, 162)");
 
-            // Door & Shield visuals
             const dRect = document.getElementById("svg-door");
             const dTxt = document.getElementById("svg-door-txt");
             if (doorSealed) {{
@@ -1031,7 +992,7 @@ if st.session_state.av_stage == "STEP_3_PLAY":
         function nextSol() {{
             if (gameOver) return;
             sol += 1;
-            if (tableMeals.length > 0) tableMeals.pop(); // Eats 1 plated meal from table!
+            if (tableMeals.length > 0) tableMeals.pop();
             food = Math.max(0, food - (IS_JUNIOR ? 6 : 10));
             oxygen = Math.max(0, oxygen - (IS_JUNIOR ? 5 : 8));
 
@@ -1043,7 +1004,6 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 return;
             }}
 
-            // Spaced-out Solar Flare trigger (only if at least 12 ticks / 36s since last storm!)
             if (!flareOn && (tickCount - lastFlareTick >= 12) && Math.random() < 0.45) {{
                 flareOn = true;
                 lastFlareTick = tickCount;
@@ -1053,22 +1013,19 @@ if st.session_state.av_stage == "STEP_3_PLAY":
             }} else {{
                 flareOn = false;
                 if (Math.random() < 0.35) dusty = true;
-                updateUI("🌙 Advanced to Lunar Sol " + sol + " of 7!Crew ate 1 meal from the Pantry Table.");
+                updateUI("🌙 Advanced to Lunar Sol " + sol + " of 7! Crew ate 1 meal from the Pantry Table.");
             }}
         }}
 
-        // 3-Second Real-Time Game Tick Loop
         setInterval(() => {{
             if (gameOver) return;
             tickCount += 1;
 
-            // Auto-end solar flare after 4 ticks (12 seconds) so storms never get stuck
             if (flareOn && (tickCount - lastFlareTick >= 4)) {{
                 flareOn = false;
                 updateUI("☀️ NASA DONKI Solar Flare has passed! Turn OFF your Radiation Shield to recharge Power.");
             }}
 
-            // Power balance
             if (shieldOn) {{
                 let drain = (PERK === "CAP") ? 1 : 2;
                 power = Math.max(0, power - drain);
@@ -1079,12 +1036,10 @@ if st.session_state.av_stage == "STEP_3_PLAY":
                 power = Math.min(100, power + charge);
             }}
 
-            // Oxygen balance
             let oxLoss = doorSealed ? 0.6 : 2.0;
             if (PERK === "WIDOW") oxLoss *= 0.5;
             oxygen = Math.max(0, oxygen - oxLoss);
 
-            // Radiation damage if caught outside or unshielded during flare
             if (flareOn && (zone === "SOLAR" || !shieldOn || !doorSealed)) {{
                 let dmg = (PERK === "THOR") ? 2 : 5;
                 hp = Math.max(0, hp - dmg);
