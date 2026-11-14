@@ -1032,3 +1032,4 @@ elif nav == "🛰️ 3. Verified NASA Open Data Hub":
     </div>
     """, unsafe_allow_html=True)
 
+st.caption("🤖 **NASA Space Apps SI Disclosure:** Built with Python, Streamlit & HTML5/SVG Canvas with assistance from Gemini. Grounded in open data from NASA DONKI, NASA OSDR (OSD-137, OSD-952, Dragon Vehicle Telemetry), NASA RadLab, NASA Moon Trek, and the Canadian Space Agency (CSA).")
