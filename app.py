@@ -4,7 +4,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="Avengers Assemble | Lunar Outpost 3D",
+    page_title="Avengers Assemble | Moon & Mars 3D Survival",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -116,35 +116,35 @@ APP_HTML = r"""
 
   .glass-panel {
     background: rgba(9, 13, 31, 0.9);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     border: 2.5px solid #eab308;
     border-radius: 22px;
-    box-shadow: 0 0 45px rgba(56, 189, 248, 0.25), 0 18px 40px rgba(0, 0, 0, 0.82);
+    box-shadow: 0 0 48px rgba(56, 189, 248, 0.25), 0 18px 42px rgba(0, 0, 0, 0.85);
   }
 
   .loader-wrap {
-    width: 680px; max-width: 95%; padding: 28px 30px; text-align: center;
+    width: 700px; max-width: 95%; padding: 28px 32px; text-align: center;
     background: rgba(9, 13, 31, 0.88); border: 2.5px solid #38bdf8;
-    border-radius: 24px; box-shadow: 0 0 60px rgba(56, 189, 248, 0.3);
+    border-radius: 24px; box-shadow: 0 0 65px rgba(56, 189, 248, 0.3);
   }
   .orbit-ring {
-    width: 88px; height: 88px; margin: 0 auto 14px auto;
+    width: 92px; height: 92px; margin: 0 auto 14px auto;
     border-radius: 50%; border: 4px solid rgba(56, 189, 248, 0.2);
-    border-top-color: #fde047; border-right-color: #38bdf8;
+    border-top-color: #fde047; border-right-color: #f97316;
     display: flex; align-items: center; justify-content: center;
-    font-size: 38px; animation: spinOrbit 1.4s linear infinite;
+    font-size: 40px; animation: spinOrbit 1.4s linear infinite;
   }
   .orbit-ring span { animation: spinReverse 1.4s linear infinite; display: inline-block; }
   @keyframes spinOrbit { to { transform: rotate(360deg); } }
   @keyframes spinReverse { to { transform: rotate(-360deg); } }
 
   .load-title {
-    font-size: clamp(24px, 4.5vw, 38px); font-weight: 900; letter-spacing: 2px;
-    background: linear-gradient(90deg, #fde047, #38bdf8, #f43f5e);
+    font-size: clamp(26px, 5vw, 42px); font-weight: 900; letter-spacing: 2.5px;
+    background: linear-gradient(90deg, #fde047, #38bdf8, #f97316, #f43f5e);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
   .load-bar-bg {
-    width: 100%; height: 13px; background: #0f172a; border: 2px solid #38bdf8;
+    width: 100%; height: 14px; background: #0f172a; border: 2px solid #38bdf8;
     border-radius: 999px; overflow: hidden; margin: 16px 0 8px 0;
   }
   .load-bar-fill {
@@ -155,22 +155,49 @@ APP_HTML = r"""
   .science-backdrop-card {
     margin-top: 18px; padding: 14px 18px; border-radius: 16px;
     background: linear-gradient(145deg, rgba(30, 27, 75, 0.92), rgba(15, 23, 42, 0.92));
-    border: 2px solid rgba(253, 224, 71, 0.7); text-align: left;
+    border: 2px solid rgba(253, 224, 71, 0.72); text-align: left;
   }
   .science-tag { font-size: 11px; font-weight: 900; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
   .science-fact-txt { font-size: clamp(12.5px, 2.2vw, 14.5px); color: #f8fafc; margin-top: 5px; line-height: 1.48; font-weight: 600; }
 
-  .create-card { width: 540px; max-width: 95%; padding: 28px 30px; text-align: center; }
+  .create-card { width: 650px; max-width: 96%; max-height: 96%; overflow-y: auto; padding: 24px 28px; text-align: center; }
   .game-logo-title {
-    font-size: clamp(28px, 5vw, 40px); font-weight: 900; color: #fde047; letter-spacing: 1.5px;
-    text-shadow: 0 0 24px rgba(253, 224, 71, 0.45);
+    font-size: clamp(28px, 5vw, 42px); font-weight: 900; color: #fde047; letter-spacing: 1.8px;
+    text-shadow: 0 0 26px rgba(253, 224, 71, 0.45);
   }
   .game-logo-sub {
-    font-size: 13px; color: #7dd3fc; font-weight: 800; letter-spacing: 2px;
-    text-transform: uppercase; margin: 6px 0 22px 0;
+    font-size: 12.5px; color: #7dd3fc; font-weight: 800; letter-spacing: 2px;
+    text-transform: uppercase; margin: 4px 0 18px 0;
   }
+
+  .planet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 560px) { .planet-grid { grid-template-columns: 1fr; } }
+  .planet-card {
+    background: linear-gradient(150deg, #0f172a, #1e1b4b);
+    border: 2.5px solid #334155; border-radius: 16px; padding: 13px 12px;
+    cursor: pointer; text-align: left; transition: all 0.18s ease;
+  }
+  .planet-card:hover { transform: translateY(-2px); border-color: #38bdf8; }
+  .planet-card.active-moon {
+    border-color: #38bdf8;
+    background: linear-gradient(150deg, #0c1f3d, #1e293b);
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.55);
+  }
+  .planet-card.active-mars {
+    border-color: #f97316;
+    background: linear-gradient(150deg, #3b1208, #1e1b4b);
+    box-shadow: 0 0 24px rgba(249, 115, 22, 0.55);
+  }
+  .planet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .planet-name { font-size: 16px; font-weight: 900; color: #fde047; }
+  .planet-specs { font-size: 11px; color: #cbd5e1; line-height: 1.45; font-weight: 600; }
+  .planet-pill {
+    font-size: 9.5px; font-weight: 900; padding: 2px 8px; border-radius: 999px;
+    background: rgba(56, 189, 248, 0.22); border: 1px solid #38bdf8; color: #7dd3fc;
+  }
+
   .menu-btn {
-    width: 100%; padding: 14px 18px; margin-bottom: 11px;
+    width: 100%; padding: 13px 18px; margin-bottom: 10px;
     border-radius: 15px; font-size: 15px; font-weight: 900; cursor: pointer;
     border: 2.5px solid #fde047; color: #ffffff;
     background: linear-gradient(90deg, #dc2626 0%, #2563eb 100%);
@@ -179,10 +206,11 @@ APP_HTML = r"""
   .menu-btn:hover { transform: translateY(-2px); box-shadow: 0 0 22px rgba(56, 189, 248, 0.7); }
   .menu-btn.secondary { background: linear-gradient(145deg, #1e293b, #0f172a); border-color: #38bdf8; }
   .menu-btn.multi { background: linear-gradient(145deg, #3b0764, #1e1b4b); border-color: #c084fc; }
+  .menu-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   #multi-notice {
-    display: none; margin-top: 8px; padding: 11px 14px; border-radius: 12px;
+    display: none; margin-top: 6px; padding: 10px 14px; border-radius: 12px;
     background: rgba(127, 29, 29, 0.92); border: 2px solid #fca5a5;
-    color: #fef08a; font-weight: 800; font-size: 13px;
+    color: #fef08a; font-weight: 800; font-size: 12.5px;
   }
 
   .age-panel { width: 1140px; max-width: 97%; max-height: 96%; overflow-y: auto; padding: 16px 20px; }
@@ -220,6 +248,7 @@ APP_HTML = r"""
   .hero-card.locked { opacity: 0.8; border-color: #475569; }
   .hero-name { font-weight: 900; font-size: 12.5px; color: #fde047; margin-top: 2px; }
   .hero-perk { font-size: 10px; color: #86efac; font-weight: 700; margin-top: 3px; line-height: 1.25; }
+  .hero-shield-tag { font-size: 9.5px; color: #7dd3fc; font-weight: 800; margin-top: 2px; }
   .hero-status { margin-top: 5px; padding: 3px 5px; border-radius: 8px; font-size: 10px; font-weight: 900; }
   .status-unlocked { background: rgba(22, 163, 74, 0.25); color: #86efac; border: 1px solid #4ade80; }
   .status-locked { background: rgba(127, 29, 29, 0.55); color: #fde047; border: 1px solid #f87171; }
@@ -232,7 +261,7 @@ APP_HTML = r"""
   }
   .continue-btn:disabled { background: #1e293b; border-color: #475569; color: #64748b; cursor: not-allowed; }
 
-  .inst-panel { width: 1040px; max-width: 97%; max-height: 96%; overflow-y: auto; padding: 20px 24px; text-align: center; }
+  .inst-panel { width: 1060px; max-width: 97%; max-height: 96%; overflow-y: auto; padding: 20px 24px; text-align: center; }
   .inst-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0 18px 0; }
   @media (max-width: 860px) { .inst-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 500px) { .inst-grid { grid-template-columns: 1fr; } }
@@ -245,7 +274,7 @@ APP_HTML = r"""
   #canvas-container { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
 
   #game-sidebar {
-    position: absolute; top: 0; left: 0; bottom: 0; width: 268px; max-width: 84vw; z-index: 45;
+    position: absolute; top: 0; left: 0; bottom: 0; width: 274px; max-width: 84vw; z-index: 45;
     background: linear-gradient(180deg, rgba(7, 11, 24, 0.98), rgba(15, 23, 42, 0.98));
     border-right: 3px solid #eab308; padding: 14px 12px;
     transform: translateX(-100%); transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
@@ -265,7 +294,7 @@ APP_HTML = r"""
 
   .top-hud {
     position: absolute; top: 6px; left: 6px; right: 6px;
-    display: grid; grid-template-columns: 0.48fr 0.92fr 0.88fr 0.88fr 0.88fr 0.88fr 1.25fr;
+    display: grid; grid-template-columns: 0.48fr 0.95fr 0.88fr 0.88fr 0.88fr 0.88fr 1.25fr;
     gap: 5px; pointer-events: none; z-index: 12;
   }
   .hud-card {
@@ -328,13 +357,13 @@ APP_HTML = r"""
     position: absolute; top: 228px; left: 8px;
     background: linear-gradient(90deg, rgba(185, 28, 28, 0.95), rgba(127, 29, 29, 0.95));
     border: 2px solid #fde047; border-radius: 11px; padding: 6px 10px;
-    z-index: 22; display: none; width: 235px;
+    z-index: 22; display: none; width: 242px;
     box-shadow: 0 0 22px rgba(239, 68, 68, 0.85); animation: pulseRed 0.75s infinite alternate;
   }
   @keyframes pulseRed { from { transform: scale(1); } to { transform: scale(1.03); } }
 
   #comic-toast {
-    position: absolute; top: 98px; right: 56px; width: 230px;
+    position: absolute; top: 98px; right: 56px; width: 238px;
     background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 27, 75, 0.96));
     border: 2.5px solid #fde047; border-radius: 14px; padding: 7px 10px;
     z-index: 25; display: none; text-align: center;
@@ -386,9 +415,9 @@ APP_HTML = r"""
   }
   #mobile-quick-pad.visible { display: flex; }
   .mq-btn {
-    width: 60px; height: 46px; border-radius: 13px;
+    width: 62px; height: 46px; border-radius: 13px;
     background: rgba(15, 23, 42, 0.88); border: 2px solid #fde047;
-    color: #fff; font-size: 11px; font-weight: 900; cursor: pointer;
+    color: #fff; font-size: 10.5px; font-weight: 900; cursor: pointer;
     box-shadow: 0 4px 14px rgba(0,0,0,0.65);
   }
 
@@ -474,16 +503,16 @@ APP_HTML = r"""
 
   <div id="screen-loader" class="screen active">
     <div class="loader-wrap">
-      <div class="orbit-ring"><span>🌕</span></div>
+      <div class="orbit-ring"><span>🪐</span></div>
       <div class="load-title">AVENGERS ASSEMBLE</div>
-      <div style="font-size:12px;color:#93c5fd;font-weight:800;margin-top:4px;letter-spacing:1.2px;">SHACKLETON CRATER 3D LUNAR OUTPOST</div>
+      <div style="font-size:12px;color:#93c5fd;font-weight:800;margin-top:4px;letter-spacing:1.4px;">MOON &amp; MARS 3D SURVIVAL COMMAND</div>
       <div class="load-bar-bg"><div id="load-bar-fill" class="load-bar-fill"></div></div>
       <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:900;color:#fde047;">
-        <span id="load-status">Calibrating 1/6G Lunar Physics...</span>
+        <span id="load-status">Initializing Deep Space Telemetry...</span>
         <span id="load-pct">0%</span>
       </div>
       <div class="science-backdrop-card">
-        <div class="science-tag">🛰️ REAL LUNAR SPACE SCIENCE FACT</div>
+        <div class="science-tag">🛰️ REAL NASA DEEP SPACE SCIENCE FACT</div>
         <div id="load-fact" class="science-fact-txt"></div>
       </div>
     </div>
@@ -491,13 +520,45 @@ APP_HTML = r"""
 
   <div id="screen-create" class="screen">
     <div class="glass-panel create-card">
-      <div style="font-size:50px;margin-bottom:4px;">🛡️🌕🚀</div>
+      <div style="font-size:44px;margin-bottom:2px;">🛡️🌕🔴</div>
       <div class="game-logo-title">AVENGERS ASSEMBLE</div>
-      <div class="game-logo-sub">3D Lunar Survival Expedition</div>
-      <button class="menu-btn" onclick="goToAgePage()">🚀 CREATE &amp; PLAY MISSION</button>
-      <button class="menu-btn secondary" id="create-music-btn" onclick="toggleMusic()">🎵 MUSIC: ON</button>
-      <button class="menu-btn multi" onclick="clickMultiplayer()">👥 MULTIPLAYER</button>
-      <div id="multi-notice">🚧 Multiplayer Mode is Currently Unavailable! Enjoy Single-Player 3D Lunar Survival.</div>
+      <div class="game-logo-sub">Choose Your Destination World</div>
+
+      <div class="planet-grid">
+        <div id="card-planet-MOON" class="planet-card active-moon" onclick="selectPlanet('MOON')">
+          <div class="planet-head">
+            <span class="planet-name">🌕 MOON</span>
+            <span class="planet-pill">Shackleton Crater</span>
+          </div>
+          <div class="planet-specs">
+            • <b>Gravity:</b> 1/6G (Super-High Jumps)<br>
+            • <b>Sunlight:</b> 100% Solar Power (1,361 W/m²)<br>
+            • <b>Radiation:</b> 0.42 mSv/Sol • Fierce Flares<br>
+            • <b>Earth Comms:</b> 2.6s Delay (384,400 km)<br>
+            • <b>O₂ Source:</b> Crater Water-Ice Electrolysis
+          </div>
+        </div>
+        <div id="card-planet-MARS" class="planet-card" onclick="selectPlanet('MARS')">
+          <div class="planet-head">
+            <span class="planet-name">🔴 MARS</span>
+            <span class="planet-pill" style="border-color:#f97316;color:#fdba74;background:rgba(249,115,22,0.2);">Jezero Crater</span>
+          </div>
+          <div class="planet-specs">
+            • <b>Gravity:</b> 3/8G (Crisp Heavy Jumps)<br>
+            • <b>Sunlight:</b> 43% Solar Power (590 W/m²)<br>
+            • <b>Weather:</b> Rust Dust Storms • 0.67 mSv/Sol<br>
+            • <b>Earth Comms:</b> 6.5s Sim (225M km • 12m real)<br>
+            • <b>O₂ Source:</b> MOXIE CO₂ Atmospheric Unit
+          </div>
+        </div>
+      </div>
+
+      <button class="menu-btn" id="btn-start-world" onclick="goToAgePage()">🚀 LAUNCH MOON MISSION</button>
+      <div class="menu-row-2">
+        <button class="menu-btn secondary" id="create-music-btn" onclick="toggleMusic()">🎵 MUSIC: ON</button>
+        <button class="menu-btn multi" onclick="clickMultiplayer()">👥 MULTIPLAYER</button>
+      </div>
+      <div id="multi-notice">🚧 Multiplayer Mode is Currently Unavailable! Enjoy Single-Player 3D Moon &amp; Mars Survival.</div>
     </div>
   </div>
 
@@ -526,29 +587,29 @@ APP_HTML = r"""
       <p id="inst-hero-line" style="color:#7dd3fc;font-size:13.5px;font-weight:800;margin-top:5px;"></p>
       <div class="inst-grid">
         <div class="inst-box">
-          <div style="font-size:28px;">🕹️</div>
-          <h3>1. Laptop &amp; Mobile</h3>
-          <p><b>Laptop:</b> WASD/Arrows to move, <b>Space</b> jump, <b>Z/X</b> or wheel to zoom out to the whole Moon!<br><b>Phone:</b> Use the glowing thumb <b>Joystick Handle</b> &amp; pinch to zoom!</p>
+          <div style="font-size:28px;">🛡️</div>
+          <h3>1. Hero Relic Shields</h3>
+          <p>Press <b>Q</b> to activate your hero's unique 3D weapon shield—Cap's <b>Vibranium Shield</b>, Thor's <b>Mjolnir Lightning</b>, Loki's <b>Emerald Crown Magic</b>, Strange's <b>Mandala</b> &amp; more!</p>
         </div>
         <div class="inst-box">
           <div style="font-size:28px;">⌨️</div>
-          <h3>2. Fast Keyboard Keys</h3>
-          <p><b>Q</b> Shield • <b>E</b> Airlock • <b>1–6</b> Auto-Run Stations • <b>R</b> Rover • <b>N</b> Next Sol • <b>F G H J K</b> Earth Radio • <b>M</b> Menu • <b>V</b> Music!</p>
+          <h3>2. Laptop &amp; Phone</h3>
+          <p><b>Laptop:</b> WASD/Arrows, <b>Space</b> jump, <b>Q</b> Shield, <b>E</b> Airlock, <b>1–6</b> Stations, <b>R</b> Rover, <b>F–K</b> Radio, <b>Z/X/C</b> Zoom.<br><b>Phone:</b> Thumb <b>Joystick Handle</b> + Pinch Zoom!</p>
         </div>
         <div class="inst-box">
-          <div style="font-size:28px;">🚨</div>
-          <h3>3. NASA Solar Flares</h3>
-          <p>Keep Shield <b>OFF</b> when calm to charge Power. When a <b>DONKI Solar Flare</b> hits: Run Inside, press <b>E</b> to Seal Airlock, and press <b>Q</b> for Shield!</p>
+          <div style="font-size:28px;">🌍</div>
+          <h3>3. Moon vs. Mars Physics</h3>
+          <p>Every Sol is a true full-length endurance cycle! <b>Moon</b> has stronger flares &amp; 1/6G; <b>Mars</b> has weaker sunlight (43%), fierce dust storms &amp; longer Earth radio delay!</p>
         </div>
         <div class="inst-box">
           <div style="font-size:28px;">🪙</div>
-          <h3>4. Unlock Elite Heroes</h3>
-          <p>Explore the huge lunar surface to gather Coins, farm CSA crops, mine Ice, and drill Science! Earn <b>1080+ Vault Coins</b> to unlock elite Avengers!</p>
+          <h3>4. Real Engineering</h3>
+          <p>No free lunches! Shielding drains battery; EVA Core Drilling costs O₂; open Airlocks leak air. Survive all 7 Sols &amp; bank Vault Coins to unlock every Avenger!</p>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
         <button class="menu-btn secondary" style="width:180px;margin:0;" onclick="goToAgePage()">⬅️ Back</button>
-        <button class="menu-btn" style="width:300px;margin:0;" onclick="launchGameScreen()">🚀 LAUNCH 3D MOON MISSION</button>
+        <button class="menu-btn" style="width:310px;margin:0;" id="btn-launch-final" onclick="launchGameScreen()">🚀 LAUNCH 3D EXPEDITION</button>
       </div>
     </div>
   </div>
@@ -563,13 +624,15 @@ APP_HTML = r"""
           <button onclick="toggleSidebar()" style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:4px 10px;font-weight:900;cursor:pointer;">✕</button>
         </div>
         <div class="sb-stat">
+          <div><b>World:</b> <span id="sb-world" style="color:#f97316;font-weight:900;">MOON</span></div>
           <div><b>Hero:</b> <span id="sb-hero" style="color:#fde047;"></span></div>
           <div><b>Mode:</b> <span id="sb-mode" style="color:#7dd3fc;"></span></div>
           <div><b>Vault Coins:</b> <span id="sb-coins" style="color:#fde047;font-weight:900;">40</span> 🪙</div>
           <div><b>Trophies:</b> <span id="sb-wins" style="color:#4ade80;font-weight:900;">0</span> 🏆</div>
         </div>
         <button class="sb-btn" onclick="sidebarChangeAgeHero()">🦸 Change Age &amp; Hero</button>
-        <button class="sb-btn" onclick="sidebarGoInstructions()">📖 Instructions &amp; Shortcut Keys</button>
+        <button class="sb-btn" onclick="sidebarChangePlanet()">🪐 Switch Moon / Mars</button>
+        <button class="sb-btn" onclick="sidebarGoInstructions()">📖 Instructions &amp; Keys</button>
         <button class="sb-btn" onclick="openMathLab()">📈 Engineering Graphs &amp; Math Lab</button>
         <button class="sb-btn" onclick="openNasaModal()">🛰️ NASA &amp; Partner Data Log</button>
         <button class="sb-btn" onclick="toggleJoystick()">🕹️ Toggle Mobile Joystick Handle</button>
@@ -585,7 +648,7 @@ APP_HTML = r"""
         </button>
         <div class="hud-card">
           <div class="hud-row">
-            <span class="hud-lbl">📅 Sol <span class="qchip" onclick="openGlossary('SOL')">?</span></span>
+            <span class="hud-lbl" id="hud-sol-lbl">📅 Sol <span class="qchip" onclick="openGlossary('SOL')">?</span></span>
             <span class="hud-val" id="ui-sol">1 / 7</span>
           </div>
           <div class="bar-bg"><div id="bar-sol" class="bar-fill" style="width:0%;background:#a855f7;"></div></div>
@@ -594,25 +657,25 @@ APP_HTML = r"""
         <div class="hud-card">
           <div class="hud-row">
             <span class="hud-lbl">⚡ Pwr <span class="qchip" onclick="openGlossary('POWER')">?</span></span>
-            <span class="hud-val" id="ui-pwr">95%</span>
+            <span class="hud-val" id="ui-pwr">96%</span>
           </div>
-          <div class="bar-bg"><div id="bar-pwr" class="bar-fill" style="width:95%;background:#facc15;"></div></div>
+          <div class="bar-bg"><div id="bar-pwr" class="bar-fill" style="width:96%;background:#facc15;"></div></div>
           <div class="hud-sub" id="sub-pwr">☀️ Charging</div>
         </div>
         <div class="hud-card">
           <div class="hud-row">
             <span class="hud-lbl">🫁 O₂ <span class="qchip" onclick="openGlossary('OXYGEN')">?</span></span>
-            <span class="hud-val" id="ui-ox">95%</span>
+            <span class="hud-val" id="ui-ox">96%</span>
           </div>
-          <div class="bar-bg"><div id="bar-ox" class="bar-fill" style="width:95%;background:#38bdf8;"></div></div>
+          <div class="bar-bg"><div id="bar-ox" class="bar-fill" style="width:96%;background:#38bdf8;"></div></div>
           <div class="hud-sub" id="sub-ox">🔒 Sealed</div>
         </div>
         <div class="hud-card">
           <div class="hud-row">
             <span class="hud-lbl">🍽️ Food <span class="qchip" onclick="openGlossary('FOOD')">?</span></span>
-            <span class="hud-val" id="ui-food">90%</span>
+            <span class="hud-val" id="ui-food">92%</span>
           </div>
-          <div class="bar-bg"><div id="bar-food" class="bar-fill" style="width:90%;background:#4ade80;"></div></div>
+          <div class="bar-bg"><div id="bar-food" class="bar-fill" style="width:92%;background:#4ade80;"></div></div>
           <div class="hud-sub" id="sub-basket">🧺 0/4</div>
         </div>
         <div class="hud-card">
@@ -636,19 +699,19 @@ APP_HTML = r"""
       </div>
 
       <div class="ticker-bar">
-        <span id="status-msg">🚀 Touchdown at Shackleton Crater! Explore the expanded Moon &amp; collect Vault Coins!</span>
+        <span id="status-msg">🚀 Touchdown! Explore the expanded planetary basin &amp; bank Vault Coins!</span>
         <button class="nasa-badge-btn" id="nasa-feed-btn" onclick="openNasaModal()">🛰️ NASA DONKI</button>
       </div>
 
       <div id="minimap-wrap">
-        <div style="font-size:8.5px;font-weight:900;color:#7dd3fc;margin-bottom:2px;">📡 LUNAR RADAR</div>
+        <div id="radar-title" style="font-size:8.5px;font-weight:900;color:#7dd3fc;margin-bottom:2px;">📡 SHACKLETON RADAR</div>
         <canvas id="minimap" width="116" height="100"></canvas>
       </div>
 
       <div id="zoom-bar">
         <button class="zbtn" onclick="adjustZoom(-0.45)" title="Zoom In (X)">➕ <span class="kbadge">X</span></button>
         <button class="zbtn" onclick="adjustZoom(0.45)" title="Zoom Out (Z)">➖ <span class="kbadge">Z</span></button>
-        <button class="zbtn" onclick="toggleFullMoonView()" title="Whole Moon View (C)">🌕 <span class="kbadge">C</span></button>
+        <button class="zbtn" id="btn-whole-planet" onclick="toggleFullPlanetView()" title="Whole Planet View (C)">🌕 <span class="kbadge">C</span></button>
       </div>
 
       <div id="flare-alarm">
@@ -693,14 +756,14 @@ APP_HTML = r"""
           <div class="dock-title"><span>🏃 Auto-Run Stations</span><span style="color:#7dd3fc;">WASD / Arrows + Space</span></div>
           <div class="btn-grid-4" style="margin-bottom:4px;">
             <button class="gbtn gbtn-gold" onclick="autoRunTo('SOLAR')">☀️ Solar<span class="kbadge">1</span></button>
-            <button class="gbtn gbtn-cyan" onclick="autoRunTo('ICE')">🧊 Ice<span class="kbadge">2</span></button>
+            <button class="gbtn gbtn-cyan" id="btn-station-o2" onclick="autoRunTo('O2GEN')">🧊 Ice<span class="kbadge">2</span></button>
             <button class="gbtn gbtn-purple" onclick="autoRunTo('SCIENCE')">🔬 Sci<span class="kbadge">3</span></button>
             <button class="gbtn gbtn-green" onclick="autoRunTo('FARM')">🌱 Farm<span class="kbadge">4</span></button>
           </div>
           <div class="btn-grid-3">
             <button class="gbtn" onclick="autoRunTo('PANTRY')">🍽️ Pantry<span class="kbadge">5</span></button>
             <button class="gbtn gbtn-red" onclick="autoRunTo('SHIELD')">🛡️ Console<span class="kbadge">6</span></button>
-            <button class="gbtn" onclick="triggerJump()">⬆️ Jump<span class="kbadge">SPC</span></button>
+            <button class="gbtn" id="btn-jump-dock" onclick="triggerJump()">⬆️ Jump<span class="kbadge">SPC</span></button>
           </div>
         </div>
 
@@ -717,7 +780,7 @@ APP_HTML = r"""
         </div>
 
         <div class="dock-panel hide-sm-panel">
-          <div class="dock-title"><span>📡 Earth HQ Radio <span class="qchip" onclick="openGlossary('DELAY')">?</span></span><span style="color:#7dd3fc;">384,400 km • 2.6s</span></div>
+          <div class="dock-title"><span>📡 Earth HQ Radio <span class="qchip" onclick="openGlossary('DELAY')">?</span></span><span id="comms-dist-lbl" style="color:#7dd3fc;">384,400 km • 2.6s</span></div>
           <div class="btn-grid-5" style="margin-bottom:4px;">
             <button class="gbtn" onclick="callEarth(1)">⚡+30%<br><span class="kbadge">F</span></button>
             <button class="gbtn gbtn-cyan" onclick="callEarth(2)">🫁+30%<br><span class="kbadge">G</span></button>
@@ -726,7 +789,7 @@ APP_HTML = r"""
             <button class="gbtn gbtn-gold" onclick="callEarth(5)">☀️Clr<br><span class="kbadge">K</span></button>
           </div>
           <div id="radio-log" style="font-size:9.8px;color:#fde047;font-weight:800;text-align:center;">
-            15 🪙 per drop (Dr. Strange: 10 🪙 &amp; 1.0s)
+            15 🪙 per drop (Dr. Strange: 10 🪙 &amp; faster link)
           </div>
         </div>
       </div>
@@ -761,14 +824,14 @@ APP_HTML = r"""
       <div id="math-modal" class="modal-backdrop">
         <div class="modal-box">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <h3 style="color:#fde047;">📈 Engineering Trade-Off Math Lab</h3>
+            <h3 style="color:#fde047;" id="math-title">📈 Engineering Trade-Off Math Lab</h3>
             <button onclick="closeModal('math-modal')" style="background:#ef4444;color:#fff;border:none;border-radius:8px;padding:4px 12px;font-weight:900;cursor:pointer;">Close ✕</button>
           </div>
           <div class="slider-grid">
             <div class="slider-item">🛡️ Shield Duty: <b id="sl-sh-v">35%</b><input type="range" id="sl-sh" min="0" max="100" value="35" oninput="updateMathLab()"></div>
             <div class="slider-item">🌱 Grow-Lights: <b id="sl-fm-v">50%</b><input type="range" id="sl-fm" min="10" max="100" value="50" oninput="updateMathLab()"></div>
             <div class="slider-item">🔬 EVA Science: <b id="sl-ev-v">2 hrs</b><input type="range" id="sl-ev" min="0" max="6" value="2" oninput="updateMathLab()"></div>
-            <div class="slider-item">🌪️ Solar Dust: <b id="sl-ds-v">15%</b><input type="range" id="sl-ds" min="0" max="60" value="15" oninput="updateMathLab()"></div>
+            <div class="slider-item">🌪️ Dust Loss: <b id="sl-ds-v">15%</b><input type="range" id="sl-ds" min="0" max="65" value="15" oninput="updateMathLab()"></div>
           </div>
           <canvas id="math-chart" width="600" height="165" style="width:100%;background:#020617;border:1.5px solid #334155;border-radius:11px;"></canvas>
           <div id="math-summary" style="margin-top:7px;font-size:11.5px;color:#93c5fd;font-weight:700;"></div>
@@ -795,69 +858,153 @@ APP_HTML = r"""
 <script>
 const NASA = __NASA_JSON__;
 
+const PLANETS = {
+  MOON: {
+    key: "MOON",
+    name: "Moon",
+    site: "Shackleton Crater",
+    icon: "🌕",
+    gravity: 11.2,
+    jumpVel: 7.4,
+    solarChargeMult: 1.0,
+    solarIrradiance: "1,361 W/m² (100%)",
+    radBaseline: 0.42,
+    flareDmgMult: 1.05,
+    dustChance: 0.50,
+    dustPowerLoss: 0.35,
+    commsDelayMs: 2600,
+    commsLabel: "384,400 km • 2.6s",
+    o2Short: "🧊 Ice",
+    o2Tag: "🧊 CRATER ICE [2]",
+    o2Work: "🧊 Electrolysis: Crater Ice → O₂...",
+    skyHex: 0x020617,
+    fogHex: 0x050b1f,
+    fogDensity: 0.0032,
+    warnFogHex: 0x2d0a0a,
+    stormFogHex: 0x4a0b0b,
+    groundColor: "#6b7280",
+    craterDark: "rgba(30,41,59,0.58)",
+    craterRim: "rgba(226,232,240,0.34)",
+    bodyHex: 0x475569,
+    rockHex: 0x475569,
+    sunLightHex: 0xfff8eb,
+    hemiSkyHex: 0x93c5fd,
+    hemiGndHex: 0x1e293b,
+    windDust: false
+  },
+  MARS: {
+    key: "MARS",
+    name: "Mars",
+    site: "Jezero Crater",
+    icon: "🔴",
+    gravity: 19.5,
+    jumpVel: 8.6,
+    solarChargeMult: 0.54,
+    solarIrradiance: "590 W/m² (43%)",
+    radBaseline: 0.67,
+    flareDmgMult: 0.85,
+    dustChance: 0.85,
+    dustPowerLoss: 0.62,
+    commsDelayMs: 6500,
+    commsLabel: "225M km • 12m [6.5s]",
+    o2Short: "⚙️ MOXIE",
+    o2Tag: "⚙️ MOXIE O₂ LAB [2]",
+    o2Work: "⚙️ MOXIE Converting Mars CO₂ → O₂...",
+    skyHex: 0x2a1009,
+    fogHex: 0x3b180d,
+    fogDensity: 0.0058,
+    warnFogHex: 0x5c190a,
+    stormFogHex: 0x7c220c,
+    groundColor: "#b4532a",
+    craterDark: "rgba(92,28,12,0.56)",
+    craterRim: "rgba(251,146,60,0.35)",
+    bodyHex: 0x7c2d12,
+    rockHex: 0x853517,
+    sunLightHex: 0xffd7b5,
+    hemiSkyHex: 0xfdba74,
+    hemiGndHex: 0x431407,
+    windDust: true
+  }
+};
+
 const HEROES = [
   {
     key: "CAP", name: "Captain America", unlockCoins: 0,
     perk: "🛡️ Shield drains 50% less Power",
-    suit: "#1d4ed8", accent: "#ef4444", eyes: "#38bdf8",
+    shieldName: "Vibranium Star Shield",
+    domeColor: 0x2563eb, wireColor: 0xef4444, auraColor: 0x60a5fa,
+    suit: "#1d4ed8", accent: "#dc2626", trim: "#f8fafc", eyes: "#38bdf8", skin: "#f5cba7",
     head: "<path d='M 24 50 A 36 36 0 0 1 96 50 Z' fill='#1d4ed8' stroke='#ffffff' stroke-width='2'/><text x='60' y='38' text-anchor='middle' fill='#ffffff' font-size='18' font-weight='900'>A</text>"
   },
   {
     key: "WIDOW", name: "Natasha Romanoff", unlockCoins: 0,
     perk: "🕷️ +25% Speed & 40% less O₂ use",
-    suit: "#1e293b", accent: "#ef4444", eyes: "#22c55e",
+    shieldName: "Widow's Bite Electro-Barrier",
+    domeColor: 0x0ea5e9, wireColor: 0xf43f5e, auraColor: 0x38bdf8,
+    suit: "#111827", accent: "#ef4444", trim: "#38bdf8", eyes: "#22c55e", skin: "#fbdcc4",
     head: "<path d='M 24 58 Q 26 14 60 16 Q 94 14 96 58 L 88 34 Q 60 22 32 34 Z' fill='#b91c1c'/><circle cx='24' cy='52' r='9' fill='#b91c1c'/><circle cx='96' cy='52' r='9' fill='#b91c1c'/>"
   },
   {
     key: "IRON", name: "Iron Man", unlockCoins: 1080,
     perk: "⚡ 2x Solar Charge & Jet Jumps",
-    suit: "#dc2626", accent: "#facc15", eyes: "#38bdf8",
+    shieldName: "Mk-85 Nano Energy Shield",
+    domeColor: 0x38bdf8, wireColor: 0xfacc15, auraColor: 0x7dd3fc,
+    suit: "#b91c1c", accent: "#facc15", trim: "#38bdf8", eyes: "#7dd3fc", skin: "#facc15",
     head: "<rect x='30' y='18' width='60' height='54' rx='18' fill='#b91c1c' stroke='#facc15' stroke-width='3'/><polygon points='38,22 82,22 76,58 44,58' fill='#facc15'/><rect x='40' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/><rect x='66' y='40' width='14' height='6' rx='2' fill='#e0f2fe'/>"
   },
   {
     key: "THOR", name: "Thor Odinson", unlockCoins: 1120,
     perk: "🔨 60% less Solar Flare Radiation",
-    suit: "#475569", accent: "#ef4444", eyes: "#38bdf8",
+    shieldName: "Mjolnir Lightning Aegis",
+    domeColor: 0x38bdf8, wireColor: 0xe0f2fe, auraColor: 0x93c5fd,
+    suit: "#334155", accent: "#dc2626", trim: "#cbd5e1", eyes: "#7dd3fc", skin: "#f5cba7",
     head: "<path d='M 24 58 Q 28 14 60 16 Q 92 14 96 58 L 86 34 Q 60 24 34 34 Z' fill='#facc15'/><path d='M 20 42 L 10 22 L 26 32 Z' fill='#cbd5e1'/><path d='M 100 42 L 110 22 L 94 32 Z' fill='#cbd5e1'/>"
   },
   {
     key: "STRANGE", name: "Dr. Strange", unlockCoins: 1160,
-    perk: "⏳ 1.0s Radio Delay & 10 🪙 Drops",
-    suit: "#1e3a8a", accent: "#dc2626", eyes: "#4ade80",
+    perk: "⏳ Faster Earth Radio & 10 🪙 Drops",
+    shieldName: "Eldritch Tao Mandala",
+    domeColor: 0xf97316, wireColor: 0xfde047, auraColor: 0xfb923c,
+    suit: "#1e3a8a", accent: "#dc2626", trim: "#facc15", eyes: "#4ade80", skin: "#f5cba7",
     head: "<path d='M 28 46 Q 30 16 60 16 Q 90 16 92 46 L 84 32 Q 60 22 36 32 Z' fill='#1e293b'/><path d='M 26 42 L 34 42' stroke='#e2e8f0' stroke-width='4'/><path d='M 86 42 L 94 42' stroke='#e2e8f0' stroke-width='4'/>"
   },
   {
     key: "WANDA", name: "Wanda Maximoff", unlockCoins: 1200,
     perk: "🔮 2x Crop Growth & +6% O₂ Bonus",
-    suit: "#991b1b", accent: "#f43f5e", eyes: "#ef4444",
+    shieldName: "Scarlet Chaos Hex Field",
+    domeColor: 0xdc2626, wireColor: 0xfb7185, auraColor: 0xef4444,
+    suit: "#7f1d1d", accent: "#ef4444", trim: "#fda4af", eyes: "#ef4444", skin: "#fbdcc4",
     head: "<path d='M 22 60 Q 26 16 60 16 Q 94 16 98 60 L 86 34 Q 60 24 34 34 Z' fill='#7c2d12'/><polygon points='42,38 50,18 60,30 70,18 78,38' fill='#ef4444' stroke='#fca5a5' stroke-width='1.5'/>"
   },
   {
     key: "LOKI", name: "Loki", unlockCoins: 1250,
     perk: "🐍 2x Vault Coins & +50% Science",
-    suit: "#15803d", accent: "#eab308", eyes: "#22c55e",
+    shieldName: "Horned Crown Emerald Ward",
+    domeColor: 0x16a34a, wireColor: 0xfacc15, auraColor: 0x4ade80,
+    suit: "#14532d", accent: "#eab308", trim: "#22c55e", eyes: "#4ade80", skin: "#f5cba7",
     head: "<path d='M 22 58 Q 24 18 60 18 Q 96 18 98 58 Z' fill='#0f172a'/><path d='M 34 40 Q 60 50 86 40 L 82 28 Q 60 38 38 28 Z' fill='#eab308' stroke='#fef08a' stroke-width='1.5'/><path d='M 40 32 Q 22 6 44 4 Q 34 18 46 30 Z' fill='#eab308'/><path d='M 80 32 Q 98 6 76 4 Q 86 18 74 30 Z' fill='#eab308'/>"
   }
 ];
 
 const LOAD_FACTS = [
-  "Shackleton Crater at the Moon's South Pole has sunlit rims for solar power right next to shadowed craters filled with water-ice (H₂O) that can be split into breathable Oxygen!",
-  "Even traveling at the speed of light (300,000 km/s), a radio message from a Lunar Outpost to Earth HQ and back takes 2.56 seconds across 384,400 km!",
-  "Lunar gravity is only 1/6th of Earth's gravity—astronauts can leap six times higher on the Moon while electrostatic lunar dust clings to spacesuits and solar panels!",
-  "NASA RadLab measurements show lunar surface radiation averages 0.42 mSv per Sol—over 50 times higher than a normal day on Earth!"
+  "On Mars, sunlight is only 43% as strong as on the Moon (590 vs. 1,361 W/m²), and NASA's Perseverance rover proved MOXIE can convert Martian CO₂ directly into breathable Oxygen!",
+  "Shackleton Crater at the Moon's South Pole has sunlit rims for solar power right next to permanently shadowed craters filled with water-ice (H₂O)!",
+  "NASA Curiosity's RAD instrument measured ~0.67 mSv/day of surface radiation on Mars, while NASA RadLab/CRaTER places lunar surface baselines near 0.42 mSv/Sol!",
+  "Radio waves travel at light speed: Moon-to-Earth round-trip takes 2.56 seconds (384,400 km), while Mars-to-Earth can take 6 to 44 minutes (up to 400 million km)!"
 ];
 
 const GLOSSARY = {
-  SOL: { title: "📅 What is a Lunar Sol?", body: "A Sol is one survival day-cycle on an off-world outpost. Survive all 7 Sols at Shackleton Crater while balancing Power, Oxygen, Food, and Radiation!" },
-  POWER: { title: "⚡ Solar Power vs. Shielding", body: "Solar panels charge your batteries in calm skies unless covered in lunar dust. Raising the Radiation Shield protects against solar flares while drawing steady battery power." },
-  OXYGEN: { title: "🫁 Airlock & Ice Electrolysis", body: "The Moon has no air. Leaving the Airlock Door open leaks Oxygen into space. Mine Shackleton Crater ice (H₂O) and split it with electricity to produce fresh O₂!" },
-  FOOD: { title: "🌱 CSA 4-Crop Hydroponics", body: "Inspired by the Canadian Space Agency Deep Space Food Toolkit and NASA OSDR (OSD-767), your greenhouse grows Tomatoes, Lettuce, Radishes, and Potatoes without soil." },
-  RAD: { title: "☢️ Radiation Dose (mSv)", body: "mSv (millisievert) measures radiation exposure. NASA RadLab BLEO sets lunar baseline around 0.42 mSv/Sol, spiking during unshielded NASA DONKI solar storms." },
-  DELAY: { title: "📡 2.6-Second Light Delay", body: "Earth is 384,400 km away. Radio waves travel at light speed, creating a real 2.56-second round-trip delay when calling Earth Mission Control!" }
+  SOL: { title: "📅 What is a Sol?", body: "A Sol is one survival day-cycle on another world (a Martian Sol is 24h 39m!). Each Sol in this mission is an extended endurance cycle testing your resource strategy across 7 full Sols." },
+  POWER: { title: "⚡ Solar Irradiance & Dust", body: "On the Moon, sunlight is intense (1,361 W/m²). On Mars (1.52 AU from the Sun), sunlight drops to 43% (590 W/m²) and global iron-oxide dust storms coat solar arrays quickly!" },
+  OXYGEN: { title: "🫁 Lunar Ice vs. Mars MOXIE", body: "On the Moon, astronauts mine frozen water-ice (H₂O) from Shackleton Crater for electrolysis. On Mars, NASA's MOXIE technology splits Carbon Dioxide (CO₂) from the thin air into pure Oxygen (O₂)!" },
+  FOOD: { title: "🌱 CSA 4-Crop Hydroponics", body: "Inspired by the Canadian Space Agency Deep Space Food Toolkit and NASA OSDR (OSD-767), your dome grows Tomatoes, Lettuce, Radishes, and Potatoes without soil while releasing fresh O₂." },
+  RAD: { title: "☢️ Radiation Dose (mSv)", body: "mSv (millisievert) measures radiation exposure. NASA RadLab & Curiosity RAD show lunar/Martian baselines (0.42–0.67 mSv/Sol) spike sharply during unshielded NASA DONKI solar storms." },
+  DELAY: { title: "📡 Light-Speed Communication Delay", body: "Radio messages travel at 300,000 km/s. Moon HQ takes 2.6 seconds round-trip, while Mars HQ takes 6 to 44 minutes in real life (simulated as a tense 6.5-second delay in-game)!" }
 };
 
 let session = {
   screen: "LOADER",
+  planet: "MOON",
   age: null,
   ageTier: "10-12 Commander",
   heroKey: "CAP",
@@ -869,18 +1016,28 @@ let session = {
 };
 
 function getHero(key) { return HEROES.find(h => h.key === (key || session.heroKey)) || HEROES[0]; }
+function getPlanet() { return PLANETS[session.planet] || PLANETS.MOON; }
 
 function getDiff() {
-  if (session.ageTier.includes("7-9")) return { drain: 0.48, solSecs: 30, flareWarn: 9.5, flareDur: 8.0, flareDmg: 4.0, flareGap: 16 };
-  if (session.ageTier.includes("13+")) return { drain: 0.78, solSecs: 26, flareWarn: 7.5, flareDur: 9.5, flareDmg: 7.5, flareGap: 12 };
-  return { drain: 0.62, solSecs: 28, flareWarn: 8.5, flareDur: 8.5, flareDmg: 5.5, flareGap: 14 };
+  if (session.ageTier.includes("7-9")) return { drain: 0.44, solSecs: 52, flareWarn: 9.5, flareDur: 8.5, flareDmg: 3.8, flareGap: 18 };
+  if (session.ageTier.includes("13+")) return { drain: 0.72, solSecs: 48, flareWarn: 7.5, flareDur: 10.0, flareDmg: 7.2, flareGap: 14 };
+  return { drain: 0.56, solSecs: 50, flareWarn: 8.5, flareDur: 9.0, flareDmg: 5.2, flareGap: 16 };
+}
+
+function selectPlanet(pKey) {
+  ensureAudio();
+  session.planet = pKey;
+  playSfx(pKey === "MARS" ? 392 : 523.25, 0.16, "triangle", 0.08, pKey === "MARS" ? 587 : 659);
+  document.getElementById("card-planet-MOON").className = "planet-card" + (pKey === "MOON" ? " active-moon" : "");
+  document.getElementById("card-planet-MARS").className = "planet-card" + (pKey === "MARS" ? " active-mars" : "");
+  document.getElementById("btn-start-world").innerText = pKey === "MARS" ? "🚀 LAUNCH MARS EXPEDITION (JEZERO)" : "🚀 LAUNCH MOON MISSION (SHACKLETON)";
 }
 
 let audioCtx = null, masterGain = null, musicTimer = null, musicBeat = 0;
 
 const CHORDS = [
   { bass: 73.42, pad: [146.83, 220.00, 293.66, 349.23], lead: [587.33, 0, 523.25, 587.33, 659.25, 0, 587.33, 440.00] },
-  { bass: 58.27, pad: [116.54, 174.61, 233.08, 293.66], lead: [466.16, 0, 523.25, 587.33, 700.00, 0, 659.25, 587.33] },
+  { bass: 58.27, pad: [116.54, 174.61, 233.08, 293.66], lead: [466.16, 0, 523.25, 587.33, 698.46, 0, 659.25, 587.33] },
   { bass: 87.31, pad: [174.61, 220.00, 261.63, 349.23], lead: [698.46, 0, 659.25, 587.33, 523.25, 0, 587.33, 659.25] },
   { bass: 65.41, pad: [130.81, 196.00, 261.63, 329.63], lead: [523.25, 0, 587.33, 659.25, 783.99, 0, 659.25, 523.25] }
 ];
@@ -928,9 +1085,9 @@ function playKick() {
     const osc = audioCtx.createOscillator();
     const g = audioCtx.createGain();
     osc.type = "sine";
-    osc.frequency.setValueAtTime(115, now);
-    osc.frequency.exponentialRampToValueAtTime(36, now + 0.14);
-    g.gain.setValueAtTime(0.065, now);
+    osc.frequency.setValueAtTime(112, now);
+    osc.frequency.exponentialRampToValueAtTime(34, now + 0.14);
+    g.gain.setValueAtTime(0.06, now);
     g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
     osc.connect(g); g.connect(masterGain);
     osc.start(now); osc.stop(now + 0.17);
@@ -944,20 +1101,13 @@ function startHeroicSoundtrack() {
     const bar = Math.floor(musicBeat / 8) % CHORDS.length;
     const step = musicBeat % 8;
     const ch = CHORDS[bar];
+    const pitchShift = session.planet === "MARS" ? 0.94 : 1.0;
 
-    if (step === 0) {
-      ch.pad.forEach(n => playSynthVoice(n, 2.35, "sawtooth", 0.015, 720, 0.25));
-    }
-    if (step % 2 === 0) {
-      playSynthVoice(ch.bass, 0.42, "triangle", 0.05, 360, 0.01);
-    }
-    if (step === 0 || step === 4 || step === 6) {
-      playKick();
-    }
+    if (step === 0) ch.pad.forEach(n => playSynthVoice(n * pitchShift, 2.3, "sawtooth", 0.014, 720, 0.24));
+    if (step % 2 === 0) playSynthVoice(ch.bass * pitchShift, 0.4, "triangle", 0.048, 360, 0.01);
+    if (step === 0 || step === 4 || step === 6) playKick();
     const leadNote = ch.lead[step];
-    if (leadNote > 0) {
-      playSynthVoice(leadNote, 0.38, "triangle", 0.028, 2200, 0.015);
-    }
+    if (leadNote > 0) playSynthVoice(leadNote * pitchShift, 0.36, "triangle", 0.026, 2200, 0.015);
     musicBeat++;
   }, 290);
 }
@@ -1019,31 +1169,22 @@ function updateJoystickFromClient(cx, cy) {
   let dx = cx - centerX;
   let dy = cy - centerY;
   const dist = Math.hypot(dx, dy);
-  if (dist > maxR) {
-    dx = (dx / dist) * maxR;
-    dy = (dy / dist) * maxR;
-  }
+  if (dist > maxR) { dx = (dx / dist) * maxR; dy = (dy / dist) * maxR; }
   joyKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
   joyX = dx / maxR;
   joyY = dy / maxR;
 }
-
 joyBase.addEventListener("pointerdown", e => {
-  e.preventDefault();
-  ensureAudio();
-  joyPointerId = e.pointerId;
-  joyBase.setPointerCapture(e.pointerId);
-  updateJoystickFromClient(e.clientX, e.clientY);
+  e.preventDefault(); ensureAudio(); joyPointerId = e.pointerId;
+  joyBase.setPointerCapture(e.pointerId); updateJoystickFromClient(e.clientX, e.clientY);
 });
 joyBase.addEventListener("pointermove", e => {
   if (e.pointerId !== joyPointerId) return;
-  e.preventDefault();
-  updateJoystickFromClient(e.clientX, e.clientY);
+  e.preventDefault(); updateJoystickFromClient(e.clientX, e.clientY);
 });
 function releaseJoystick(e) {
   if (e.pointerId !== joyPointerId) return;
-  joyPointerId = null;
-  joyX = 0; joyY = 0;
+  joyPointerId = null; joyX = 0; joyY = 0;
   joyKnob.style.transform = "translate(-50%, -50%)";
 }
 joyBase.addEventListener("pointerup", releaseJoystick);
@@ -1056,11 +1197,11 @@ function initBgStars() {
   bgCanvas.width = window.innerWidth || 1200;
   bgCanvas.height = window.innerHeight || 800;
   bgStars = [];
-  for (let i = 0; i < 160; i++) {
+  for (let i = 0; i < 170; i++) {
     bgStars.push({
       x: Math.random() * bgCanvas.width,
       y: Math.random() * bgCanvas.height,
-      r: 0.6 + Math.random() * 1.8,
+      r: 0.6 + Math.random() * 1.9,
       s: 0.15 + Math.random() * 0.45,
       p: Math.random() * Math.PI * 2
     });
@@ -1071,9 +1212,10 @@ function drawBgSpace(ts) {
   requestAnimationFrame(drawBgSpace);
   if (session.screen === "GAME") return;
   const w = bgCanvas.width, h = bgCanvas.height;
+  const isMars = session.planet === "MARS";
   const grd = bgCtx.createRadialGradient(w * 0.5, h * 0.15, 20, w * 0.5, h * 0.5, w * 0.85);
-  grd.addColorStop(0, "#1e1b4b");
-  grd.addColorStop(0.55, "#090d1f");
+  grd.addColorStop(0, isMars ? "#451a03" : "#1e1b4b");
+  grd.addColorStop(0.55, isMars ? "#1c0a05" : "#090d1f");
   grd.addColorStop(1, "#020617");
   bgCtx.fillStyle = grd;
   bgCtx.fillRect(0, 0, w, h);
@@ -1082,7 +1224,7 @@ function drawBgSpace(ts) {
     bgCtx.fillStyle = `rgba(224,242,254,${a})`;
     bgCtx.beginPath(); bgCtx.arc(st.x, st.y, st.r, 0, Math.PI * 2); bgCtx.fill();
   });
-  bgCtx.fillStyle = "rgba(100,116,139,0.22)";
+  bgCtx.fillStyle = isMars ? "rgba(180,83,42,0.28)" : "rgba(100,116,139,0.22)";
   bgCtx.beginPath();
   bgCtx.ellipse(w * 0.5, h + 110, w * 0.72, 210, 0, Math.PI, 0);
   bgCtx.fill();
@@ -1100,9 +1242,9 @@ function startFiveSecondLoader() {
   document.getElementById("load-fact").innerText = LOAD_FACTS[Math.floor(Math.random() * LOAD_FACTS.length)];
   const steps = [
     "Connecting to NASA DONKI Space Weather Feed...",
-    "Mapping Expanded Shackleton Crater Terrain...",
-    "Loading 3D Avengers Lunar Suits & Hardware...",
-    "Preparing CSA 4-Crop Hydroponic Greenhouse...",
+    "Mapping Moon (Shackleton) & Mars (Jezero) Terrains...",
+    "Forging Hero 3D Armor, Mjolnir & Vibranium Shields...",
+    "Booting CSA Hydroponic Greenhouse & MOXIE O₂...",
     "Avengers Assemble — Ready for Launch!"
   ];
   const startT = performance.now();
@@ -1121,7 +1263,10 @@ function startFiveSecondLoader() {
 
 function goToCreatePage() {
   session.screen = "CREATE";
+  state.paused = true;
+  document.getElementById("game-sidebar").classList.remove("open");
   document.getElementById("multi-notice").style.display = "none";
+  selectPlanet(session.planet);
   syncMusicButtons();
   showScreen("screen-create");
 }
@@ -1181,7 +1326,7 @@ function renderHeroGrid() {
       <text x="60" y="94" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="bold">${h.unlockCoins} 🪙</text>
     `;
     card.innerHTML = `
-      <svg width="80" height="92" viewBox="0 0 120 140">
+      <svg width="78" height="90" viewBox="0 0 120 140">
         <circle cx="60" cy="52" r="36" fill="#f8fafc" stroke="${h.suit}" stroke-width="4"/>
         <circle cx="60" cy="53" r="22" fill="#ffedd5"/>
         <ellipse cx="51" cy="52" rx="4.5" ry="5.5" fill="${h.eyes}"/><circle cx="49.5" cy="50" r="1.8" fill="#fff"/>
@@ -1193,6 +1338,7 @@ function renderHeroGrid() {
         ${lockSvg}
       </svg>
       <div class="hero-name">${h.name}</div>
+      <div class="hero-shield-tag">✨ ${h.shieldName}</div>
       <div class="hero-perk">${h.perk}</div>
       <div class="hero-status ${unlocked ? 'status-unlocked' : 'status-locked'}">
         ${unlocked ? (selected ? '✅ SELECTED' : '🔓 UNLOCKED') : `🔒 ${Math.floor(session.vaultCoins)} / ${h.unlockCoins} 🪙`}
@@ -1208,7 +1354,7 @@ function renderHeroGrid() {
         validateAgePage();
       } else {
         const needed = Math.max(0, h.unlockCoins - Math.floor(session.vaultCoins));
-        document.getElementById("hero-msg").innerText = `❌ ${h.name} is locked! Collect ${needed} more Vault Coins on the Moon to unlock!`;
+        document.getElementById("hero-msg").innerText = `❌ ${h.name} is locked! Collect ${needed} more Vault Coins on Moon/Mars to unlock!`;
         playSfx(210, 0.16, "sawtooth", 0.07);
       }
     };
@@ -1255,28 +1401,30 @@ function goToInstructions() {
   ensureAudio();
   playSfx(523, 0.14, "triangle", 0.08);
   session.screen = "INSTRUCTIONS";
-  const h = getHero();
-  document.getElementById("inst-hero-line").innerText = `Commander: ${h.name}  •  ${session.ageTier} Mode  •  Vault: ${Math.floor(session.vaultCoins)} 🪙`;
+  const h = getHero(), pl = getPlanet();
+  document.getElementById("inst-hero-line").innerText =
+    `${pl.icon} ${pl.name} (${pl.site})  •  Commander: ${h.name} (${h.shieldName})  •  ${session.ageTier}`;
+  document.getElementById("btn-launch-final").innerText = `🚀 LAUNCH 3D ${pl.name.toUpperCase()} MISSION`;
   showScreen("screen-instructions");
 }
 
-const WORLD_LIMIT_X = 48;
-const WORLD_LIMIT_Z = 44;
+const WORLD_RADIUS = 64;
 
 const STATIONS = {
-  SOLAR:   { x: -18.0, z: 8.5,   r: 3.4, label: "☀️ Scrubbing Solar Dust...", color: 0xfacc15, tag: "☀️ SOLAR ARRAY" },
-  ICE:     { x: -15.5, z: -14.0, r: 3.4, label: "🧊 Mining Crater Ice (+O₂, -⚡)...", color: 0x38bdf8, tag: "🧊 ICE CRATER" },
-  SCIENCE: { x: 16.5,  z: 14.5,  r: 3.4, label: "🔬 Drilling Lunar Core (-O₂, +Sci)...", color: 0xd8b4fe, tag: "🔬 EVA SCIENCE" },
-  FARM:    { x: 17.5,  z: -4.0,  r: 3.6, label: "🌱 Harvesting CSA Crops...", color: 0x4ade80, tag: "🌱 CSA FARM" },
+  SOLAR:   { x: -21.0, z: 10.5,  r: 3.6, label: "☀️ Scrubbing Solar Dust...", color: 0xfacc15, tag: "☀️ SOLAR ARRAY" },
+  O2GEN:   { x: -18.5, z: -17.5, r: 3.6, label: "🧊 Generating Oxygen...", color: 0x38bdf8, tag: "🧊 O₂ GENERATOR" },
+  SCIENCE: { x: 19.5,  z: 17.5,  r: 3.6, label: "🔬 Drilling Core Sample (-O₂, +Sci)...", color: 0xd8b4fe, tag: "🔬 EVA SCIENCE" },
+  FARM:    { x: 21.0,  z: -5.0,  r: 3.8, label: "🌱 Harvesting CSA Crops...", color: 0x4ade80, tag: "🌱 CSA FARM" },
   PANTRY:  { x: 2.3,   z: -1.2,  r: 2.2, label: "🍽️ Stocking Pantry Table...", color: 0xf472b6, tag: "🍽️ PANTRY" },
-  SHIELD:  { x: -2.4,  z: -1.4,  r: 2.1, label: "🛡️ Shield Console", color: 0x60a5fa, tag: "🛡️ SHIELD" }
+  SHIELD:  { x: -2.4,  z: -1.4,  r: 2.1, label: "🛡️ Hero Shield Console", color: 0x60a5fa, tag: "🛡️ SHIELD" }
 };
 
 let state = { started: false, paused: true, ended: false };
 let telemetryLog = [];
+let lastShieldToggleMs = 0;
 
 function resetMissionState() {
-  const diff = getDiff();
+  const diff = getDiff(), pl = getPlanet();
   state = {
     started: true,
     paused: false,
@@ -1287,7 +1435,7 @@ function resetMissionState() {
     oxygen: 96,
     food: 92,
     hp: 100,
-    rad: 0.42,
+    rad: pl.radBaseline,
     science: 0,
     doorSealed: true,
     shieldOn: false,
@@ -1305,128 +1453,399 @@ function resetMissionState() {
     radioBusy: false,
     radioBeamTimer: 0,
     camZoom: 1.0,
-    fullMoonMode: false,
+    fullPlanetMode: false,
     dilemmasShown: {}
   };
   telemetryLog = [{ sol: 1, pwr: 96, ox: 96, hp: 100 }];
 }
 
 let threeReady = false;
-let scene, camera, renderer, clock;
-let heroGroup, heroLimbs = {}, heroBasketGroup;
-let sunMesh, sunGlow, dirLight, beaconLight, earthGroup, radioBeamMesh;
-let shieldDomeMesh, shieldWireMesh, airlockDoorMesh, airlockGlowMat;
+let scene, camera, renderer, clock, worldGroup;
+let heroGroup, heroBodyRig, heroLimbs = {}, heroBasketGroup, heroShieldFX, heroAuraRings = [], heroLightning = [];
+let sunMesh, sunGlow, dirLight, hemiLight, beaconLight, earthGroup, radioBeamMesh, commsDishHead, scoutDrone, droneRotor, landerStrobe;
+let shieldDomeMesh, shieldWireMesh, shieldRingMesh, airlockDoorMesh, airlockGlowMat;
 let solarDustMeshes = [], cropMeshes = [], pantryFoodGroup, roverGroup, drillCrystal;
-let coinOrbs = [], flareParticles, fxParticles = [], shootingStar;
+let coinOrbs = [], flareParticles, marsWindParticles, fxParticles = [], shootingStar;
 let padRings = {};
-let heroPos = null, heroVelY = 0, heroRotY = 0, wasInside = true, footstepTimer = 0;
+let heroPos = null, heroVelY = 0, heroRotY = 0, wasInside = true, footstepTimer = 0, runCycle = 0;
 const keys = {};
 
-function makeLunarTexture() {
+function makePlanetTexture(pl) {
   const c = document.createElement("canvas");
   c.width = 512; c.height = 512;
   const ctx = c.getContext("2d");
-  ctx.fillStyle = "#64748b";
+  ctx.fillStyle = pl.groundColor;
   ctx.fillRect(0, 0, 512, 512);
-  for (let i = 0; i < 6500; i++) {
-    const shade = 75 + Math.floor(Math.random() * 55);
-    ctx.fillStyle = `rgb(${shade},${shade+6},${shade+16})`;
-    ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+  for (let i = 0; i < 7000; i++) {
+    const v = Math.floor((Math.random() - 0.5) * 44);
+    ctx.fillStyle = pl.key === "MARS"
+      ? `rgb(${170 + v},${78 + Math.floor(v * 0.6)},${40 + Math.floor(v * 0.4)})`
+      : `rgb(${102 + v},${108 + v},${120 + v})`;
+    ctx.fillRect(Math.random() * 512, Math.random() * 512, 2.2, 2.2);
   }
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 52; i++) {
     const x = Math.random() * 512, y = Math.random() * 512, r = 6 + Math.random() * 26;
     const grad = ctx.createRadialGradient(x, y, r * 0.2, x, y, r);
-    grad.addColorStop(0, "rgba(30,41,59,0.55)");
-    grad.addColorStop(0.75, "rgba(100,116,139,0.2)");
-    grad.addColorStop(1, "rgba(203,213,225,0.35)");
+    grad.addColorStop(0, pl.craterDark);
+    grad.addColorStop(0.75, "rgba(0,0,0,0.06)");
+    grad.addColorStop(1, pl.craterRim);
     ctx.fillStyle = grad;
     ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
   }
   const tex = new THREE.CanvasTexture(c);
   tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(12, 12);
+  tex.repeat.set(14, 14);
   return tex;
+}
+
+function makeCapShieldTexture() {
+  const c = document.createElement("canvas");
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext("2d");
+  const cx = 128, cy = 128;
+  const rings = [[124, "#dc2626"], [98, "#f8fafc"], [72, "#dc2626"], [48, "#1d4ed8"]];
+  rings.forEach(([r, col]) => {
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const a1 = -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+    const a2 = a1 + Math.PI / 5;
+    if (i === 0) ctx.moveTo(cx + Math.cos(a1) * 38, cy + Math.sin(a1) * 38);
+    else ctx.lineTo(cx + Math.cos(a1) * 38, cy + Math.sin(a1) * 38);
+    ctx.lineTo(cx + Math.cos(a2) * 16, cy + Math.sin(a2) * 16);
+  }
+  ctx.closePath(); ctx.fill();
+  return new THREE.CanvasTexture(c);
+}
+
+function makeMandalaTexture(primary, secondary) {
+  const c = document.createElement("canvas");
+  c.width = 256; c.height = 256;
+  const ctx = c.getContext("2d");
+  ctx.clearRect(0, 0, 256, 256);
+  ctx.strokeStyle = primary; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(128, 128, 114, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = secondary; ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.arc(128, 128, 86, 0, Math.PI * 2); ctx.stroke();
+  for (let i = 0; i < 2; i++) {
+    ctx.save(); ctx.translate(128, 128); ctx.rotate(i * Math.PI / 4);
+    ctx.strokeRect(-72, -72, 144, 144);
+    ctx.restore();
+  }
+  ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(128, 128, 34, 0, Math.PI * 2); ctx.stroke();
+  return new THREE.CanvasTexture(c);
 }
 
 function makeFloatingLabel(text, borderHex) {
   const c = document.createElement("canvas");
-  c.width = 256; c.height = 64;
+  c.width = 280; c.height = 64;
   const ctx = c.getContext("2d");
   ctx.fillStyle = "rgba(9,13,31,0.88)";
   ctx.strokeStyle = borderHex;
   ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.roundRect(6, 8, 244, 48, 14); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(6, 8, 268, 48, 14); ctx.fill(); ctx.stroke();
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 20px Segoe UI, sans-serif";
+  ctx.font = "900 19px Segoe UI, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText(text, 128, 40);
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true }));
-  sprite.scale.set(5.4, 1.35, 1);
+  ctx.fillText(text, 140, 40);
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+  sprite.scale.set(5.8, 1.35, 1);
   return sprite;
 }
 
 function buildHero3D() {
   if (heroGroup) scene.remove(heroGroup);
+  heroAuraRings = [];
+  heroLightning = [];
+
   const h = getHero();
   heroGroup = new THREE.Group();
-  const suitMat = new THREE.MeshStandardMaterial({ color: h.suit, roughness: 0.35, metalness: 0.25 });
-  const accMat  = new THREE.MeshStandardMaterial({ color: h.accent, roughness: 0.3, metalness: 0.35 });
-  const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.25 });
+  heroBodyRig = new THREE.Group();
+  heroGroup.add(heroBodyRig);
 
-  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.15, 0.6), suitMat);
-  torso.position.y = 1.45; torso.castShadow = true; heroGroup.add(torso);
-
-  const emblem = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.08, 16), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
-  emblem.rotation.x = Math.PI / 2; emblem.position.set(0, 1.55, 0.31); heroGroup.add(emblem);
-
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.54, 18, 18), whiteMat);
-  head.position.y = 2.42; head.castShadow = true; heroGroup.add(head);
-
-  const visor = new THREE.Mesh(
-    new THREE.SphereGeometry(0.45, 16, 12, -Math.PI * 0.35, Math.PI * 0.7, Math.PI * 0.25, Math.PI * 0.42),
-    new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, metalness: 0.8 })
+  const shadowBlob = new THREE.Mesh(
+    new THREE.CircleGeometry(0.82, 20),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.42, depthWrite: false })
   );
-  visor.position.set(0, 2.42, 0.15); heroGroup.add(visor);
+  shadowBlob.rotation.x = -Math.PI / 2;
+  shadowBlob.position.y = 0.05;
+  heroGroup.add(shadowBlob);
+
+  const suitMat = new THREE.MeshStandardMaterial({ color: h.suit, roughness: 0.32, metalness: 0.35 });
+  const accMat  = new THREE.MeshStandardMaterial({ color: h.accent, roughness: 0.28, metalness: 0.45 });
+  const trimMat = new THREE.MeshStandardMaterial({ color: h.trim, roughness: 0.25, metalness: 0.6 });
+  const skinMat = new THREE.MeshStandardMaterial({ color: h.skin, roughness: 0.55 });
+  const darkMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.5 });
+
+  const chest = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.82, 0.54), suitMat);
+  chest.position.y = 1.82; chest.castShadow = true; heroBodyRig.add(chest);
+
+  const waist = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.38, 0.44), accMat);
+  waist.position.y = 1.26; heroBodyRig.add(waist);
+
+  const belt = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.14, 0.5), darkMat);
+  belt.position.y = 1.12; heroBodyRig.add(belt);
+  const buckle = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.16, 0.54), trimMat);
+  buckle.position.y = 1.12; heroBodyRig.add(buckle);
+
+  [-0.56, 0.56].forEach(sx => {
+    const pauldron = new THREE.Mesh(new THREE.SphereGeometry(0.26, 12, 12), accMat);
+    pauldron.position.set(sx, 2.12, 0); pauldron.scale.set(1.1, 0.85, 1.0);
+    heroBodyRig.add(pauldron);
+  });
+
+  const coreCol = h.key === "IRON" ? 0x7dd3fc : (h.key === "STRANGE" ? 0x4ade80 : (h.key === "WANDA" ? 0xef4444 : 0x38bdf8));
+  const emblem = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.08, 16), new THREE.MeshBasicMaterial({ color: coreCol }));
+  emblem.rotation.x = Math.PI / 2; emblem.position.set(0, 1.88, 0.29); heroBodyRig.add(emblem);
+
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.18, 10), suitMat);
+  neck.position.y = 2.28; heroBodyRig.add(neck);
+
+  const headGrp = new THREE.Group();
+  headGrp.position.y = 2.66;
+  const faceSphere = new THREE.Mesh(new THREE.SphereGeometry(0.38, 18, 18), h.key === "IRON" ? accMat : skinMat);
+  faceSphere.castShadow = true; headGrp.add(faceSphere);
+
+  const glassHelmet = new THREE.Mesh(
+    new THREE.SphereGeometry(0.49, 18, 16),
+    new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.22, roughness: 0.08, metalness: 0.3, depthWrite: false })
+  );
+  headGrp.add(glassHelmet);
 
   const eyeMat = new THREE.MeshBasicMaterial({ color: h.eyes });
-  [-0.16, 0.16].forEach(ex => {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), eyeMat);
-    eye.position.set(ex, 2.44, 0.52); heroGroup.add(eye);
+  [-0.13, 0.13].forEach(ex => {
+    const eye = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.06, 0.06), eyeMat);
+    eye.position.set(ex, 0.04, 0.35); headGrp.add(eye);
   });
 
   if (h.key === "CAP") {
-    const shield = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.1, 20), accMat);
-    shield.rotation.x = Math.PI / 2; shield.position.set(0, 1.5, -0.38); heroGroup.add(shield);
+    const cowl = new THREE.Mesh(new THREE.SphereGeometry(0.41, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.58), suitMat);
+    headGrp.add(cowl);
+  } else if (h.key === "IRON") {
+    const faceplate = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.44, 0.14), new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.85, roughness: 0.2 }));
+    faceplate.position.set(0, 0, 0.32); headGrp.add(faceplate);
   } else if (h.key === "LOKI") {
-    const hornMat = new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.8, roughness: 0.2 });
-    [-0.3, 0.3].forEach(hx => {
-      const horn = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.65, 8), hornMat);
-      horn.position.set(hx, 3.05, 0.1); horn.rotation.z = hx > 0 ? -0.35 : 0.35; heroGroup.add(horn);
+    const crownBase = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.06, 8, 18), new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.9, roughness: 0.18 }));
+    crownBase.rotation.x = Math.PI / 2; crownBase.position.y = 0.24; headGrp.add(crownBase);
+    [-0.24, 0.24].forEach(hx => {
+      const h1 = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.72, 10), new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.9, roughness: 0.15 }));
+      h1.position.set(hx, 0.62, 0.16); h1.rotation.z = hx > 0 ? -0.35 : 0.35; h1.rotation.x = 0.38;
+      headGrp.add(h1);
     });
-  } else if (h.key === "THOR" || h.key === "STRANGE") {
-    const cape = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.35, 0.08), accMat);
-    cape.position.set(0, 1.25, -0.36); cape.rotation.x = 0.18; heroGroup.add(cape);
   } else if (h.key === "WANDA") {
-    const crown = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.07, 8, 16), accMat);
-    crown.rotation.x = Math.PI / 2; crown.position.set(0, 2.86, 0.05); heroGroup.add(crown);
+    const tiara = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.42, 4), accMat);
+    tiara.position.set(0, 0.36, 0.22); tiara.rotation.x = 0.25; headGrp.add(tiara);
+  } else if (h.key === "THOR") {
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.42, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.62), new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.6 }));
+    headGrp.add(hair);
+  } else if (h.key === "WIDOW") {
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.42, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.66), new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.5 }));
+    headGrp.add(hair);
+  } else if (h.key === "STRANGE") {
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(0.41, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.55), darkMat);
+    headGrp.add(hair);
+  }
+  heroBodyRig.add(headGrp);
+
+  if (h.key === "THOR" || h.key === "STRANGE" || h.key === "LOKI" || h.key === "WANDA") {
+    const capeCol = h.key === "LOKI" ? 0x15803d : 0xdc2626;
+    const cape = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.55, 0.06), new THREE.MeshStandardMaterial({ color: capeCol, roughness: 0.6 }));
+    cape.position.set(0, 1.38, -0.35); cape.rotation.x = 0.2;
+    heroLimbs.cape = cape;
+    heroBodyRig.add(cape);
+  } else {
+    heroLimbs.cape = null;
   }
 
-  const limbGeo = new THREE.BoxGeometry(0.28, 0.85, 0.28);
-  heroLimbs.lArm = new THREE.Mesh(limbGeo, accMat); heroLimbs.lArm.position.set(-0.66, 1.4, 0);
-  heroLimbs.rArm = new THREE.Mesh(limbGeo, accMat); heroLimbs.rArm.position.set(0.66, 1.4, 0);
-  heroLimbs.lLeg = new THREE.Mesh(limbGeo, suitMat); heroLimbs.lLeg.position.set(-0.26, 0.45, 0);
-  heroLimbs.rLeg = new THREE.Mesh(limbGeo, suitMat); heroLimbs.rLeg.position.set(0.26, 0.45, 0);
-  heroGroup.add(heroLimbs.lArm, heroLimbs.rArm, heroLimbs.lLeg, heroLimbs.rLeg);
+  function makeArticulatedLimb(x, y, matUpper, matLower, isLeg) {
+    const pivot = new THREE.Group();
+    pivot.position.set(x, y, 0);
+    const upper = new THREE.Mesh(new THREE.CylinderGeometry(isLeg ? 0.16 : 0.13, isLeg ? 0.14 : 0.11, isLeg ? 0.52 : 0.44, 10), matUpper);
+    upper.position.y = isLeg ? -0.26 : -0.22; upper.castShadow = true;
+    pivot.add(upper);
 
-  heroBasketGroup = new THREE.Group(); heroBasketGroup.position.set(0, 1.5, -0.65);
-  heroGroup.add(heroBasketGroup);
+    const joint = new THREE.Group();
+    joint.position.y = isLeg ? -0.52 : -0.44;
+    const lower = new THREE.Mesh(new THREE.CylinderGeometry(isLeg ? 0.13 : 0.11, isLeg ? 0.12 : 0.10, isLeg ? 0.50 : 0.40, 10), matLower);
+    lower.position.y = isLeg ? -0.25 : -0.20; lower.castShadow = true;
+    joint.add(lower);
+
+    if (isLeg) {
+      const boot = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.18, 0.42), darkMat);
+      boot.position.set(0, -0.50, 0.07);
+      joint.add(boot);
+    }
+    pivot.add(joint);
+    pivot.userData.lower = joint;
+    heroBodyRig.add(pivot);
+    return pivot;
+  }
+
+  heroLimbs.lArm = makeArticulatedLimb(-0.60, 2.08, suitMat, accMat, false);
+  heroLimbs.rArm = makeArticulatedLimb(0.60, 2.08, suitMat, accMat, false);
+  heroLimbs.lLeg = makeArticulatedLimb(-0.24, 1.08, suitMat, darkMat, true);
+  heroLimbs.rLeg = makeArticulatedLimb(0.24, 1.08, suitMat, darkMat, true);
+
+  if (h.key === "CAP") {
+    const capShieldTex = makeCapShieldTexture();
+    const armShield = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.56, 0.56, 0.08, 28),
+      [
+        new THREE.MeshStandardMaterial({ color: 0xdc2626, metalness: 0.75, roughness: 0.2 }),
+        new THREE.MeshStandardMaterial({ map: capShieldTex, metalness: 0.65, roughness: 0.25 }),
+        new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8 })
+      ]
+    );
+    armShield.rotation.z = Math.PI / 2;
+    armShield.position.set(-0.18, -0.32, 0.14);
+    heroLimbs.lArm.userData.lower.add(armShield);
+  } else if (h.key === "THOR") {
+    const mjolnir = new THREE.Group();
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.55, 8), new THREE.MeshStandardMaterial({ color: 0x78350f }));
+    const headM = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.26, 0.46), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.18 }));
+    headM.position.y = 0.28;
+    mjolnir.add(handle, headM);
+    mjolnir.rotation.x = Math.PI / 2;
+    mjolnir.position.set(0, -0.38, 0.22);
+    heroLimbs.rArm.userData.lower.add(mjolnir);
+  } else if (h.key === "LOKI") {
+    const scepter = new THREE.Group();
+    const staff = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.45, 8), new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.85 }));
+    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: 0x4ade80 }));
+    gem.position.y = 0.78;
+    scepter.add(staff, gem);
+    scepter.rotation.x = 0.45;
+    scepter.position.set(0.05, -0.25, 0.24);
+    heroLimbs.rArm.userData.lower.add(scepter);
+  }
+
+  heroShieldFX = new THREE.Group();
+  heroShieldFX.position.set(0, 1.65, 0);
+
+  if (h.key === "CAP") {
+    const giantShield = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.38, 1.38, 0.1, 32),
+      [
+        new THREE.MeshBasicMaterial({ color: 0xef4444 }),
+        new THREE.MeshBasicMaterial({ map: makeCapShieldTexture(), transparent: true, opacity: 0.92, depthWrite: false }),
+        new THREE.MeshBasicMaterial({ map: makeCapShieldTexture(), transparent: true, opacity: 0.85, depthWrite: false })
+      ]
+    );
+    giantShield.rotation.x = Math.PI / 2;
+    giantShield.position.set(0, 0.15, 1.05);
+    heroShieldFX.add(giantShield);
+
+    const holoRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.65, 0.05, 10, 36),
+      new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.8, depthWrite: false })
+    );
+    holoRing.position.set(0, 0.15, 1.05);
+    heroShieldFX.add(holoRing);
+    heroAuraRings.push(holoRing);
+  } else if (h.key === "THOR") {
+    const orbHammer = new THREE.Group();
+    const hHead = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.38, 0.65), new THREE.MeshStandardMaterial({ color: 0xe0f2fe, emissive: 0x38bdf8, emissiveIntensity: 0.9 }));
+    const hStick = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.65, 8), new THREE.MeshStandardMaterial({ color: 0x92400e }));
+    hStick.position.y = -0.35;
+    orbHammer.add(hHead, hStick);
+    orbHammer.position.set(1.65, 0.25, 0);
+    const orbitPivot = new THREE.Group();
+    orbitPivot.add(orbHammer);
+    heroShieldFX.add(orbitPivot);
+    heroAuraRings.push(orbitPivot);
+
+    for (let i = 0; i < 6; i++) {
+      const bolt = new THREE.Mesh(
+        new THREE.TorusGeometry(1.55 + (i % 2) * 0.25, 0.04, 6, 18),
+        new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0x7dd3fc : 0xffffff, transparent: true, opacity: 0.85, depthWrite: false })
+      );
+      bolt.rotation.set(i * 0.6, i * 0.9, 0);
+      heroShieldFX.add(bolt);
+      heroLightning.push(bolt);
+    }
+  } else if (h.key === "LOKI") {
+    const crownHalo = new THREE.Mesh(
+      new THREE.TorusGeometry(1.55, 0.07, 10, 32),
+      new THREE.MeshBasicMaterial({ color: 0xeab308, transparent: true, opacity: 0.9, depthWrite: false })
+    );
+    crownHalo.rotation.x = Math.PI / 2; crownHalo.position.y = 1.4;
+    heroShieldFX.add(crownHalo);
+    heroAuraRings.push(crownHalo);
+
+    const greenWard = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.55, 1.55, 2.6, 8, 1, true),
+      new THREE.MeshBasicMaterial({ color: 0x22c55e, wireframe: true, transparent: true, opacity: 0.72, depthWrite: false })
+    );
+    heroShieldFX.add(greenWard);
+    heroAuraRings.push(greenWard);
+  } else if (h.key === "STRANGE") {
+    const mandTex = makeMandalaTexture("#f97316", "#fde047");
+    [1.15, -1.15].forEach((zOff, idx) => {
+      const disc = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.8, 2.8),
+        new THREE.MeshBasicMaterial({ map: mandTex, transparent: true, opacity: 0.92, side: THREE.DoubleSide, depthWrite: false })
+      );
+      disc.position.set(0, 0.1, zOff);
+      heroShieldFX.add(disc);
+      heroAuraRings.push(disc);
+    });
+  } else if (h.key === "WANDA") {
+    const hexSphere = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.65, 1),
+      new THREE.MeshBasicMaterial({ color: 0xef4444, wireframe: true, transparent: true, opacity: 0.78, depthWrite: false })
+    );
+    heroShieldFX.add(hexSphere);
+    heroAuraRings.push(hexSphere);
+    for (let i = 0; i < 4; i++) {
+      const orb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), new THREE.MeshBasicMaterial({ color: 0xf43f5e }));
+      orb.position.set(Math.cos(i * Math.PI / 2) * 1.55, 0.2, Math.sin(i * Math.PI / 2) * 1.55);
+      hexSphere.add(orb);
+    }
+  } else if (h.key === "IRON") {
+    const nanoPlate = new THREE.Mesh(
+      new THREE.CircleGeometry(1.45, 6),
+      new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.52, side: THREE.DoubleSide, depthWrite: false })
+    );
+    nanoPlate.position.set(0, 0.15, 1.15);
+    const nanoEdge = new THREE.Mesh(
+      new THREE.RingGeometry(1.36, 1.5, 6),
+      new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide, depthWrite: false })
+    );
+    nanoEdge.position.set(0, 0.15, 1.16);
+    heroShieldFX.add(nanoPlate, nanoEdge);
+    heroAuraRings.push(nanoEdge);
+  } else {
+    const biteRing1 = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.06, 10, 28), new THREE.MeshBasicMaterial({ color: 0x38bdf8, depthWrite: false }));
+    const biteRing2 = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.05, 10, 28), new THREE.MeshBasicMaterial({ color: 0xef4444, depthWrite: false }));
+    biteRing1.rotation.x = Math.PI / 2;
+    biteRing2.rotation.x = Math.PI / 2.6;
+    heroShieldFX.add(biteRing1, biteRing2);
+    heroAuraRings.push(biteRing1, biteRing2);
+  }
+
+  heroShieldFX.visible = state.shieldOn;
+  heroGroup.add(heroShieldFX);
+
+  heroBasketGroup = new THREE.Group();
+  heroBasketGroup.position.set(0, 1.7, -0.58);
+  heroBodyRig.add(heroBasketGroup);
 
   heroGroup.position.copy(heroPos);
   scene.add(heroGroup);
   refreshBasketVisuals();
+
+  if (shieldDomeMesh) {
+    shieldDomeMesh.material.color.setHex(h.domeColor);
+    shieldWireMesh.material.color.setHex(h.wireColor);
+    shieldRingMesh.material.color.setHex(h.auraColor);
+  }
 }
 
-function init3D() {
+function init3DEngineOnce() {
   if (threeReady) return;
   const container = document.getElementById("canvas-container");
   const w = container.clientWidth || window.innerWidth;
@@ -1434,10 +1853,7 @@ function init3D() {
 
   heroPos = new THREE.Vector3(0, 0, 1.5);
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x020617);
-  scene.fog = new THREE.FogExp2(0x04091a, 0.0042);
-
-  camera = new THREE.PerspectiveCamera(52, w / h, 0.1, 480);
+  camera = new THREE.PerspectiveCamera(52, w / h, 0.1, 520);
   camera.position.set(0, 15, 22);
 
   renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -1449,12 +1865,14 @@ function init3D() {
 
   clock = new THREE.Clock();
 
-  scene.add(new THREE.HemisphereLight(0x93c5fd, 0x1e293b, 0.72));
+  hemiLight = new THREE.HemisphereLight(0x93c5fd, 0x1e293b, 0.72);
+  scene.add(hemiLight);
+
   dirLight = new THREE.DirectionalLight(0xfff7ed, 1.55);
-  dirLight.position.set(-48, 52, 28);
+  dirLight.position.set(-55, 58, 32);
   dirLight.castShadow = true;
   dirLight.shadow.mapSize.set(1024, 1024);
-  const d = 52;
+  const d = 64;
   dirLight.shadow.camera.left = -d; dirLight.shadow.camera.right = d;
   dirLight.shadow.camera.top = d; dirLight.shadow.camera.bottom = -d;
   scene.add(dirLight);
@@ -1463,210 +1881,285 @@ function init3D() {
   beaconLight.position.set(0, 4.5, 0);
   scene.add(beaconLight);
 
+  worldGroup = new THREE.Group();
+  scene.add(worldGroup);
+
+  threeReady = true;
+  setupCanvasZoomGestures();
+  animate3D();
+}
+
+function rebuildWorldForPlanet() {
+  const pl = getPlanet();
+  const h = getHero();
+
+  while (worldGroup.children.length > 0) worldGroup.remove(worldGroup.children[0]);
+  solarDustMeshes = [];
+  cropMeshes = [];
+  coinOrbs = [];
+  fxParticles = [];
+  padRings = {};
+
+  scene.background = new THREE.Color(pl.skyHex);
+  scene.fog = new THREE.FogExp2(pl.fogHex, pl.fogDensity);
+  hemiLight.color.setHex(pl.hemiSkyHex);
+  hemiLight.groundColor.setHex(pl.hemiGndHex);
+  dirLight.color.setHex(pl.sunLightHex);
+
   const starGeo = new THREE.BufferGeometry();
-  const starPos = new Float32Array(2000 * 3);
-  const starCol = new Float32Array(2000 * 3);
-  for (let i = 0; i < 2000; i++) {
-    const r = 130 + Math.random() * 140;
+  const starPos = new Float32Array(2200 * 3);
+  const starCol = new Float32Array(2200 * 3);
+  for (let i = 0; i < 2200; i++) {
+    const r = 150 + Math.random() * 150;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(Math.random() * 1.6 - 0.8);
     starPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
     starPos[i*3+1] = r * Math.cos(phi);
     starPos[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
-    starCol[i*3] = Math.random() > 0.7 ? 1.0 : 0.82;
+    starCol[i*3] = Math.random() > 0.7 ? 1.0 : 0.85;
     starCol[i*3+1] = 0.92;
     starCol[i*3+2] = 1.0;
   }
   starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
   starGeo.setAttribute("color", new THREE.BufferAttribute(starCol, 3));
-  scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 0.75, vertexColors: true })));
+  worldGroup.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ size: 0.8, vertexColors: true })));
 
-  shootingStar = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 5.2), new THREE.MeshBasicMaterial({ color: 0xbae6fd }));
-  shootingStar.position.set(-70, 48, -80);
-  scene.add(shootingStar);
+  shootingStar = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 5.5), new THREE.MeshBasicMaterial({ color: 0xbae6fd }));
+  shootingStar.position.set(-80, 50, -85);
+  worldGroup.add(shootingStar);
 
-  sunMesh = new THREE.Mesh(new THREE.SphereGeometry(8.5, 24, 24), new THREE.MeshBasicMaterial({ color: 0xfde047 }));
-  sunMesh.position.set(-85, 58, -78);
-  scene.add(sunMesh);
-  sunGlow = new THREE.Mesh(new THREE.SphereGeometry(12.5, 24, 24), new THREE.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.26, depthWrite: false }));
+  sunMesh = new THREE.Mesh(new THREE.SphereGeometry(pl.key === "MARS" ? 6.5 : 9.0, 24, 24), new THREE.MeshBasicMaterial({ color: pl.key === "MARS" ? 0xfdba74 : 0xfde047 }));
+  sunMesh.position.set(-92, 62, -85);
+  worldGroup.add(sunMesh);
+  sunGlow = new THREE.Mesh(new THREE.SphereGeometry(pl.key === "MARS" ? 10.0 : 13.5, 24, 24), new THREE.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.26, depthWrite: false }));
   sunGlow.position.copy(sunMesh.position);
-  scene.add(sunGlow);
+  worldGroup.add(sunGlow);
 
   earthGroup = new THREE.Group();
-  earthGroup.position.set(68, 52, -88);
-  earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(8.5, 28, 28), new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.5 })));
-  const landMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.8 });
-  [[-3.0, 2.2, 7.2, 3.2], [3.5, -1.4, 6.8, 2.8], [0.4, 4.8, -6.2, 3.0], [-4.2, -3.2, -5.6, 2.6]].forEach(c => {
-    const patch = new THREE.Mesh(new THREE.SphereGeometry(c[3], 12, 12), landMat);
-    patch.position.set(c[0], c[1], c[2]); patch.scale.set(1, 0.8, 0.5);
-    earthGroup.add(patch);
-  });
-  earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(9.2, 24, 24), new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.18, depthWrite: false })));
-  scene.add(earthGroup);
+  earthGroup.position.set(74, 55, -94);
+  const eRad = pl.key === "MARS" ? 2.6 : 9.2;
+  earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(eRad, 24, 24), new THREE.MeshStandardMaterial({ color: 0x1d4ed8, emissive: 0x1e40af, emissiveIntensity: 0.35 })));
+  if (pl.key === "MOON") {
+    const landMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.8 });
+    [[-3.2, 2.4, 7.6, 3.4], [3.6, -1.5, 7.2, 2.9], [0.4, 5.0, -6.5, 3.1]].forEach(c => {
+      const patch = new THREE.Mesh(new THREE.SphereGeometry(c[3], 12, 12), landMat);
+      patch.position.set(c[0], c[1], c[2]); patch.scale.set(1, 0.8, 0.5);
+      earthGroup.add(patch);
+    });
+  } else {
+    const phobos = new THREE.Mesh(new THREE.DodecahedronGeometry(3.4, 1), new THREE.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.9 }));
+    phobos.position.set(-38, 8, 12);
+    earthGroup.add(phobos);
+  }
+  earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(eRad * 1.12, 20, 20), new THREE.MeshBasicMaterial({ color: 0x60a5fa, transparent: true, opacity: 0.22, depthWrite: false })));
+  worldGroup.add(earthGroup);
 
-  const lunarTex = makeLunarTexture();
-  const moonDiskGeo = new THREE.CircleGeometry(68, 64);
-  moonDiskGeo.rotateX(-Math.PI / 2);
-  const ground = new THREE.Mesh(
-    moonDiskGeo,
-    new THREE.MeshStandardMaterial({ map: lunarTex, roughness: 0.94, metalness: 0.05 })
-  );
+  const planetTex = makePlanetTexture(pl);
+  const diskGeo = new THREE.CircleGeometry(82, 64);
+  diskGeo.rotateX(-Math.PI / 2);
+  const ground = new THREE.Mesh(diskGeo, new THREE.MeshStandardMaterial({ map: planetTex, roughness: 0.94, metalness: 0.04 }));
   ground.receiveShadow = true;
-  scene.add(ground);
+  worldGroup.add(ground);
 
-  const moonSphereBody = new THREE.Mesh(
-    new THREE.SphereGeometry(72, 40, 28),
-    new THREE.MeshStandardMaterial({ map: lunarTex, color: 0x475569, roughness: 0.96 })
+  const planetBody = new THREE.Mesh(
+    new THREE.SphereGeometry(86, 40, 28),
+    new THREE.MeshStandardMaterial({ map: planetTex, color: pl.bodyHex, roughness: 0.96 })
   );
-  moonSphereBody.position.set(0, -24.5, 0);
-  scene.add(moonSphereBody);
+  planetBody.position.set(0, -28.0, 0);
+  worldGroup.add(planetBody);
 
   const rimRing = new THREE.Mesh(
-    new THREE.TorusGeometry(56, 2.2, 10, 48),
-    new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.95 })
+    new THREE.TorusGeometry(69, 2.8, 10, 54),
+    new THREE.MeshStandardMaterial({ color: pl.rockHex, roughness: 0.95 })
   );
-  rimRing.rotation.x = Math.PI / 2;
-  rimRing.position.y = 0.6;
-  scene.add(rimRing);
+  rimRing.rotation.x = Math.PI / 2; rimRing.position.y = 0.8;
+  worldGroup.add(rimRing);
 
-  const rockMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.95 });
+  const rockMat = new THREE.MeshStandardMaterial({ color: pl.rockHex, roughness: 0.95 });
   [
-    [-32, 22], [-36, -18], [34, 24], [38, -22], [10, 34], [-14, -36],
-    [28, -32], [-26, 30], [42, 4], [-42, -4], [0, -40], [22, 32], [-30, -30], [36, 12]
+    [-38, 28], [-44, -22], [40, 30], [45, -26], [12, 42], [-18, -44],
+    [34, -38], [-32, 36], [50, 6], [-50, -6], [0, -48], [26, 40], [-36, -38], [44, 16], [-46, 12], [18, -46]
   ].forEach(([rx, rz]) => {
-    const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1.4 + Math.random() * 1.9, 0), rockMat);
-    rock.position.set(rx, 0.7, rz); rock.rotation.set(Math.random(), Math.random(), 0);
-    rock.castShadow = true; rock.receiveShadow = true;
-    scene.add(rock);
+    const mesh = pl.key === "MARS"
+      ? new THREE.Mesh(new THREE.CylinderGeometry(1.8 + Math.random() * 2.2, 3.6 + Math.random() * 2.8, 3.4 + Math.random() * 4.5, 7), rockMat)
+      : new THREE.Mesh(new THREE.DodecahedronGeometry(1.6 + Math.random() * 2.2, 0), rockMat);
+    mesh.position.set(rx, pl.key === "MARS" ? 1.8 : 0.8, rz);
+    mesh.rotation.y = Math.random() * Math.PI;
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    worldGroup.add(mesh);
   });
 
-  function addCraterRing(cx, cz, rad) {
-    const cr = new THREE.Mesh(
-      new THREE.TorusGeometry(rad, 0.55, 8, 24),
-      new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.95 })
-    );
-    cr.rotation.x = Math.PI / 2; cr.position.set(cx, 0.15, cz);
-    scene.add(cr);
-  }
-  addCraterRing(-32, -26, 6.5);
-  addCraterRing(32, -26, 7.2);
-  addCraterRing(-34, 26, 5.8);
-  addCraterRing(30, 28, 6.2);
-  addCraterRing(0, -32, 5.0);
+  [[-38, -32, 7.5], [38, -32, 8.2], [-40, 32, 6.8], [36, 34, 7.2], [0, -38, 6.0]].forEach(([cx, cz, rad]) => {
+    const cr = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.65, 8, 24), rockMat);
+    cr.rotation.x = Math.PI / 2; cr.position.set(cx, 0.16, cz);
+    worldGroup.add(cr);
+  });
 
   function addPath(x1, z1, x2, z2, col) {
     const len = Math.hypot(x2 - x1, z2 - z1);
-    const p = new THREE.Mesh(new THREE.PlaneGeometry(len, 1.25), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.28, depthWrite: false }));
+    const p = new THREE.Mesh(new THREE.PlaneGeometry(len, 1.35), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.28, depthWrite: false }));
     p.rotation.x = -Math.PI / 2;
     p.rotation.z = -Math.atan2(z2 - z1, x2 - x1);
     p.position.set((x1 + x2) / 2, 0.04, (z1 + z2) / 2);
-    scene.add(p);
+    worldGroup.add(p);
   }
   addPath(0, 6.2, STATIONS.SOLAR.x, STATIONS.SOLAR.z, 0xfacc15);
-  addPath(0, 6.2, STATIONS.ICE.x, STATIONS.ICE.z, 0x38bdf8);
+  addPath(0, 6.2, STATIONS.O2GEN.x, STATIONS.O2GEN.z, 0x38bdf8);
   addPath(0, 6.2, STATIONS.SCIENCE.x, STATIONS.SCIENCE.z, 0xd8b4fe);
   addPath(5.5, -1.5, STATIONS.FARM.x, STATIONS.FARM.z, 0x4ade80);
 
+  const lander = new THREE.Group();
+  lander.position.set(0, 0, -34);
+  const padBase = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 6.2, 0.35, 16), new THREE.MeshStandardMaterial({ color: 0x334155 }));
+  padBase.position.y = 0.17; lander.add(padBase);
+  const fuselage = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 2.2, 7.5, 16), new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.4, roughness: 0.3 }));
+  fuselage.position.y = 5.0; fuselage.castShadow = true; lander.add(fuselage);
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(1.5, 2.8, 16), new THREE.MeshStandardMaterial({ color: pl.key === "MARS" ? 0xf97316 : 0x2563eb }));
+  nose.position.y = 10.1; lander.add(nose);
+  for (let i = 0; i < 4; i++) {
+    const a = (i * Math.PI) / 2 + Math.PI / 4;
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.35, 3.2, 0.35), new THREE.MeshStandardMaterial({ color: 0x94a3b8 }));
+    leg.position.set(Math.cos(a) * 2.5, 1.3, Math.sin(a) * 2.5);
+    leg.rotation.z = -Math.cos(a) * 0.45; leg.rotation.x = Math.sin(a) * 0.45;
+    lander.add(leg);
+  }
+  landerStrobe = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 10), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+  landerStrobe.position.y = 11.7; lander.add(landerStrobe);
+  const lLbl = makeFloatingLabel(pl.key === "MARS" ? "🚀 ARES LANDER" : "🚀 ARTEMIS LANDER", "#facc15");
+  lLbl.position.set(0, 13.4, 0); lander.add(lLbl);
+  worldGroup.add(lander);
+
+  const dishTower = new THREE.Group();
+  dishTower.position.set(-34, 0, -4);
+  const towerPole = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.55, 6.2, 10), new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.7 }));
+  towerPole.position.y = 3.1; dishTower.add(towerPole);
+  commsDishHead = new THREE.Mesh(new THREE.ConeGeometry(2.6, 1.3, 18, 1, true), new THREE.MeshStandardMaterial({ color: 0xf8fafc, side: THREE.DoubleSide, metalness: 0.5 }));
+  commsDishHead.position.y = 6.6; commsDishHead.rotation.x = -0.9;
+  dishTower.add(commsDishHead);
+  worldGroup.add(dishTower);
+
+  scoutDrone = new THREE.Group();
+  const dBody = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.65, 1.1), new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.6 }));
+  scoutDrone.add(dBody);
+  droneRotor = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.08, 0.25), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
+  droneRotor.position.y = 0.55; scoutDrone.add(droneRotor);
+  scoutDrone.position.set(16, 6.5, 0);
+  worldGroup.add(scoutDrone);
+
   const habFloor = new THREE.Mesh(new THREE.CylinderGeometry(6.0, 6.2, 0.22, 32), new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.45, metalness: 0.4 }));
   habFloor.position.set(0, 0.11, 0); habFloor.receiveShadow = true;
-  scene.add(habFloor);
+  worldGroup.add(habFloor);
 
-  scene.add(new THREE.Mesh(
+  worldGroup.add(new THREE.Mesh(
     new THREE.SphereGeometry(6.0, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.5),
     new THREE.MeshStandardMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.16, roughness: 0.1, side: THREE.DoubleSide, depthWrite: false })
   ));
-  scene.add(new THREE.Mesh(
+  worldGroup.add(new THREE.Mesh(
     new THREE.SphereGeometry(6.06, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.5),
     new THREE.MeshBasicMaterial({ color: 0xe2e8f0, wireframe: true, transparent: true, opacity: 0.34, depthWrite: false })
   ));
-  const habLbl = makeFloatingLabel("🏠 ARTEMIS HABITAT", "#38bdf8");
-  habLbl.position.set(0, 7.4, 0);
-  scene.add(habLbl);
+  const habLbl = makeFloatingLabel(pl.key === "MARS" ? "🏠 ARES HABITAT" : "🏠 ARTEMIS HABITAT", "#38bdf8");
+  habLbl.position.set(0, 7.5, 0);
+  worldGroup.add(habLbl);
 
   const airlockFrame = new THREE.Mesh(new THREE.BoxGeometry(3.2, 2.8, 1.4), new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5 }));
   airlockFrame.position.set(0, 1.4, 6.0); airlockFrame.castShadow = true;
-  scene.add(airlockFrame);
+  worldGroup.add(airlockFrame);
 
   airlockGlowMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, emissive: 0x16a34a, emissiveIntensity: 0.7 });
   airlockDoorMesh = new THREE.Mesh(new THREE.BoxGeometry(2.3, 2.3, 0.35), airlockGlowMat);
   airlockDoorMesh.position.set(0, 1.25, 6.0);
-  scene.add(airlockDoorMesh);
+  worldGroup.add(airlockDoorMesh);
 
   const beamDir = new THREE.Vector3().subVectors(earthGroup.position, new THREE.Vector3(0, 6.8, 0));
   radioBeamMesh = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.22, 0.55, beamDir.length(), 10),
+    new THREE.CylinderGeometry(0.24, 0.6, beamDir.length(), 10),
     new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85, depthWrite: false })
   );
   radioBeamMesh.position.copy(new THREE.Vector3(0, 6.8, 0)).add(beamDir.clone().multiplyScalar(0.5));
   radioBeamMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), beamDir.clone().normalize());
   radioBeamMesh.visible = false;
-  scene.add(radioBeamMesh);
+  worldGroup.add(radioBeamMesh);
 
   const tableTop = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.25, 1.4), new THREE.MeshStandardMaterial({ color: 0xb45309 }));
   tableTop.position.set(2.3, 1.0, -1.2); tableTop.castShadow = true;
-  scene.add(tableTop);
+  worldGroup.add(tableTop);
   pantryFoodGroup = new THREE.Group(); pantryFoodGroup.position.set(2.3, 1.25, -1.2);
-  scene.add(pantryFoodGroup);
+  worldGroup.add(pantryFoodGroup);
   refreshPantryVisuals();
 
   const consoleDesk = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, 1.1), new THREE.MeshStandardMaterial({ color: 0x1e3a8a, emissive: 0x1d4ed8, emissiveIntensity: 0.45 }));
   consoleDesk.position.set(-2.4, 0.6, -1.4);
-  scene.add(consoleDesk);
+  worldGroup.add(consoleDesk);
 
   shieldDomeMesh = new THREE.Mesh(
     new THREE.SphereGeometry(8.0, 28, 18, 0, Math.PI * 2, 0, Math.PI * 0.52),
-    new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: h.domeColor, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false })
   );
   shieldWireMesh = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(8.18, 2),
-    new THREE.MeshBasicMaterial({ color: 0x7dd3fc, wireframe: true, transparent: true, opacity: 0.42, depthWrite: false })
+    new THREE.IcosahedronGeometry(8.22, 2),
+    new THREE.MeshBasicMaterial({ color: h.wireColor, wireframe: true, transparent: true, opacity: 0.44, depthWrite: false })
   );
-  shieldDomeMesh.visible = false; shieldWireMesh.visible = false;
-  scene.add(shieldDomeMesh, shieldWireMesh);
+  shieldRingMesh = new THREE.Mesh(
+    new THREE.TorusGeometry(8.28, 0.14, 10, 48),
+    new THREE.MeshBasicMaterial({ color: h.auraColor, transparent: true, opacity: 0.82, depthWrite: false })
+  );
+  shieldRingMesh.rotation.x = Math.PI / 2; shieldRingMesh.position.y = 0.45;
+  shieldDomeMesh.visible = false; shieldWireMesh.visible = false; shieldRingMesh.visible = false;
+  worldGroup.add(shieldDomeMesh, shieldWireMesh, shieldRingMesh);
 
   for (let i = 0; i < 4; i++) {
     const px = STATIONS.SOLAR.x - 3.3 + i * 2.2, pz = STATIONS.SOLAR.z - 1.2 + (i % 2) * 2.0;
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 1.8, 8), new THREE.MeshStandardMaterial({ color: 0x94a3b8 }));
-    pole.position.set(px, 0.9, pz); scene.add(pole);
+    pole.position.set(px, 0.9, pz); worldGroup.add(pole);
     const panel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.12, 2.4), new THREE.MeshStandardMaterial({ color: 0x1d4ed8, emissive: 0x1e3a8a, emissiveIntensity: 0.35, metalness: 0.6 }));
-    panel.position.set(px, 1.9, pz); panel.rotation.x = 0.32; panel.castShadow = true; scene.add(panel);
-    const dust = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.14, 2.42), new THREE.MeshStandardMaterial({ color: 0xa16207, transparent: true, opacity: 0.88 }));
-    dust.position.set(px, 1.95, pz); dust.rotation.x = 0.32; dust.visible = false; scene.add(dust);
+    panel.position.set(px, 1.9, pz); panel.rotation.x = 0.32; panel.castShadow = true; worldGroup.add(panel);
+    const dust = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.14, 2.42), new THREE.MeshStandardMaterial({ color: pl.key === "MARS" ? 0xc2410c : 0xa16207, transparent: true, opacity: 0.9 }));
+    dust.position.set(px, 1.95, pz); dust.rotation.x = 0.32; dust.visible = false; worldGroup.add(dust);
     solarDustMeshes.push(dust);
   }
-  const sLbl = makeFloatingLabel("☀️ SOLAR ARRAY [1]", "#facc15"); sLbl.position.set(STATIONS.SOLAR.x, 4.6, STATIONS.SOLAR.z); scene.add(sLbl);
+  const sLbl = makeFloatingLabel("☀️ SOLAR ARRAY [1]", "#facc15"); sLbl.position.set(STATIONS.SOLAR.x, 4.7, STATIONS.SOLAR.z); worldGroup.add(sLbl);
 
-  const iceMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, emissive: 0x0284c7, emissiveIntensity: 0.65, roughness: 0.15 });
-  [[0, 0, 1.9], [1.4, -0.8, 1.25], [-1.3, 0.6, 1.4], [0.2, 1.4, 1.0]].forEach(([ox, oz, h]) => {
-    const c = new THREE.Mesh(new THREE.ConeGeometry(0.6, h, 6), iceMat);
-    c.position.set(STATIONS.ICE.x + ox, h / 2 - 0.1, STATIONS.ICE.z + oz); c.castShadow = true; scene.add(c);
-  });
-  const iLbl = makeFloatingLabel("🧊 CRATER ICE [2]", "#38bdf8"); iLbl.position.set(STATIONS.ICE.x, 4.1, STATIONS.ICE.z); scene.add(iLbl);
+  if (pl.key === "MOON") {
+    const iceMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, emissive: 0x0284c7, emissiveIntensity: 0.65, roughness: 0.15 });
+    [[0, 0, 2.0], [1.5, -0.9, 1.3], [-1.4, 0.7, 1.5], [0.2, 1.5, 1.1]].forEach(([ox, oz, ht]) => {
+      const c = new THREE.Mesh(new THREE.ConeGeometry(0.65, ht, 6), iceMat);
+      c.position.set(STATIONS.O2GEN.x + ox, ht / 2 - 0.1, STATIONS.O2GEN.z + oz); c.castShadow = true; worldGroup.add(c);
+    });
+  } else {
+    const moxBox = new THREE.Mesh(new THREE.BoxGeometry(3.2, 2.2, 2.4), new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.6, roughness: 0.3 }));
+    moxBox.position.set(STATIONS.O2GEN.x, 1.1, STATIONS.O2GEN.z); moxBox.castShadow = true; worldGroup.add(moxBox);
+    [-0.9, 0.9].forEach(tx => {
+      const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 2.6, 12), new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.4 }));
+      tank.position.set(STATIONS.O2GEN.x + tx, 1.4, STATIONS.O2GEN.z + 1.5); worldGroup.add(tank);
+    });
+  }
+  const iLbl = makeFloatingLabel(pl.o2Tag, "#38bdf8"); iLbl.position.set(STATIONS.O2GEN.x, 4.3, STATIONS.O2GEN.z); worldGroup.add(iLbl);
 
-  const sciBase = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 2.1, 0.35, 8), new THREE.MeshStandardMaterial({ color: 0x3b0764, metalness: 0.5 }));
-  sciBase.position.set(STATIONS.SCIENCE.x, 0.18, STATIONS.SCIENCE.z); scene.add(sciBase);
-  const drillTower = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.34, 2.8, 8), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.7 }));
-  drillTower.position.set(STATIONS.SCIENCE.x, 1.5, STATIONS.SCIENCE.z); drillTower.castShadow = true; scene.add(drillTower);
-  drillCrystal = new THREE.Mesh(new THREE.OctahedronGeometry(0.7, 0), new THREE.MeshStandardMaterial({ color: 0xd8b4fe, emissive: 0xa855f7, emissiveIntensity: 0.8 }));
-  drillCrystal.position.set(STATIONS.SCIENCE.x, 3.3, STATIONS.SCIENCE.z); scene.add(drillCrystal);
-  const sciLbl = makeFloatingLabel("🔬 EVA SCIENCE [3]", "#d8b4fe"); sciLbl.position.set(STATIONS.SCIENCE.x, 4.9, STATIONS.SCIENCE.z); scene.add(sciLbl);
+  const sciBase = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 2.2, 0.35, 8), new THREE.MeshStandardMaterial({ color: 0x3b0764, metalness: 0.5 }));
+  sciBase.position.set(STATIONS.SCIENCE.x, 0.18, STATIONS.SCIENCE.z); worldGroup.add(sciBase);
+  const drillTower = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.34, 2.9, 8), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.7 }));
+  drillTower.position.set(STATIONS.SCIENCE.x, 1.55, STATIONS.SCIENCE.z); drillTower.castShadow = true; worldGroup.add(drillTower);
+  drillCrystal = new THREE.Mesh(new THREE.OctahedronGeometry(0.74, 0), new THREE.MeshStandardMaterial({ color: 0xd8b4fe, emissive: 0xa855f7, emissiveIntensity: 0.85 }));
+  drillCrystal.position.set(STATIONS.SCIENCE.x, 3.45, STATIONS.SCIENCE.z); worldGroup.add(drillCrystal);
+  const sciLbl = makeFloatingLabel("🔬 EVA SCIENCE [3]", "#d8b4fe"); sciLbl.position.set(STATIONS.SCIENCE.x, 5.1, STATIONS.SCIENCE.z); worldGroup.add(sciLbl);
 
-  const ghDome = new THREE.Mesh(new THREE.SphereGeometry(4.6, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: 0x4ade80, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false }));
-  ghDome.position.set(STATIONS.FARM.x, 0, STATIONS.FARM.z); scene.add(ghDome);
-  const ghWire = new THREE.Mesh(new THREE.SphereGeometry(4.66, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshBasicMaterial({ color: 0x86efac, wireframe: true, transparent: true, opacity: 0.36, depthWrite: false }));
-  ghWire.position.set(STATIONS.FARM.x, 0, STATIONS.FARM.z); scene.add(ghWire);
-  const gLbl = makeFloatingLabel("🌱 CSA FARM [4]", "#4ade80"); gLbl.position.set(STATIONS.FARM.x, 5.5, STATIONS.FARM.z); scene.add(gLbl);
+  const ghDome = new THREE.Mesh(new THREE.SphereGeometry(4.8, 20, 14, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: 0x4ade80, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false }));
+  ghDome.position.set(STATIONS.FARM.x, 0, STATIONS.FARM.z); worldGroup.add(ghDome);
+  const ghWire = new THREE.Mesh(new THREE.SphereGeometry(4.86, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshBasicMaterial({ color: 0x86efac, wireframe: true, transparent: true, opacity: 0.36, depthWrite: false }));
+  ghWire.position.set(STATIONS.FARM.x, 0, STATIONS.FARM.z); worldGroup.add(ghWire);
+  const gLbl = makeFloatingLabel("🌱 CSA FARM [4]", "#4ade80"); gLbl.position.set(STATIONS.FARM.x, 5.7, STATIONS.FARM.z); worldGroup.add(gLbl);
 
   const cropColors = [0xef4444, 0x22c55e, 0xf97316, 0xeab308];
   [[-1.3, -1.1], [1.3, -1.1], [-1.3, 1.1], [1.3, 1.1]].forEach(([ox, oz], idx) => {
     const bed = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.35, 1.4), new THREE.MeshStandardMaterial({ color: 0x451a03 }));
-    bed.position.set(STATIONS.FARM.x + ox, 0.18, STATIONS.FARM.z + oz); scene.add(bed);
+    bed.position.set(STATIONS.FARM.x + ox, 0.18, STATIONS.FARM.z + oz); worldGroup.add(bed);
     const plant = new THREE.Group(); plant.position.set(STATIONS.FARM.x + ox, 0.4, STATIONS.FARM.z + oz);
     const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 0.8, 6), new THREE.MeshStandardMaterial({ color: 0x16a34a }));
     stem.position.y = 0.4;
     const fruit = new THREE.Mesh(new THREE.SphereGeometry(0.36, 12, 12), new THREE.MeshStandardMaterial({ color: cropColors[idx], emissive: cropColors[idx], emissiveIntensity: 0.35 }));
     fruit.position.y = 0.9;
-    plant.add(stem, fruit); scene.add(plant);
+    plant.add(stem, fruit); worldGroup.add(plant);
     cropMeshes.push(plant);
   });
 
@@ -1677,65 +2170,75 @@ function init3D() {
     );
     ring.rotation.x = -Math.PI / 2;
     ring.position.set(st.x, 0.08, st.z);
-    scene.add(ring);
+    worldGroup.add(ring);
     padRings[key] = ring;
   });
 
   roverGroup = new THREE.Group();
-  const rBody = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.65, 1.3), new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.4 }));
-  rBody.position.y = 0.62; rBody.castShadow = true; roverGroup.add(rBody);
+  const rBody = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.72, 1.4), new THREE.MeshStandardMaterial({ color: pl.key === "MARS" ? 0xf8fafc : 0xfacc15, metalness: 0.4 }));
+  rBody.position.y = 0.68; rBody.castShadow = true; roverGroup.add(rBody);
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.0, 8), new THREE.MeshStandardMaterial({ color: 0x334155 }));
+  mast.position.set(0.65, 1.35, 0); roverGroup.add(mast);
   const wMat = new THREE.MeshStandardMaterial({ color: 0x0f172a });
-  [[-0.75, 0.7], [0.75, 0.7], [-0.75, -0.7], [0.75, -0.7]].forEach(([wx, wz]) => {
+  [[-0.85, 0.75], [0, 0.75], [0.85, 0.75], [-0.85, -0.75], [0, -0.75], [0.85, -0.75]].forEach(([wx, wz]) => {
     const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.25, 12), wMat);
     wh.rotation.x = Math.PI / 2; wh.position.set(wx, 0.34, wz); roverGroup.add(wh);
   });
-  roverGroup.position.set(0, 0, 22);
-  scene.add(roverGroup);
+  roverGroup.position.set(0, 0, 27);
+  worldGroup.add(roverGroup);
 
   const coinPositions = [
-    [-9, 12], [8, 12], [-22, -2], [25, 8], [-6, -18], [12, -16],
-    [-28, 16], [28, -16], [-32, -8], [34, 2], [0, 26], [0, -26],
-    [-18, 28], [20, 28], [-24, -28], [24, -28], [-38, 8], [38, -8]
+    [-11, 14], [10, 14], [-28, -2], [30, 10], [-8, -22], [14, -20],
+    [-34, 20], [34, -20], [-40, -10], [42, 4], [0, 32], [0, -24],
+    [-22, 34], [24, 34], [-30, -34], [30, -34], [-46, 10], [46, -10], [0, 46], [-48, -28]
   ];
   coinPositions.forEach(([cx, cz]) => {
     const coin = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.62, 0.62, 0.18, 16),
-      new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xca8a04, emissiveIntensity: 0.75, metalness: 0.7 })
+      new THREE.CylinderGeometry(0.66, 0.66, 0.18, 16),
+      new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xca8a04, emissiveIntensity: 0.78, metalness: 0.72 })
     );
-    coin.rotation.x = Math.PI / 2; coin.position.set(cx, 1.15, cz);
+    coin.rotation.x = Math.PI / 2; coin.position.set(cx, 1.2, cz);
     coin.userData = { active: true, respawn: 0 };
-    scene.add(coin); coinOrbs.push(coin);
+    worldGroup.add(coin); coinOrbs.push(coin);
   });
 
   const fpGeo = new THREE.BufferGeometry();
-  const fpPos = new Float32Array(360 * 3);
-  for (let i = 0; i < 360; i++) {
-    fpPos[i*3] = (Math.random() - 0.5) * 95;
-    fpPos[i*3+1] = Math.random() * 34;
-    fpPos[i*3+2] = (Math.random() - 0.5) * 95;
+  const fpPos = new Float32Array(420 * 3);
+  for (let i = 0; i < 420; i++) {
+    fpPos[i*3] = (Math.random() - 0.5) * 120;
+    fpPos[i*3+1] = Math.random() * 38;
+    fpPos[i*3+2] = (Math.random() - 0.5) * 120;
   }
   fpGeo.setAttribute("position", new THREE.BufferAttribute(fpPos, 3));
-  flareParticles = new THREE.Points(fpGeo, new THREE.PointsMaterial({ color: 0xff4500, size: 0.55, transparent: true, opacity: 0.92 }));
+  flareParticles = new THREE.Points(fpGeo, new THREE.PointsMaterial({ color: 0xff4500, size: 0.58, transparent: true, opacity: 0.92 }));
   flareParticles.visible = false;
-  scene.add(flareParticles);
+  worldGroup.add(flareParticles);
 
-  buildHero3D();
-  threeReady = true;
-  setupCanvasZoomGestures();
-  animate3D();
+  const wpGeo = new THREE.BufferGeometry();
+  const wpPos = new Float32Array(300 * 3);
+  for (let i = 0; i < 300; i++) {
+    wpPos[i*3] = (Math.random() - 0.5) * 120;
+    wpPos[i*3+1] = 0.5 + Math.random() * 14;
+    wpPos[i*3+2] = (Math.random() - 0.5) * 120;
+  }
+  wpGeo.setAttribute("position", new THREE.BufferAttribute(wpPos, 3));
+  marsWindParticles = new THREE.Points(wpGeo, new THREE.PointsMaterial({ color: 0xfb923c, size: 0.42, transparent: true, opacity: 0.55 }));
+  marsWindParticles.visible = pl.windDust;
+  worldGroup.add(marsWindParticles);
 }
 
 function adjustZoom(delta) {
-  state.fullMoonMode = false;
-  state.camZoom = Math.max(0.65, Math.min(4.6, state.camZoom + delta));
+  state.fullPlanetMode = false;
+  state.camZoom = Math.max(0.65, Math.min(5.2, state.camZoom + delta));
   playSfx(520, 0.06, "sine", 0.04);
 }
 
-function toggleFullMoonView() {
-  state.fullMoonMode = !state.fullMoonMode;
-  state.camZoom = state.fullMoonMode ? 4.4 : 1.0;
-  playSfx(state.fullMoonMode ? 440 : 660, 0.12, "triangle", 0.06);
-  setStatus(state.fullMoonMode ? "🌕 Whole Moon Orbital View! Press C or ➕ to zoom back to your Avenger." : "🎥 Returned to third-person Avenger camera.");
+function toggleFullPlanetView() {
+  state.fullPlanetMode = !state.fullPlanetMode;
+  state.camZoom = state.fullPlanetMode ? 5.0 : 1.0;
+  const pl = getPlanet();
+  playSfx(state.fullPlanetMode ? 440 : 660, 0.12, "triangle", 0.06);
+  setStatus(state.fullPlanetMode ? `${pl.icon} Whole ${pl.name} Orbital View! Press C or ➕ to zoom back to your Avenger.` : "🎥 Returned to third-person Avenger camera.");
 }
 
 function setupCanvasZoomGestures() {
@@ -1743,27 +2246,20 @@ function setupCanvasZoomGestures() {
   cont.addEventListener("wheel", e => {
     if (session.screen !== "GAME") return;
     e.preventDefault();
-    adjustZoom(e.deltaY > 0 ? 0.25 : -0.25);
+    adjustZoom(e.deltaY > 0 ? 0.28 : -0.28);
   }, { passive: false });
 
   let pinchStartDist = null;
   cont.addEventListener("touchstart", e => {
     if (e.touches.length === 2) {
-      pinchStartDist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
+      pinchStartDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
   }, { passive: true });
   cont.addEventListener("touchmove", e => {
     if (e.touches.length === 2 && pinchStartDist) {
-      const dist = Math.hypot(
-        e.touches[0].clientX - e.touches[1].clientX,
-        e.touches[0].clientY - e.touches[1].clientY
-      );
-      const diff = (pinchStartDist - dist) * 0.008;
-      state.fullMoonMode = false;
-      state.camZoom = Math.max(0.65, Math.min(4.6, state.camZoom + diff));
+      const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      state.fullPlanetMode = false;
+      state.camZoom = Math.max(0.65, Math.min(5.2, state.camZoom + (pinchStartDist - dist) * 0.009));
       pinchStartDist = dist;
     }
   }, { passive: true });
@@ -1809,11 +2305,11 @@ function spawnFxPuff(x, y, z, colorHex=0xcbd5e1, size=0.4) {
   if (!threeReady) return;
   const puff = new THREE.Mesh(
     new THREE.SphereGeometry(size, 8, 8),
-    new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.75, depthWrite: false })
+    new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.72, depthWrite: false })
   );
   puff.position.set(x, y, z);
-  puff.userData = { life: 0.42 };
-  scene.add(puff);
+  puff.userData = { life: 0.4 };
+  worldGroup.add(puff);
   fxParticles.push(puff);
 }
 
@@ -1830,27 +2326,37 @@ function launchGameScreen() {
   document.getElementById("flare-alarm").style.display = "none";
 
   resetMissionState();
-  const h = getHero();
+  const h = getHero(), pl = getPlanet();
+  document.getElementById("sb-world").innerText = `${pl.icon} ${pl.name} (${pl.site})`;
   document.getElementById("sb-hero").innerText = h.name;
   document.getElementById("sb-mode").innerText = session.ageTier;
+  document.getElementById("radar-title").innerText = `📡 ${pl.site.toUpperCase()}`;
+  document.getElementById("btn-whole-planet").innerHTML = `${pl.icon} <span class="kbadge">C</span>`;
+  document.getElementById("btn-station-o2").innerHTML = `${pl.o2Short}<span class="kbadge">2</span>`;
+  document.getElementById("btn-jump-dock").innerHTML = (pl.key === "MARS" ? "⬆️ 3/8G" : "⬆️ 1/6G") + '<span class="kbadge">SPC</span>';
+  document.getElementById("comms-dist-lbl").innerText = pl.commsLabel;
   document.getElementById("nasa-feed-btn").innerText =
     NASA.flr.live ? `🟢 LIVE DONKI ${NASA.flr.class}` : `🟡 ARCHIVED DONKI ${NASA.flr.class}`;
+
+  STATIONS.O2GEN.label = pl.o2Work;
+  STATIONS.O2GEN.tag = pl.o2Tag;
+
   syncMusicButtons();
   syncJoystickVisibility();
   syncVaultDisplays();
 
   function boot3D() {
     if (typeof THREE !== "undefined") {
-      init3D();
+      init3DEngineOnce();
       resize3D();
       heroPos.set(0, 0, 1.5);
       wasInside = true;
+      rebuildWorldForPlanet();
       buildHero3D();
-      refreshPantryVisuals();
       updateHUD();
       drawMinimap();
       playSfx(440, 0.25, "triangle", 0.09, 880);
-      setStatus(`🚀 Mission Live as ${h.name}! Use WASD/Joystick, Q=Shield, E=Airlock, 1-6=Stations, C=Whole Moon!`);
+      setStatus(`🚀 ${pl.icon} Touchdown at ${pl.site} as ${h.name}! Press Q for ${h.shieldName}, C for Whole ${pl.name}!`);
       document.getElementById("game-root").focus();
     } else {
       setTimeout(boot3D, 120);
@@ -1859,24 +2365,18 @@ function launchGameScreen() {
   boot3D();
 }
 
-function toggleSidebar() {
-  document.getElementById("game-sidebar").classList.toggle("open");
-  syncVaultDisplays();
-}
+function toggleSidebar() { document.getElementById("game-sidebar").classList.toggle("open"); syncVaultDisplays(); }
 function sidebarChangeAgeHero() { goToAgePage(); }
+function sidebarChangePlanet() { goToCreatePage(); }
 function sidebarGoInstructions() { state.paused = true; document.getElementById("game-sidebar").classList.remove("open"); goToInstructions(); }
 function restartCurrentRun() { launchGameScreen(); }
 function debriefChangeHero() { document.getElementById("debrief-modal").style.display = "none"; goToAgePage(); }
 
 function quitAndResetGame() {
-  state.paused = true;
-  state.ended = true;
-  session.age = null;
-  session.ageTier = "10-12 Commander";
-  session.heroKey = "CAP";
-  session.vaultCoins = 40;
-  session.unlocked = ["CAP", "WIDOW"];
-  session.wins = 0;
+  state.paused = true; state.ended = true;
+  session.age = null; session.ageTier = "10-12 Commander";
+  session.heroKey = "CAP"; session.vaultCoins = 40;
+  session.unlocked = ["CAP", "WIDOW"]; session.wins = 0;
   document.getElementById("age-input").value = "";
   document.getElementById("game-sidebar").classList.remove("open");
   startFiveSecondLoader();
@@ -1894,17 +2394,20 @@ function closeGlossary() { document.getElementById("glossary-pop").style.display
 function openMathLab() {
   state.paused = true;
   document.getElementById("game-sidebar").classList.remove("open");
+  document.getElementById("math-title").innerText = `📈 ${getPlanet().name} Engineering Trade-Off Lab`;
   document.getElementById("math-modal").style.display = "flex";
   updateMathLab();
 }
 function openNasaModal() {
   state.paused = true;
+  const pl = getPlanet();
   document.getElementById("game-sidebar").classList.remove("open");
   document.getElementById("nasa-data-body").innerHTML = `
-    <p><b>☀️ NASA DONKI Solar Flare Feed:</b> <code>${NASA.flr.id}</code> (Class <code>${NASA.flr.class}</code>) — <b>${NASA.flr.source}</b></p>
+    <p><b>${pl.icon} Active Mission Site:</b> ${pl.name} — ${pl.site} | Solar Irradiance: <code>${pl.solarIrradiance}</code> | Baseline Radiation: <code>${pl.radBaseline} mSv/Sol</code></p>
+    <p style="margin-top:8px;"><b>☀️ NASA DONKI Solar Flare Feed:</b> <code>${NASA.flr.id}</code> (Class <code>${NASA.flr.class}</code>) — <b>${NASA.flr.source}</b></p>
     <p style="margin-top:8px;"><b>🌊 NASA DONKI CME Feed:</b> <code>${NASA.cme.id}</code> (Speed <code>${NASA.cme.speed} km/s</code>) — <b>${NASA.cme.source}</b></p>
-    <p style="margin-top:8px;"><b>☢️ NASA RadLab BLEO &amp; OSDR (OSD-137, OSD-767, OSD-895):</b> Lunar surface baseline radiation calibrated at <code>0.42 mSv/Sol</code>, paired with spaceflight crop biology models.</p>
-    <p style="margin-top:8px;"><b>🤝 Partner Space Agencies:</b> Canadian Space Agency (CSA) Deep Space Food Toolkit (4-crop hydroponics), ISRO Chandrayaan-3 South Pole regolith &amp; water-ice research, and ESA lunar communications delay physics (<code>2.56s</code> round-trip across 384,400 km).</p>
+    <p style="margin-top:8px;"><b>☢️ NASA RadLab BLEO, Curiosity RAD &amp; OSDR (OSD-137, OSD-767, OSD-895):</b> Calibrates lunar surface radiation (<code>0.42 mSv/Sol</code>), Martian surface radiation (<code>0.67 mSv/Sol</code>), and spaceflight botany.</p>
+    <p style="margin-top:8px;"><b>🤝 Space Agency Partners:</b> Canadian Space Agency (CSA) Deep Space Food Toolkit, ISRO Chandrayaan-3 Lunar South Pole regolith &amp; water-ice insights, NASA Perseverance MOXIE O₂ generation, and ESA Moonlight lunar communications physics.</p>
   `;
   document.getElementById("nasa-modal").style.display = "flex";
 }
@@ -1915,6 +2418,7 @@ function closeModal(id) {
 }
 
 function updateMathLab() {
+  const pl = getPlanet();
   const sh = Number(document.getElementById("sl-sh").value);
   const fm = Number(document.getElementById("sl-fm").value);
   const ev = Number(document.getElementById("sl-ev").value);
@@ -1924,12 +2428,12 @@ function updateMathLab() {
   document.getElementById("sl-ev-v").innerText = ev + " hrs";
   document.getElementById("sl-ds-v").innerText = ds + "%";
   const pts = [];
-  let p = 96, o = 96, r = 0.42;
+  let p = 96, o = 96, r = pl.radBaseline;
   for (let s = 1; s <= 7; s++) {
-    const solarIn = 32 * (1 - ds / 100);
-    p = Math.max(0, Math.min(100, p + solarIn - (sh * 0.30 + fm * 0.14 + ev * 1.4 + 4)));
-    o = Math.max(0, Math.min(100, o + fm * 0.14 - (7.5 + ev * 2.2)));
-    r += 0.42 + ev * 0.08 + ((s === 3 || s === 6) ? 1.8 * (1 - sh / 100) : 0);
+    const solarIn = 34 * pl.solarChargeMult * (1 - ds / 100);
+    p = Math.max(0, Math.min(100, p + solarIn - (sh * 0.28 + fm * 0.13 + ev * 1.3 + 3.5)));
+    o = Math.max(0, Math.min(100, o + fm * 0.14 - (7.2 + ev * 2.1)));
+    r += pl.radBaseline + ev * 0.08 + ((s === 3 || s === 6) ? 1.8 * pl.flareDmgMult * (1 - sh / 100) : 0);
     pts.push({ p, o, r });
   }
   const c = document.getElementById("math-chart");
@@ -1953,66 +2457,76 @@ function updateMathLab() {
   ctx.fillStyle = "#38bdf8"; ctx.fillText("■ Projected Oxygen %", 475, 15);
   const last = pts[6];
   document.getElementById("math-summary").innerText =
-    `Projected Sol 7 Status: Power ${Math.round(last.p)}% | Oxygen ${Math.round(last.o)}% | Cumulative Radiation ${last.r.toFixed(2)} mSv`;
+    `${pl.name} Sol 7 Projection: Power ${Math.round(last.p)}% | Oxygen ${Math.round(last.o)}% | Crew Radiation ${last.r.toFixed(2)} mSv`;
 }
 
-const DILEMMAS = {
-  2: {
-    title: "🔬 Deep Crater Discovery: Oxygen vs. Research!",
-    desc: "Orbital radar spotted ancient volcanic glass and frozen water-ice deeper inside Shackleton Crater! Drilling takes heavy EVA exertion.",
-    choices: [
-      {
-        label: "A) Run Deep EVA Core Drill",
-        tradeoff: "Cost: -12% 🫁 O₂ & +0.20 mSv  |  Reward: +300 🔬 Science & +60 🪙 Vault Coins",
-        apply: () => { state.oxygen = Math.max(8, state.oxygen - 12); state.rad += 0.20; state.science += 300; addVaultCoins(60); setStatus("🔬 Deep EVA succeeded! +300 Science & +60 Vault Coins!"); }
-      },
-      {
-        label: "B) Send Autonomous Rover Camera Instead",
-        tradeoff: "Cost: -9% ⚡ Power  |  Reward: +120 🔬 Science & +30 🪙 Vault Coins",
-        apply: () => { state.power = Math.max(8, state.power - 9); state.science += 120; addVaultCoins(30); setStatus("🚙 Rover scan saved Oxygen! +120 Science & +30 Vault Coins."); }
-      }
-    ]
-  },
-  4: {
-    title: `🌊 NASA DONKI CME Alert (${NASA.cme.speed} km/s): Shield vs. Greenhouse!`,
-    desc: `NASA DONKI logged Coronal Mass Ejection ${NASA.cme.id}! Peak power cannot max out both magnetic shielding and CSA Greenhouse grow-lights tonight.`,
-    choices: [
-      {
-        label: "A) Reinforce Magnetic Dome Shielding",
-        tradeoff: "Cost: -14% ⚡ Power & -8% 🍽️ Food  |  Reward: Blocks CME & +50 🪙 Vault Coins",
-        apply: () => { state.power = Math.max(8, state.power - 14); state.food = Math.max(10, state.food - 8); state.science += 100; addVaultCoins(50); state.flarePhase = "CALM"; state.flareTimer = 15; setStatus("🛡️ CME deflected! +50 Vault Coins."); }
-      },
-      {
-        label: "B) Prioritize CSA Greenhouse Grow-Lights",
-        tradeoff: "Cost: +0.75 mSv & -10% ❤️ HP  |  Reward: +22% 🍽️ Food, +15% 🫁 O₂ & +40 🪙",
-        apply: () => { state.rad += 0.75; state.hp = Math.max(12, state.hp - 10); state.food = Math.min(100, state.food + 22); state.oxygen = Math.min(100, state.oxygen + 15); addVaultCoins(40); setStatus("🌱 Greenhouse thrived (+22% Food)!"); }
-      }
-    ]
-  },
-  6: {
-    title: "📡 Micrometeoroid Hit Solar Inverter — Comms Delay Choice!",
-    desc: "A tiny space rock cracked an inverter outside! Earth HQ is 384,400 km away (2.6s light delay). How will you respond?",
-    choices: [
-      {
-        label: "A) Rush Outside for Manual EVA Patch",
-        tradeoff: "Cost: -10% 🫁 O₂ & +0.16 mSv  |  Reward: +18% ⚡ Power, +180 🔬 & +60 🪙",
-        apply: () => { state.oxygen = Math.max(8, state.oxygen - 10); state.rad += 0.16; state.power = Math.min(100, state.power + 18); state.science += 180; addVaultCoins(60); setStatus("🛠️ EVA repair restored +18% Power & +60 Vault Coins!"); }
-      },
-      {
-        label: "B) Wait for Earth HQ Remote Software Reroute",
-        tradeoff: "Cost: -12% ⚡ Power drained while waiting  |  Reward: Zero Risk & +45 🪙 Vault Coins",
-        apply: () => { state.power = Math.max(8, state.power - 12); addVaultCoins(45); setStatus("📡 Earth HQ rerouted power safely! +45 Vault Coins."); }
-      }
-    ]
+function getDilemma(solNum) {
+  const pl = getPlanet();
+  if (solNum === 2) {
+    return {
+      title: pl.key === "MARS" ? "🔬 Jezero River Delta Discovery: O₂ vs. Ancient Fossils!" : "🔬 Shackleton Crater Discovery: O₂ vs. Research!",
+      desc: pl.key === "MARS"
+        ? "Perseverance orbital scans spotted ancient clay lakebed minerals 300m down Jezero Delta! Heavy EVA drilling consumes extra Oxygen."
+        : "Orbital radar spotted ancient volcanic glass and frozen water-ice deeper inside Shackleton Crater! Heavy EVA drilling consumes extra Oxygen.",
+      choices: [
+        {
+          label: "A) Run Deep EVA Core Drill",
+          tradeoff: "Cost: -12% 🫁 O₂ & +0.20 mSv  |  Reward: +300 🔬 Science & +70 🪙 Vault Coins",
+          apply: () => { state.oxygen = Math.max(8, state.oxygen - 12); state.rad += 0.20; state.science += 300; addVaultCoins(70); setStatus("🔬 Deep EVA succeeded! +300 Science & +70 Vault Coins!"); }
+        },
+        {
+          label: "B) Send Autonomous Scout Drone Instead",
+          tradeoff: "Cost: -9% ⚡ Power  |  Reward: +130 🔬 Science & +35 🪙 Vault Coins",
+          apply: () => { state.power = Math.max(8, state.power - 9); state.science += 130; addVaultCoins(35); setStatus("🚁 Drone scan saved Oxygen! +130 Science & +35 Vault Coins."); }
+        }
+      ]
+    };
   }
-};
+  if (solNum === 4) {
+    return {
+      title: `🌊 NASA DONKI CME (${NASA.cme.speed} km/s): Shield vs. Greenhouse!`,
+      desc: `NASA DONKI logged Coronal Mass Ejection ${NASA.cme.id}! Peak power on ${pl.name} cannot max out both magnetic shielding and CSA Greenhouse grow-lights tonight.`,
+      choices: [
+        {
+          label: "A) Reinforce Outpost Radiation Shielding",
+          tradeoff: "Cost: -14% ⚡ Power & -8% 🍽️ Food  |  Reward: Blocks CME & +60 🪙 Vault Coins",
+          apply: () => { state.power = Math.max(8, state.power - 14); state.food = Math.max(10, state.food - 8); state.science += 110; addVaultCoins(60); state.flarePhase = "CALM"; state.flareTimer = 16; setStatus("🛡️ CME deflected! +60 Vault Coins."); }
+        },
+        {
+          label: "B) Prioritize CSA Greenhouse Grow-Lights",
+          tradeoff: "Cost: +0.75 mSv & -10% ❤️ HP  |  Reward: +22% 🍽️ Food, +15% 🫁 O₂ & +45 🪙",
+          apply: () => { state.rad += 0.75; state.hp = Math.max(12, state.hp - 10); state.food = Math.min(100, state.food + 22); state.oxygen = Math.min(100, state.oxygen + 15); addVaultCoins(45); setStatus("🌱 Greenhouse thrived (+22% Food)!"); }
+        }
+      ]
+    };
+  }
+  if (solNum === 6) {
+    return {
+      title: pl.key === "MARS" ? "🌪️ Martian Dust Devil Damaged Solar Bus — 12-Min Comms Delay!" : "📡 Micrometeoroid Hit Solar Inverter — Comms Delay!",
+      desc: `An outdoor solar bus cracked! Waiting for Earth Mission Control across ${pl.commsLabel} drains battery while diagnostics travel.`,
+      choices: [
+        {
+          label: "A) Rush Outside for Manual EVA Repair",
+          tradeoff: "Cost: -10% 🫁 O₂ & +0.16 mSv  |  Reward: +18% ⚡ Power, +180 🔬 & +70 🪙",
+          apply: () => { state.oxygen = Math.max(8, state.oxygen - 10); state.rad += 0.16; state.power = Math.min(100, state.power + 18); state.science += 180; addVaultCoins(70); setStatus("🛠️ Bold EVA repair restored +18% Power & +70 Vault Coins!"); }
+        },
+        {
+          label: "B) Wait for Earth HQ Remote Software Reroute",
+          tradeoff: "Cost: -12% ⚡ Power drained while waiting  |  Reward: Zero Crew Risk & +50 🪙",
+          apply: () => { state.power = Math.max(8, state.power - 12); addVaultCoins(50); setStatus("📡 Earth HQ rerouted power safely! +50 Vault Coins."); }
+        }
+      ]
+    };
+  }
+  return null;
+}
 
 function triggerDilemma(solNum) {
-  const d = DILEMMAS[solNum];
+  const d = getDilemma(solNum);
   if (!d) return;
   state.paused = true;
   playSfx(392, 0.25, "triangle", 0.09, 523);
-  document.getElementById("dil-sol").innerText = `LUNAR SOL ${solNum}`;
+  document.getElementById("dil-sol").innerText = `${getPlanet().name.toUpperCase()} SOL ${solNum}`;
   document.getElementById("dil-title").innerText = d.title;
   document.getElementById("dil-desc").innerText = d.desc;
   const wrap = document.getElementById("dil-choices");
@@ -2060,9 +2574,10 @@ function autoRunTo(stationKey) {
 function triggerJump() {
   if (session.screen !== "GAME" || state.ended || state.paused) return;
   if (heroPos && heroPos.y <= 0.02) {
-    heroVelY = (session.heroKey === "IRON") ? 8.8 : 6.8;
+    const pl = getPlanet();
+    heroVelY = (session.heroKey === "IRON") ? pl.jumpVel * 1.28 : pl.jumpVel;
     playSfx(260, 0.22, "sine", 0.08, 540);
-    spawnFxPuff(heroPos.x, 0.3, heroPos.z, 0x38bdf8, 0.45);
+    spawnFxPuff(heroPos.x, 0.3, heroPos.z, pl.key === "MARS" ? 0xfb923c : 0x38bdf8, 0.45);
   }
 }
 
@@ -2075,27 +2590,34 @@ function toggleDoor() {
   }
   state.doorSealed = !state.doorSealed;
   playSfx(state.doorSealed ? 660 : 320, 0.16, "square", 0.07);
-  setStatus(state.doorSealed ? "🔒 Airlock Door SEALED! Cabin Oxygen locked in." : "🔓 Airlock Door OPENED — seal when back inside!");
+  setStatus(state.doorSealed ? "🔒 Airlock Door SEALED! Cabin Oxygen locked in." : "🔓 Airlock Door OPENED — press E to seal when inside!");
   updateHUD();
 }
 
 function toggleShield() {
   if (session.screen !== "GAME" || state.ended || state.paused) return;
+  const now = performance.now();
+  if (now - lastShieldToggleMs < 260) return;
+  lastShieldToggleMs = now;
+
   if (!state.shieldOn && state.power < 6) {
-    setStatus("⚠️ Battery Power too low for Vibranium Shield! Scrub Solar Array [1] or call Earth HQ [F]!");
+    setStatus("⚠️ Battery Power too low for Shield! Scrub Solar Array [1] or call Earth HQ [F]!");
     playSfx(180, 0.2, "sawtooth", 0.08);
     return;
   }
+  const h = getHero();
   state.shieldOn = !state.shieldOn;
+  if (heroShieldFX) heroShieldFX.visible = state.shieldOn;
+
   if (state.shieldOn) {
     const cost = (session.heroKey === "CAP") ? 3 : 6;
     state.power = Math.max(0, state.power - cost);
     playSfx(320, 0.28, "sawtooth", 0.075, 760);
-    showComic("🛡️⚡", "VIBRANIUM SHIELD ON!", "Blocking NASA DONKI radiation! Press Q to turn OFF after storm.");
-    setStatus(`🛡️ Shield RAISED (-${cost}% startup Power)! Press Q to turn OFF after the flare.`);
+    showComic("🛡️⚡", `${h.shieldName.toUpperCase()} ON!`, "Blocking solar flare radiation! Press Q to lower after storm.");
+    setStatus(`🛡️ ${h.shieldName} ACTIVATED (-${cost}% startup Power)! Press Q to turn OFF after storm.`);
   } else {
     playSfx(540, 0.18, "sine", 0.07, 260);
-    setStatus("🟢 Shield turned OFF! Solar arrays are recharging battery power.");
+    setStatus(`🟢 ${h.shieldName} lowered! Solar arrays are recharging battery power.`);
   }
   updateHUD();
 }
@@ -2103,23 +2625,24 @@ function toggleShield() {
 function deployRoverScan() {
   if (session.screen !== "GAME" || state.ended || state.paused) return;
   if (state.roverCooldown > 0) { setStatus(`🚙 Rover recharging... ready in ${Math.ceil(state.roverCooldown)}s.`); return; }
-  if (state.power < 4) { setStatus("⚠️ Need 4% Power for a Lunar Rover scan!"); return; }
+  if (state.power < 4) { setStatus("⚠️ Need 4% Power for a Rover scan!"); return; }
   state.power = Math.max(0, state.power - 4);
-  const gain = (session.heroKey === "LOKI") ? 70 : 35;
+  const gain = (session.heroKey === "LOKI") ? 75 : 38;
   addVaultCoins(gain);
-  state.science += 50;
+  state.science += 55;
   state.roverCooldown = 9;
   playSfx(740, 0.22, "triangle", 0.08, 980);
-  showComic("🚙🪙", "ROVER SCAN COMPLETE!", `+${gain} Vault Coins & +50 Science (-4% Power)!`, 2000);
-  setStatus(`🚙 Rover mapped crater rim: +${gain} 🪙 added to Vault!`);
+  showComic("🚙🪙", "ROVER SCAN COMPLETE!", `+${gain} Vault Coins & +55 Science (-4% Power)!`, 2000);
+  setStatus(`🚙 Rover scanned ${getPlanet().site}: +${gain} 🪙 added to Vault!`);
 }
 
 function callEarth(preset) {
   if (session.screen !== "GAME" || state.ended || state.paused || state.radioBusy) return;
+  const pl = getPlanet();
   const cost = (session.heroKey === "STRANGE") ? 10 : 15;
-  const delayMs = (session.heroKey === "STRANGE") ? 1000 : 2600;
+  const delayMs = (session.heroKey === "STRANGE") ? Math.round(pl.commsDelayMs * 0.42) : pl.commsDelayMs;
   if (session.vaultCoins < cost) {
-    document.getElementById("radio-log").innerText = `⚠️ Need ${cost} 🪙! Grab spinning Moon Coins or press R for Rover!`;
+    document.getElementById("radio-log").innerText = `⚠️ Need ${cost} 🪙! Grab spinning Coins or press R for Rover!`;
     playSfx(210, 0.15, "sawtooth", 0.06);
     return;
   }
@@ -2128,16 +2651,16 @@ function callEarth(preset) {
   state.radioBusy = true;
   state.radioBeamTimer = delayMs / 1000;
   playSfx(440, 0.15, "sine", 0.08, 880);
-  document.getElementById("radio-log").innerText = `📡 Signal beamed 384,400 km to Earth HQ... (${(delayMs / 1000).toFixed(1)}s delay)`;
+  document.getElementById("radio-log").innerText = `📡 Transmitting across ${pl.commsLabel}... (${(delayMs / 1000).toFixed(1)}s wait)`;
 
   setTimeout(() => {
     state.radioBusy = false;
     if (state.ended) return;
     playSfx(880, 0.25, "triangle", 0.09, 1180);
-    if (preset === 1) { state.power = Math.min(100, state.power + 30); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Arc Battery Pod landed (+30% ⚡)!"; }
-    else if (preset === 2) { state.oxygen = Math.min(100, state.oxygen + 30); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Emergency O₂ Tank delivered (+30% 🫁)!"; }
-    else if (preset === 3) { state.food = Math.min(100, state.food + 30); state.pantryCount = Math.min(6, state.pantryCount + 2); refreshPantryVisuals(); document.getElementById("radio-log").innerText = "🌍 Earth HQ: CSA Hydroponic Ration Drop (+30% 🍽️)!"; }
-    else if (preset === 4) { state.hp = Math.min(100, state.hp + 30); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Nano-Medkit restored +30% ❤️ HP!"; }
+    if (preset === 1) { state.power = Math.min(100, state.power + 32); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Arc Battery Pod landed (+32% ⚡)!"; }
+    else if (preset === 2) { state.oxygen = Math.min(100, state.oxygen + 32); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Emergency O₂ Tank delivered (+32% 🫁)!"; }
+    else if (preset === 3) { state.food = Math.min(100, state.food + 32); state.pantryCount = Math.min(6, state.pantryCount + 2); refreshPantryVisuals(); document.getElementById("radio-log").innerText = "🌍 Earth HQ: CSA Hydroponic Ration Drop (+32% 🍽️)!"; }
+    else if (preset === 4) { state.hp = Math.min(100, state.hp + 32); document.getElementById("radio-log").innerText = "🌍 Earth HQ: Nano-Medkit restored +32% ❤️ HP!"; }
     else { state.flarePhase = "CALM"; state.flareTimer = getDiff().flareGap; document.getElementById("flare-alarm").style.display = "none"; document.getElementById("radio-log").innerText = "🌍 NASA DONKI Forecast: Solar storm cleared!"; }
     updateHUD();
   }, delayMs);
@@ -2151,23 +2674,24 @@ function advanceSolEarly() {
 
 function completePadAction(key) {
   const coinMult = (session.heroKey === "LOKI") ? 2 : 1;
+  const pl = getPlanet();
   if (key === "SOLAR") {
     state.dusty = false;
-    state.power = Math.min(100, state.power + 28);
-    const g = 22 * coinMult;
+    state.power = Math.min(100, state.power + (pl.key === "MARS" ? 22 : 28));
+    const g = 25 * coinMult;
     addVaultCoins(g);
     playSfx(784, 0.2, "triangle", 0.09, 1046);
-    showComic("🧹☀️", "SOLAR ARRAY CLEAN!", `+28% Power & +${g} 🪙 Vault Coins!`, 1900);
-    setStatus(`🧹 Swept lunar dust off Solar Array! +${g} 🪙 added to Vault.`);
-  } else if (key === "ICE") {
-    if (state.power < 7) { setStatus("⚠️ Need at least 7% ⚡ Power to run Ice Electrolysis!"); return; }
+    showComic("🧹☀️", "SOLAR ARRAY CLEAN!", `Dust cleared! +Power & +${g} 🪙 Vault Coins!`, 1900);
+    setStatus(`🧹 Swept ${pl.name} dust off Solar Array! +${g} 🪙 added to Vault.`);
+  } else if (key === "O2GEN") {
+    if (state.power < 7) { setStatus(`⚠️ Need at least 7% ⚡ Power to run ${pl.o2Short}!`); return; }
     state.power = Math.max(0, state.power - 7);
     state.oxygen = Math.min(100, state.oxygen + 30);
-    const g = 18 * coinMult;
+    const g = 22 * coinMult;
     addVaultCoins(g);
     playSfx(620, 0.22, "sine", 0.08, 920);
-    showComic("🧊🫁", "ICE ELECTROLYSIS!", `+30% O₂ & +${g} 🪙 Vault Coins (-7% Power)!`, 1900);
-    setStatus(`🫁 Melted Crater Ice (+30% O₂) & earned +${g} 🪙 Vault Coins!`);
+    showComic(pl.key === "MARS" ? "⚙️🫁" : "🧊🫁", pl.key === "MARS" ? "MOXIE CO₂ → O₂!" : "ICE ELECTROLYSIS!", `+30% O₂ & +${g} 🪙 Vault Coins (-7% Power)!`, 1900);
+    setStatus(`🫁 ${pl.key === "MARS" ? "MOXIE converted Mars CO₂" : "Melted Shackleton Ice"} into +30% O₂ (+${g} 🪙 Vault)!`);
   } else if (key === "SCIENCE") {
     if (state.oxygen < 14 || state.power < 7) {
       setStatus("⚠️ Too risky! Need ≥14% 🫁 O₂ & ≥7% ⚡ Power for EVA Core Drilling!");
@@ -2175,16 +2699,16 @@ function completePadAction(key) {
       return;
     }
     const sciGain = (session.heroKey === "LOKI") ? 300 : 200;
-    const g = 40 * coinMult;
+    const g = 45 * coinMult;
     state.oxygen = Math.max(0, state.oxygen - 10);
     state.power = Math.max(0, state.power - 5);
     state.rad += 0.14;
     state.science += sciGain;
     addVaultCoins(g);
     playSfx(520, 0.25, "sawtooth", 0.07, 1040);
-    spawnFxPuff(STATIONS.SCIENCE.x, 1.5, STATIONS.SCIENCE.z, 0xd8b4fe, 0.65);
-    showComic("🔬🌕", "CORE SAMPLE DRILLED!", `+${sciGain} Science & +${g} 🪙 Vault Coins (-10% O₂)!`, 2200);
-    setStatus(`🔬 Drilled regolith core (+${sciGain} Science, +${g} 🪙 Vault Coins)!`);
+    spawnFxPuff(STATIONS.SCIENCE.x, 1.5, STATIONS.SCIENCE.z, 0xd8b4fe, 0.68);
+    showComic("🔬🪐", "CORE SAMPLE DRILLED!", `+${sciGain} Science & +${g} 🪙 Vault Coins (-10% O₂)!`, 2200);
+    setStatus(`🔬 Drilled ${pl.name} core sample (+${sciGain} Science, +${g} 🪙 Vault Coins)!`);
   } else if (key === "FARM") {
     const icons = ["🍅", "🥬", "🥕", "🥔"];
     let picked = 0;
@@ -2200,7 +2724,7 @@ function completePadAction(key) {
       refreshBasketVisuals();
       playSfx(698, 0.18, "sine", 0.09, 987);
       showComic("🧺🍅🥬", "CSA HARVEST!", `Picked ${picked} fresh crops! Press 5 to Stock Pantry!`, 1900);
-      setStatus(`🧺 Harvested ${picked} CSA crops into your Basket! Press 5 to run to Pantry.`);
+      setStatus(`🧺 Harvested ${picked} CSA crops into your Basket! Press 5 to Stock Pantry.`);
     } else if (state.basket.length >= 4) {
       setStatus("🧺 Basket full (4/4)! Press 5 to run to the Pantry Table inside!");
     } else {
@@ -2212,7 +2736,7 @@ function completePadAction(key) {
     state.basket = [];
     state.pantryCount = Math.min(6, state.pantryCount + n);
     state.food = Math.min(100, state.food + n * 15);
-    const g = n * 18 * coinMult;
+    const g = n * 20 * coinMult;
     addVaultCoins(g);
     state.science += n * 25;
     refreshBasketVisuals(); refreshPantryVisuals();
@@ -2232,49 +2756,58 @@ function drawMinimap() {
   const ctx = c.getContext("2d");
   ctx.clearRect(0, 0, c.width, c.height);
   if (!heroPos) return;
-  const mx = x => (x + WORLD_LIMIT_X + 4) / ((WORLD_LIMIT_X + 4) * 2) * c.width;
-  const mz = z => (z + WORLD_LIMIT_Z + 4) / ((WORLD_LIMIT_Z + 4) * 2) * c.height;
+  const mx = x => (x + WORLD_RADIUS + 4) / ((WORLD_RADIUS + 4) * 2) * c.width;
+  const mz = z => (z + WORLD_RADIUS + 4) / ((WORLD_RADIUS + 4) * 2) * c.height;
 
-  ctx.strokeStyle = "rgba(148,163,184,0.35)"; ctx.lineWidth = 1;
+  ctx.strokeStyle = session.planet === "MARS" ? "rgba(251,146,60,0.45)" : "rgba(148,163,184,0.38)";
+  ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(c.width / 2, c.height / 2, c.height * 0.46, 0, Math.PI * 2); ctx.stroke();
 
-  ctx.strokeStyle = "rgba(56,189,248,0.75)"; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.arc(mx(0), mz(0), 8, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = "rgba(56,189,248,0.8)"; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(mx(0), mz(0), 6.5, 0, Math.PI * 2); ctx.stroke();
 
-  const stCols = { SOLAR: "#facc15", ICE: "#38bdf8", SCIENCE: "#d8b4fe", FARM: "#4ade80", PANTRY: "#f472b6", SHIELD: "#60a5fa" };
+  const stCols = { SOLAR: "#facc15", O2GEN: "#38bdf8", SCIENCE: "#d8b4fe", FARM: "#4ade80", PANTRY: "#f472b6", SHIELD: "#60a5fa" };
   Object.entries(STATIONS).forEach(([k, st]) => {
     ctx.fillStyle = stCols[k];
-    ctx.beginPath(); ctx.arc(mx(st.x), mz(st.z), 3.4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(mx(st.x), mz(st.z), 3.2, 0, Math.PI * 2); ctx.fill();
   });
 
   ctx.fillStyle = "#fef08a";
   coinOrbs.forEach(co => {
-    if (co.userData.active) ctx.fillRect(mx(co.position.x) - 1.2, mz(co.position.z) - 1.2, 2.4, 2.4);
+    if (co.userData.active) ctx.fillRect(mx(co.position.x) - 1.1, mz(co.position.z) - 1.1, 2.2, 2.2);
   });
 
   ctx.fillStyle = "#ffffff";
-  ctx.beginPath(); ctx.arc(mx(heroPos.x), mz(heroPos.z), 4.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(mx(heroPos.x), mz(heroPos.z), 4.0, 0, Math.PI * 2); ctx.fill();
   ctx.strokeStyle = "#ef4444"; ctx.lineWidth = 1.8; ctx.stroke();
 }
 
 function animate3D() {
   requestAnimationFrame(animate3D);
-  if (session.screen !== "GAME") return;
+  if (session.screen !== "GAME" || !heroPos) return;
   const dt = Math.min(0.05, clock.getDelta());
   const t = clock.elapsedTime;
   const diff = getDiff();
+  const pl = getPlanet();
 
   earthGroup.rotation.y += dt * 0.08;
   drillCrystal.rotation.y += dt * 1.8;
-  drillCrystal.position.y = 3.3 + Math.sin(t * 2.5) * 0.22;
+  drillCrystal.position.y = 3.45 + Math.sin(t * 2.5) * 0.22;
+  commsDishHead.rotation.y = Math.sin(t * 0.35) * 0.6;
+  landerStrobe.material.color.setHex(Math.sin(t * 6) > 0 ? 0xef4444 : 0x450a0a);
 
-  roverGroup.position.x = Math.sin(t * 0.26) * 24;
-  roverGroup.rotation.y = Math.cos(t * 0.26) > 0 ? Math.PI / 2 : -Math.PI / 2;
+  scoutDrone.position.x = Math.cos(t * 0.45) * 26;
+  scoutDrone.position.z = Math.sin(t * 0.45) * 20;
+  scoutDrone.position.y = 6.8 + Math.sin(t * 2.6) * 0.65;
+  droneRotor.rotation.y += dt * 22;
 
-  shootingStar.position.x += dt * 36;
+  roverGroup.position.x = Math.sin(t * 0.24) * 28;
+  roverGroup.rotation.y = Math.cos(t * 0.24) > 0 ? Math.PI / 2 : -Math.PI / 2;
+
+  shootingStar.position.x += dt * 38;
   shootingStar.position.y -= dt * 7;
-  if (shootingStar.position.x > 110) {
-    shootingStar.position.set(-90 - Math.random() * 40, 38 + Math.random() * 20, -75 - Math.random() * 35);
+  if (shootingStar.position.x > 130) {
+    shootingStar.position.set(-100 - Math.random() * 45, 42 + Math.random() * 20, -85 - Math.random() * 35);
   }
 
   Object.values(padRings).forEach((ring, idx) => {
@@ -2284,7 +2817,19 @@ function animate3D() {
 
   shieldDomeMesh.visible = state.shieldOn;
   shieldWireMesh.visible = state.shieldOn;
-  if (state.shieldOn) shieldWireMesh.rotation.y += dt * 0.22;
+  shieldRingMesh.visible = state.shieldOn;
+  if (heroShieldFX) heroShieldFX.visible = state.shieldOn;
+  if (state.shieldOn) {
+    shieldWireMesh.rotation.y += dt * 0.24;
+    heroAuraRings.forEach((r, idx) => {
+      if (session.heroKey === "STRANGE") r.rotation.z += dt * (idx % 2 === 0 ? 2.4 : -2.4);
+      else r.rotation.y += dt * (idx % 2 === 0 ? 3.2 : -2.4);
+    });
+    heroLightning.forEach((b, idx) => {
+      b.rotation.x += dt * (2.5 + idx * 0.4);
+      b.rotation.y += dt * (3.0 - idx * 0.3);
+    });
+  }
 
   const targetDoorY = state.doorSealed ? 1.25 : 3.35;
   airlockDoorMesh.position.y += (targetDoorY - airlockDoorMesh.position.y) * Math.min(1, dt * 8);
@@ -2300,27 +2845,38 @@ function animate3D() {
     radioBeamMesh.visible = false;
   }
 
+  if (pl.windDust && marsWindParticles) {
+    marsWindParticles.visible = true;
+    const wArr = marsWindParticles.geometry.attributes.position.array;
+    const spd = state.dusty ? 26 : 11;
+    for (let i = 0; i < wArr.length; i += 3) {
+      wArr[i] += dt * spd;
+      if (wArr[i] > 60) wArr[i] = -60;
+    }
+    marsWindParticles.geometry.attributes.position.needsUpdate = true;
+  }
+
   if (state.flarePhase === "WARN") {
     sunMesh.scale.setScalar(1.26 + Math.sin(t * 10) * 0.07);
     sunMesh.material.color.setHex(0xf97316);
-    scene.fog.color.setHex(0x2a0a0a);
+    scene.fog.color.setHex(pl.warnFogHex);
     beaconLight.color.setHex(0xef4444);
     beaconLight.intensity = 1.2 + Math.sin(t * 12) * 1.1;
     flareParticles.visible = false;
   } else if (state.flarePhase === "ACTIVE") {
     sunMesh.scale.setScalar(1.52);
     sunMesh.material.color.setHex(0xef4444);
-    scene.fog.color.setHex(0x450a0a);
+    scene.fog.color.setHex(pl.stormFogHex);
     beaconLight.color.setHex(0xef4444);
     beaconLight.intensity = 2.2 + Math.sin(t * 16) * 1.2;
     flareParticles.visible = true;
     const arr = flareParticles.geometry.attributes.position.array;
-    for (let i = 1; i < arr.length; i += 3) { arr[i] -= dt * 21; if (arr[i] < 0) arr[i] = 34; }
+    for (let i = 1; i < arr.length; i += 3) { arr[i] -= dt * 22; if (arr[i] < 0) arr[i] = 38; }
     flareParticles.geometry.attributes.position.needsUpdate = true;
   } else {
     sunMesh.scale.setScalar(1.0);
-    sunMesh.material.color.setHex(0xfde047);
-    scene.fog.color.setHex(0x04091a);
+    sunMesh.material.color.setHex(pl.key === "MARS" ? 0xfdba74 : 0xfde047);
+    scene.fog.color.setHex(pl.fogHex);
     beaconLight.color.setHex(0x38bdf8);
     beaconLight.intensity = 1.1;
     flareParticles.visible = false;
@@ -2330,9 +2886,9 @@ function animate3D() {
     const p = fxParticles[i];
     p.userData.life -= dt;
     p.position.y += dt * 0.9;
-    p.scale.addScalar(dt * 1.5);
+    p.scale.addScalar(dt * 1.4);
     p.material.opacity = Math.max(0, p.userData.life * 1.5);
-    if (p.userData.life <= 0) { scene.remove(p); fxParticles.splice(i, 1); }
+    if (p.userData.life <= 0) { worldGroup.remove(p); fxParticles.splice(i, 1); }
   }
 
   if (state.started && !state.ended && !state.paused) {
@@ -2342,10 +2898,7 @@ function animate3D() {
     if (keys["KeyA"] || keys["ArrowLeft"])  moveX -= 1;
     if (keys["KeyD"] || keys["ArrowRight"]) moveX += 1;
 
-    if (Math.hypot(joyX, joyY) > 0.12) {
-      moveX += joyX;
-      moveZ += joyY;
-    }
+    if (Math.hypot(joyX, joyY) > 0.12) { moveX += joyX; moveZ += joyY; }
 
     if (Math.hypot(moveX, moveZ) > 0.08) {
       state.autoTarget = null;
@@ -2356,41 +2909,61 @@ function animate3D() {
       else { moveX = dx / dist; moveZ = dz / dist; }
     }
 
-    const runSpeed = (session.heroKey === "WIDOW") ? 13.8 : 11.2;
+    const runSpeed = (session.heroKey === "WIDOW") ? 14.5 : 11.8;
     const mag = Math.hypot(moveX, moveZ);
     if (mag > 0.08) {
       const clampMag = Math.min(1, mag);
       moveX = (moveX / mag) * clampMag;
       moveZ = (moveZ / mag) * clampMag;
-      heroPos.x = Math.max(-WORLD_LIMIT_X, Math.min(WORLD_LIMIT_X, heroPos.x + moveX * runSpeed * dt));
-      heroPos.z = Math.max(-WORLD_LIMIT_Z, Math.min(WORLD_LIMIT_Z, heroPos.z + moveZ * runSpeed * dt));
+      heroPos.x += moveX * runSpeed * dt;
+      heroPos.z += moveZ * runSpeed * dt;
       const rDist = Math.hypot(heroPos.x, heroPos.z);
-      if (rDist > 52) {
-        heroPos.x = (heroPos.x / rDist) * 52;
-        heroPos.z = (heroPos.z / rDist) * 52;
+      if (rDist > WORLD_RADIUS) {
+        heroPos.x = (heroPos.x / rDist) * WORLD_RADIUS;
+        heroPos.z = (heroPos.z / rDist) * WORLD_RADIUS;
       }
       const desiredRot = Math.atan2(moveX, moveZ);
-      heroRotY += Math.atan2(Math.sin(desiredRot - heroRotY), Math.cos(desiredRot - heroRotY)) * Math.min(1, dt * 12);
+      heroRotY += Math.atan2(Math.sin(desiredRot - heroRotY), Math.cos(desiredRot - heroRotY)) * Math.min(1, dt * 13);
 
-      heroLimbs.lLeg.rotation.x = Math.sin(t * 15) * 0.72;
-      heroLimbs.rLeg.rotation.x = -Math.sin(t * 15) * 0.72;
-      heroLimbs.lArm.rotation.x = -Math.sin(t * 15) * 0.62;
-      heroLimbs.rArm.rotation.x = Math.sin(t * 15) * 0.62;
+      runCycle += dt * 15.5;
+      const swing = Math.sin(runCycle);
+      heroBodyRig.rotation.x = 0.14;
+      heroBodyRig.position.y = Math.abs(Math.cos(runCycle)) * 0.16;
+
+      heroLimbs.lLeg.rotation.x = swing * 0.85;
+      heroLimbs.rLeg.rotation.x = -swing * 0.85;
+      heroLimbs.lLeg.userData.lower.rotation.x = Math.max(0, -swing) * 0.95;
+      heroLimbs.rLeg.userData.lower.rotation.x = Math.max(0, swing) * 0.95;
+
+      const lArmBase = (state.shieldOn && session.heroKey === "CAP") ? -1.15 : -swing * 0.72;
+      heroLimbs.lArm.rotation.x = lArmBase;
+      heroLimbs.rArm.rotation.x = swing * 0.72;
+      heroLimbs.lArm.userData.lower.rotation.x = -0.55;
+      heroLimbs.rArm.userData.lower.rotation.x = -0.55;
+      if (heroLimbs.cape) heroLimbs.cape.rotation.x = 0.42 + Math.sin(runCycle * 2) * 0.08;
 
       footstepTimer -= dt;
       if (footstepTimer <= 0 && heroPos.y <= 0.05) {
-        footstepTimer = 0.25;
-        spawnFxPuff(heroPos.x, 0.12, heroPos.z, 0x94a3b8, 0.22);
+        footstepTimer = 0.24;
+        spawnFxPuff(heroPos.x, 0.12, heroPos.z, pl.key === "MARS" ? 0xd97706 : 0x94a3b8, 0.22);
       }
     } else {
-      heroLimbs.lLeg.rotation.x *= 0.85; heroLimbs.rLeg.rotation.x *= 0.85;
-      heroLimbs.lArm.rotation.x *= 0.85; heroLimbs.rArm.rotation.x *= 0.85;
+      heroBodyRig.rotation.x *= 0.82;
+      heroBodyRig.position.y = Math.sin(t * 2.8) * 0.035;
+      heroLimbs.lLeg.rotation.x *= 0.82; heroLimbs.rLeg.rotation.x *= 0.82;
+      heroLimbs.lLeg.userData.lower.rotation.x *= 0.82; heroLimbs.rLeg.userData.lower.rotation.x *= 0.82;
+      const lTarget = (state.shieldOn && session.heroKey === "CAP") ? -1.2 : 0;
+      heroLimbs.lArm.rotation.x += (lTarget - heroLimbs.lArm.rotation.x) * 0.18;
+      heroLimbs.rArm.rotation.x *= 0.82;
+      heroLimbs.lArm.userData.lower.rotation.x *= 0.82; heroLimbs.rArm.userData.lower.rotation.x *= 0.82;
+      if (heroLimbs.cape) heroLimbs.cape.rotation.x = 0.18 + Math.sin(t * 3) * 0.04;
     }
 
     heroPos.y += heroVelY * dt;
     if (heroPos.y > 0) {
-      heroVelY -= 11.2 * dt;
-      if (Math.random() < 0.45) spawnFxPuff(heroPos.x, heroPos.y + 0.3, heroPos.z, 0x38bdf8, 0.16);
+      heroVelY -= pl.gravity * dt;
+      heroLimbs.lLeg.rotation.x = -0.35; heroLimbs.rLeg.rotation.x = 0.25;
+      if (Math.random() < 0.45) spawnFxPuff(heroPos.x, heroPos.y + 0.3, heroPos.z, 0x38bdf8, 0.17);
     } else { heroPos.y = 0; heroVelY = 0; }
     heroGroup.position.copy(heroPos);
     heroGroup.rotation.y = heroRotY;
@@ -2399,21 +2972,21 @@ function animate3D() {
     if (wasInside && !nowInside && state.doorSealed) {
       state.doorSealed = false;
       playSfx(310, 0.14, "square", 0.06);
-      setStatus("🌑 Stepped outside onto Lunar Plains! Press E to seal Airlock when back inside.");
+      setStatus(`🌑 Stepped outside onto ${pl.name}! Press E to seal Airlock when back inside.`);
     }
     wasInside = nowInside;
 
     coinOrbs.forEach(c => {
       if (c.userData.active) {
         c.rotation.z += dt * 3.0;
-        c.position.y = 1.1 + Math.sin(t * 3 + c.position.x) * 0.22;
-        if (Math.hypot(heroPos.x - c.position.x, heroPos.z - c.position.z) < 1.6) {
+        c.position.y = 1.15 + Math.sin(t * 3 + c.position.x) * 0.22;
+        if (Math.hypot(heroPos.x - c.position.x, heroPos.z - c.position.z) < 1.65) {
           c.userData.active = false; c.visible = false; c.userData.respawn = 12;
-          const gain = (session.heroKey === "LOKI") ? 50 : 25;
+          const gain = (session.heroKey === "LOKI") ? 60 : 30;
           addVaultCoins(gain);
           playSfx(987, 0.16, "sine", 0.085, 1318);
-          spawnFxPuff(c.position.x, 1.1, c.position.z, 0xfde047, 0.58);
-          setStatus(`🪙 Picked up Lunar Coin Orb (+${gain} 🪙 added directly to Vault)!`);
+          spawnFxPuff(c.position.x, 1.15, c.position.z, 0xfde047, 0.58);
+          setStatus(`🪙 Picked up ${pl.name} Coin Orb (+${gain} 🪙 added directly to Vault)!`);
         }
       } else {
         c.userData.respawn -= dt;
@@ -2451,7 +3024,7 @@ function animate3D() {
       progWrap.style.display = "none";
     }
 
-    const growSpeed = (session.heroKey === "WANDA") ? 8.0 : 4.8;
+    const growSpeed = (session.heroKey === "WANDA") ? 7.8 : 4.5;
     for (let i = 0; i < 4; i++) {
       state.crops[i] = Math.min(100, state.crops[i] + growSpeed * dt);
       const s = 0.25 + (state.crops[i] / 100) * 0.95;
@@ -2461,19 +3034,20 @@ function animate3D() {
     if (state.roverCooldown > 0) state.roverCooldown -= dt;
 
     if (state.shieldOn) {
-      const sDrain = (session.heroKey === "CAP" ? 0.72 : 1.45) * diff.drain;
+      const sDrain = (session.heroKey === "CAP" ? 0.65 : 1.32) * diff.drain;
       state.power = Math.max(0, state.power - sDrain * dt);
       if (state.power <= 0.1) { state.shieldOn = false; setStatus("⚡ Battery hit 0%! Shield offline!"); }
     } else if (state.dusty) {
-      state.power = Math.max(0, state.power - 0.35 * diff.drain * dt);
+      state.power = Math.max(0, state.power - pl.dustPowerLoss * diff.drain * dt);
     } else {
-      state.power = Math.min(100, state.power + ((session.heroKey === "IRON") ? 4.2 : 2.3) * dt);
+      const charge = ((session.heroKey === "IRON") ? 3.8 : 2.15) * pl.solarChargeMult;
+      state.power = Math.min(100, state.power + charge * dt);
     }
 
-    let oxLoss = (state.doorSealed ? 0.32 : 1.25) * diff.drain;
+    let oxLoss = (state.doorSealed ? 0.28 : 1.15) * diff.drain;
     if (session.heroKey === "WIDOW") oxLoss *= 0.6;
     state.oxygen = Math.max(0, state.oxygen - oxLoss * dt);
-    state.food = Math.max(0, state.food - 0.28 * diff.drain * dt);
+    state.food = Math.max(0, state.food - 0.24 * diff.drain * dt);
 
     state.flareTimer -= dt;
     if (state.flarePhase === "CALM" && state.flareTimer <= 0) {
@@ -2481,7 +3055,7 @@ function animate3D() {
       playSfx(240, 0.45, "sawtooth", 0.08, 460);
       document.getElementById("flare-alarm").style.display = "block";
       document.getElementById("flare-alarm-title").innerText = `🚨 NASA DONKI ${NASA.flr.class} FLARE!`;
-      showComic("🚨☀️🔥", "SOLAR FLARE INCOMING!", `DONKI ${NASA.flr.class} storm hits in ${Math.ceil(diff.flareWarn)}s! Press E & Q inside!`, 2800);
+      showComic("🚨☀️🔥", "SOLAR FLARE INCOMING!", `DONKI ${NASA.flr.class} storm hits ${pl.name} in ${Math.ceil(diff.flareWarn)}s!`, 2800);
     } else if (state.flarePhase === "WARN") {
       document.getElementById("flare-alarm-desc").innerText = `Impact in ${Math.max(0, state.flareTimer).toFixed(1)}s! Inside + Door(E) + Shield(Q)`;
       if (state.flareTimer <= 0) { state.flarePhase = "ACTIVE"; state.flareTimer = diff.flareDur; playSfx(180, 0.5, "sawtooth", 0.095, 120); }
@@ -2489,22 +3063,26 @@ function animate3D() {
       document.getElementById("flare-alarm-title").innerText = `☢️ STORM HITTING (${Math.ceil(state.flareTimer)}s)`;
       const safe = nowInside && state.doorSealed && state.shieldOn;
       if (!safe) {
-        state.hp = Math.max(0, state.hp - diff.flareDmg * (session.heroKey === "THOR" ? 0.4 : 1.0) * dt);
-        state.rad += 0.22 * dt;
+        state.hp = Math.max(0, state.hp - diff.flareDmg * pl.flareDmgMult * (session.heroKey === "THOR" ? 0.4 : 1.0) * dt);
+        state.rad += 0.22 * pl.flareDmgMult * dt;
         document.getElementById("flare-alarm-desc").innerText = "⚠️ RADIATION HIT! Inside + Door(E) + Shield(Q)!";
       } else {
-        state.rad += 0.012 * dt;
-        document.getElementById("flare-alarm-desc").innerText = "🛡️ 100% PROTECTED BY SHIELD!";
+        state.rad += 0.01 * dt;
+        document.getElementById("flare-alarm-desc").innerText = `🛡️ PROTECTED BY ${getHero().shieldName.toUpperCase()}!`;
       }
       if (state.flareTimer <= 0) {
-        state.flarePhase = "CALM"; state.flareTimer = diff.flareGap + Math.random() * 5;
+        state.flarePhase = "CALM"; state.flareTimer = diff.flareGap + Math.random() * 6;
         document.getElementById("flare-alarm").style.display = "none";
-        if (Math.random() < 0.6) { state.dusty = true; showComic("🌪️☀️", "PANELS DUSTY!", "Press 1 to sweep moon dust off solar panels!", 2300); }
-        else showComic("☀️✅", "FLARE PASSED!", "Press Q to turn Shield OFF and recharge!", 2200);
-        setStatus("☀️ Solar Flare cleared! Press Q to turn Shield OFF and recharge batteries.");
+        if (Math.random() < pl.dustChance) {
+          state.dusty = true;
+          showComic("🌪️☀️", pl.key === "MARS" ? "MARTIAN DUST STORM!" : "PANELS DUSTY!", "Press 1 to sweep dust off solar panels!", 2300);
+        } else {
+          showComic("☀️✅", "FLARE PASSED!", "Press Q to turn Shield OFF and recharge!", 2200);
+        }
+        setStatus("☀️ Solar Flare cleared! Press Q to lower Shield and recharge.");
       }
     } else {
-      state.rad += 0.012 * dt;
+      state.rad += (pl.radBaseline / diff.solSecs) * dt;
     }
 
     state.solClock += dt;
@@ -2515,16 +3093,16 @@ function animate3D() {
       if (state.sol > 7) {
         endMission(true, "WIN");
       } else {
-        const bonus = (session.heroKey === "LOKI") ? 70 : 35;
+        const bonus = (session.heroKey === "LOKI") ? 90 : 45;
         addVaultCoins(bonus);
-        state.science += 50;
+        state.science += 60;
         if (state.pantryCount > 0) { state.pantryCount--; refreshPantryVisuals(); }
         playSfx(523, 0.2, "triangle", 0.09, 784);
-        if (DILEMMAS[state.sol] && !state.dilemmasShown[state.sol]) {
+        if (getDilemma(state.sol) && !state.dilemmasShown[state.sol]) {
           state.dilemmasShown[state.sol] = true;
           triggerDilemma(state.sol);
         } else {
-          showComic("🌙🏆", `LUNAR SOL ${state.sol} OF 7`, `+${bonus} 🪙 Vault Coins & +50 🔬 Science!`, 2000);
+          showComic(pl.icon + "🏆", `${pl.name.toUpperCase()} SOL ${state.sol} OF 7`, `+${bonus} 🪙 Vault Coins & +60 🔬 Science!`, 2100);
         }
       }
     }
@@ -2539,29 +3117,29 @@ function animate3D() {
   }
 
   const z = state.camZoom;
-  const followRatio = state.fullMoonMode ? 0.08 : Math.max(0.15, 0.92 - (z - 1) * 0.22);
+  const followRatio = state.fullPlanetMode ? 0.06 : Math.max(0.14, 0.92 - (z - 1) * 0.2);
   const desiredCam = new THREE.Vector3(
     heroPos.x * followRatio,
-    13.5 * z,
-    heroPos.z * followRatio + 18.5 * z
+    14.0 * z,
+    heroPos.z * followRatio + 19.5 * z
   );
   camera.position.lerp(desiredCam, Math.min(1, dt * 4.5));
-  camera.lookAt(heroPos.x * followRatio, state.fullMoonMode ? -2.0 : 1.4, heroPos.z * followRatio);
+  camera.lookAt(heroPos.x * followRatio, state.fullPlanetMode ? -3.0 : 1.5, heroPos.z * followRatio);
 
   renderer.render(scene, camera);
 }
 
 function updateHUD() {
-  const diff = getDiff();
+  const diff = getDiff(), pl = getPlanet();
   document.getElementById("ui-sol").innerText = Math.min(7, state.sol) + " / 7";
   document.getElementById("bar-sol").style.width = Math.min(100, (state.solClock / diff.solSecs) * 100) + "%";
   document.getElementById("ui-weather").innerText =
     state.flarePhase === "ACTIVE" ? `☢️ ${NASA.flr.class} STORM` :
-    (state.flarePhase === "WARN" ? "🚨 FLARE WARN" : (state.dusty ? "🌪️ Dusty" : "☀️ Calm Sky"));
+    (state.flarePhase === "WARN" ? "🚨 FLARE WARN" : (state.dusty ? (pl.key === "MARS" ? "🌪️ Dust Storm" : "🌪️ Dusty") : "☀️ Calm Sky"));
 
   document.getElementById("ui-pwr").innerText = Math.round(state.power) + "%";
   document.getElementById("bar-pwr").style.width = state.power + "%";
-  document.getElementById("sub-pwr").innerText = state.shieldOn ? "🛡️ Draining" : (state.dusty ? "🌪️ Dusty" : "☀️ Charging");
+  document.getElementById("sub-pwr").innerText = state.shieldOn ? "🛡️ Draining" : (state.dusty ? "🌪️ Dusty" : `☀️ ${pl.key === "MARS" ? "43% Sun" : "Charging"}`);
 
   document.getElementById("ui-ox").innerText = Math.round(state.oxygen) + "%";
   document.getElementById("bar-ox").style.width = state.oxygen + "%";
@@ -2580,7 +3158,7 @@ function updateHUD() {
 
   document.getElementById("btn-shield").innerHTML = (state.shieldOn ? "🛡️ Shield: ON" : "🛡️ Shield: OFF") + '<span class="kbadge">Q</span>';
   document.getElementById("btn-door").innerHTML = (state.doorSealed ? "🔒 Airlock: SEALED" : "🔓 Airlock: OPEN") + '<span class="kbadge">E</span>';
-  document.getElementById("zone-badge").innerText = isInsideHabitat() ? "📍 INSIDE BASE" : "🌑 OUTSIDE MOON";
+  document.getElementById("zone-badge").innerText = isInsideHabitat() ? "📍 INSIDE BASE" : `${pl.icon} ON ${pl.name.toUpperCase()}`;
 }
 
 function endMission(won, cause) {
@@ -2588,29 +3166,29 @@ function endMission(won, cause) {
   document.getElementById("flare-alarm").style.display = "none";
   document.getElementById("dilemma-modal").style.display = "none";
   document.getElementById("debrief-modal").style.display = "flex";
-  const h = getHero();
+  const h = getHero(), pl = getPlanet();
 
   if (won) {
     session.wins += 1;
-    addVaultCoins(150);
+    addVaultCoins(220);
     playSfx(523, 0.25, "triangle", 0.1, 1046);
-    const rank = state.science >= 1100 ? "💎 CHIEF NASA MISSION PLANNER" : (state.science >= 700 ? "🥇 SHACKLETON COMMANDER" : "🥈 ARTEMIS SPECIALIST");
-    document.getElementById("debrief-icon").innerText = "🏆🦸‍♂️🌕";
-    document.getElementById("debrief-title").innerText = "7-SOL MISSION ACCOMPLISHED!";
-    document.getElementById("debrief-rank").innerText = `${rank} • +150 🪙 Victory Vault Bonus!`;
-    document.getElementById("debrief-sub").innerText = `${h.name} survived 7 Sols | Science: ${state.science} | Dose: ${state.rad.toFixed(2)} mSv | Vault: ${Math.floor(session.vaultCoins)} 🪙`;
+    const rank = state.science >= 1100 ? "💎 CHIEF NASA MISSION PLANNER" : (state.science >= 700 ? "🥇 DEEP SPACE COMMANDER" : "🥈 ARTEMIS SPECIALIST");
+    document.getElementById("debrief-icon").innerText = `🏆🦸‍♂️${pl.icon}`;
+    document.getElementById("debrief-title").innerText = `7-SOL ${pl.name.toUpperCase()} MISSION ACCOMPLISHED!`;
+    document.getElementById("debrief-rank").innerText = `${rank} • +220 🪙 Victory Vault Bonus!`;
+    document.getElementById("debrief-sub").innerText = `${h.name} survived 7 Sols at ${pl.site} | Science: ${state.science} | Dose: ${state.rad.toFixed(2)} mSv`;
     document.getElementById("debrief-lesson").innerHTML =
-      `<b>🛰️ Engineering Takeaway:</b> You balanced Power, Oxygen, CSA Food, EVA Science, and <b>NASA DONKI ${NASA.flr.class}</b> space weather across 7 Sols! Keep collecting Vault Coins to unlock Iron Man, Thor, Dr. Strange, Wanda &amp; Loki!`;
+      `<b>🛰️ Engineering Takeaway:</b> You mastered ${pl.name}'s unique constraints (${pl.solarIrradiance} sunlight, ${pl.radBaseline} mSv/Sol baseline, ${pl.commsLabel} radio delay) across 7 full Sols! Try switching to <b>${pl.key === "MOON" ? "Mars" : "Moon"}</b> in the Menu to compare how the physics change!`;
   } else {
     playSfx(220, 0.45, "sawtooth", 0.09, 110);
     document.getElementById("debrief-icon").innerText = "🛠️📡";
-    document.getElementById("debrief-title").innerText = `MISSION DEBRIEF — SOL ${state.sol} OF 7`;
+    document.getElementById("debrief-title").innerText = `${pl.name.toUpperCase()} DEBRIEF — SOL ${state.sol} OF 7`;
     document.getElementById("debrief-rank").innerText = `Science Logged: ${state.science} pts • Vault Coins Kept: ${Math.floor(session.vaultCoins)} 🪙`;
     const lessons = {
-      POWER: "⚡ <b>Power Budget Depleted:</b> Turn Shield OFF (Q) after solar flares pass and press 1 to scrub dusty solar panels!",
-      OXYGEN: "🫁 <b>Oxygen Depleted:</b> Press E to seal the Airlock when back inside and press 2 to mine Shackleton Crater ice (H₂O → O₂)!",
-      FOOD: "🍽️ <b>Pantry Empty:</b> Press 4 to harvest CSA crops and press 5 to stock your Pantry Table!",
-      RADIATION: "☢️ <b>Solar Flare Exposure:</b> When the NASA DONKI siren sounds, get inside, Seal Airlock (E), and Raise Shield (Q)!"
+      POWER: `⚡ <b>Power Budget Depleted:</b> On ${pl.name} (${pl.solarIrradiance} sunlight), lower your Shield (Q) as soon as flares pass and press 1 to sweep solar dust!`,
+      OXYGEN: `🫁 <b>Oxygen Depleted:</b> Seal the Airlock (E) when inside and press 2 to run ${pl.o2Short} before heavy EVA science drills!`,
+      FOOD: "🍽️ <b>Pantry Empty:</b> Press 4 to harvest CSA hydroponic crops and press 5 to stock your Pantry Table!",
+      RADIATION: `☢️ <b>Solar Flare Exposure:</b> When the NASA DONKI siren sounds on ${pl.name}, get inside, Seal Airlock (E), and Raise ${h.shieldName} (Q)!`
     };
     document.getElementById("debrief-sub").innerText = `Resource limit reached: ${cause}. All Vault Coins earned are safely banked!`;
     document.getElementById("debrief-lesson").innerHTML = lessons[cause] || lessons.POWER;
@@ -2651,7 +3229,7 @@ window.addEventListener("keydown", e => {
     case "KeyQ": toggleShield(); break;
     case "KeyE": toggleDoor(); break;
     case "Digit1": autoRunTo("SOLAR"); break;
-    case "Digit2": autoRunTo("ICE"); break;
+    case "Digit2": autoRunTo("O2GEN"); break;
     case "Digit3": autoRunTo("SCIENCE"); break;
     case "Digit4": autoRunTo("FARM"); break;
     case "Digit5": autoRunTo("PANTRY"); break;
@@ -2665,7 +3243,7 @@ window.addEventListener("keydown", e => {
     case "KeyK": callEarth(5); break;
     case "KeyZ": case "Minus": adjustZoom(0.45); break;
     case "KeyX": case "Equal": adjustZoom(-0.45); break;
-    case "KeyC": toggleFullMoonView(); break;
+    case "KeyC": toggleFullPlanetView(); break;
     case "KeyM": case "Escape": toggleSidebar(); break;
     case "KeyV": toggleMusic(); break;
   }
